@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
+    <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Services\KMS.Product.Ktm.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\KMS.Product.Ktm.Common\KMS.Product.Ktm.Common.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\KMS.Product.Ktm.Repository\KMS.Product.Ktm.Repository.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\KMS.Product.Ktm.Utilities\KMS.Product.Ktm.Utilities.csproj" />
+  </ItemGroup>
+
+
+</Project>
