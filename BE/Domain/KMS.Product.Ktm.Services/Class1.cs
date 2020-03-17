@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Utilities
+namespace KMS.Product.Ktm.Services
 {
     public class Class1
     {
