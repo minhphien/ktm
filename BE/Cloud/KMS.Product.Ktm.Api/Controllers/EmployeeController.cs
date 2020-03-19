@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using KMS.Product.Ktm.Api.Exceptions;
+using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.Interfaces;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class EmployeeController : ControllerBase
     {
-        // GET: api/<controller>
+        private readonly IEmployeeService _service;
+
+        public EmployeeController(IEmployeeService service)
+        {
+            _service = service;
+        }
+
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -27,8 +32,17 @@ namespace KMS.Product.Ktm.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Create([FromBody]Employee employee)
         {
+            try
+            {
+                _service.CreateEmployee(employee);
+                return Ok("Success");
+            }
+            catch (BussinessException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<controller>/5

@@ -5,14 +5,14 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<KMS.Product.Ktm.Repository.KtmContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<KMS.Product.Ktm.Repository.KtmDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(KMS.Product.Ktm.Repository.KtmContext context)
+        protected override void Seed(KMS.Product.Ktm.Repository.KtmDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

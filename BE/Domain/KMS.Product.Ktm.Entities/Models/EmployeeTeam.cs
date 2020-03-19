@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace KMS.Product.Ktm.Repository.Models
+namespace KMS.Product.Ktm.Entities.Models
 {
-    public class EmployeeTeam
+    public class EmployeeTeam : BaseEntity
     {
-        public int EmployeeTeamID { get; set; }
         public DateTime JoinedDate { get; set; }
         public DateTime ReleseadDate { get; set; }
         public  int EmployeeID { get; set; }
