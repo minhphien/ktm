@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KMS.Product.Ktm.Repository.Models
+namespace KMS.Product.Ktm.Entities.Models
 {
-    public class Employee
+    public class Employee : BaseEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int EmployeeID { get; set; }
+        public string EmployeeBadgeId { get; set; }
         public string LastName { get; set; }
         public string FirstMidName { get; set; }
         public string Email { get; set; }

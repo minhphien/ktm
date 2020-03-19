@@ -5,7 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Entityframework" Version="6.4.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
+    <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Services\KMS.Product.Ktm.Services.csproj" />
   </ItemGroup>
 
 </Project>
