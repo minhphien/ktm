@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Api.Authentication
 {
+    // Customized authentication handler for KMS token verification
     public class KmsTokenAuthHandler : AuthenticationHandler<KmsTokenAuthOptions>
     {
 
@@ -25,7 +26,7 @@ namespace KMS.Product.Ktm.Api.Authentication
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             HttpClient client = new HttpClient();
-            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await client.GetAsync("https://home.kms-technology.com/api/account/authenticate");
             if (response.StatusCode == HttpStatusCode.OK)

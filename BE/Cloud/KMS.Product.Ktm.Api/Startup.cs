@@ -31,7 +31,6 @@ namespace KMS.Product.Ktm.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(); 
-            services.AddScoped<KtmContext>(_ => new KtmContext(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAuthentication("KmsTokenAuth")
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddScoped<KtmDbContext>(_ => new KtmDbContext(Configuration.GetConnectionString("DefaultConnection")));
