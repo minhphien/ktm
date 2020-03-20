@@ -12,7 +12,5 @@ namespace KMS.Product.Ktm.Entities.Models
 
         public virtual Employee Employee { get; set; }
         public virtual Team Team { get; set; }
-        public virtual ICollection<Kudo> KudoSends { get; set; }
-        public virtual ICollection<Kudo> KudoReceives { get; set; }
     }
 }

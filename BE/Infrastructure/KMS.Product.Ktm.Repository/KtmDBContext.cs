@@ -1,18 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 using KMS.Product.Ktm.Entities.Models;
 
 namespace KMS.Product.Ktm.Repository
 {
     public class KtmDbContext : DbContext
     {
-        public KtmDbContext()
-        {
-        }
-        public KtmDbContext(string connString) : base(connString)
+        private const string Id = "Id";
+
+        public KtmDbContext(DbContextOptions<KtmDbContext> options) : base(options)
         {
         }
 
@@ -22,23 +20,26 @@ namespace KMS.Product.Ktm.Repository
         public DbSet<KudoType> KudoTypes { get; set; }
         public DbSet<Kudo> Kudos { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Properties<int>()
-                .Where(p => p.Name.Equals("Id"))
-                .Configure(c => c.HasColumnName(c.ClrPropertyInfo.ReflectedType.Name + "Id"));
-            modelBuilder.Entity<Kudo>()
-                    .HasRequired(m => m.Sender)
-                    .WithMany(t => t.KudoSends)
-                    .HasForeignKey(m => m.SenderId)
-                    .WillCascadeOnDelete(false);
+            foreach (var property in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(int)))
+            {
+                if (property.GetColumnName().Equals(Id))
+                    property.SetColumnName(property.PropertyInfo.ReflectedType.Name + Id);
+            }
 
             modelBuilder.Entity<Kudo>()
-                    .HasRequired(m => m.Receiver)
-                    .WithMany(t => t.KudoReceives)
-                    .HasForeignKey(m => m.ReceiverId)
-                    .WillCascadeOnDelete(false);
+                .HasOne<EmployeeTeam>(a => a.Sender)
+                .WithOne()
+                .HasForeignKey<Kudo>(a => a.SenderId);
 
+            modelBuilder.Entity<Kudo>()
+                .HasOne<EmployeeTeam>(a => a.Receiver)
+                .WithOne()
+                .HasForeignKey<Kudo>(a => a.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         public override int SaveChanges()
@@ -47,7 +48,7 @@ namespace KMS.Product.Ktm.Repository
             return base.SaveChanges();
         }
 
-        public override async Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
             AddAuitInfo();
             return await base.SaveChangesAsync();
@@ -55,7 +56,9 @@ namespace KMS.Product.Ktm.Repository
 
         private void AddAuitInfo()
         {
-            var entries = ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            var entries = ChangeTracker
+                .Entries()
+                .Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
@@ -64,6 +67,7 @@ namespace KMS.Product.Ktm.Repository
                 }
                 ((BaseEntity)entry.Entity).Modified = DateTime.Now;
             }
+
         }
     }
 }
