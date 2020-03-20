@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using KMS.Product.Ktm.Repository;
+using KMS.Product.Ktm.Api.Authentication;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -28,6 +28,8 @@ namespace KMS.Product.Ktm.Api
         {
             services.AddControllers(); 
             services.AddScoped<KtmContext>(_ => new KtmContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAuthentication("KmsTokenAuth")
+                .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +39,8 @@ namespace KMS.Product.Ktm.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
