@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using KMS.Product.Ktm.Api.Authentication;
+using KMS.Product.Ktm.Repository;
+using KMS.Product.Ktm.Services.Interfaces;
+using KMS.Product.Ktm.Services.Implement;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -30,6 +34,9 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<KtmContext>(_ => new KtmContext(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAuthentication("KmsTokenAuth")
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
+            services.AddScoped<KtmDbContext>(_ => new KtmDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

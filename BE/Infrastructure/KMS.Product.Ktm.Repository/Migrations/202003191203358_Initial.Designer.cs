@@ -13,7 +13,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202003180446017_Initial"; }
+            get { return "202003191203358_Initial"; }
         }
         
         string IMigrationMetadata.Source
