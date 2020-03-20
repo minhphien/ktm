@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using KMS.Product.Ktm.Api.Authentication;
 using KMS.Product.Ktm.Repository;
 using KMS.Product.Ktm.Services.Interfaces;
 using KMS.Product.Ktm.Services.Implement;
@@ -29,6 +31,8 @@ namespace KMS.Product.Ktm.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(); 
+            services.AddAuthentication("KmsTokenAuth")
+                .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddScoped<KtmDbContext>(_ => new KtmDbContext(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -41,6 +45,8 @@ namespace KMS.Product.Ktm.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 
