@@ -34,11 +34,11 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet]
-        public IActionResult GetAllKudoTypes()
+        public async Task<IActionResult> GetAllKudoTypesAsync()
         {
             try
             {
-                var kudoTypes = _kudoTypeService.GetAllKudoTypes();
+                var kudoTypes = await _kudoTypeService.GetAllKudoTypesAsync();
                 return Ok(kudoTypes);
             }
             catch(BussinessException ex)
@@ -57,11 +57,11 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet("{id}")]
-        public IActionResult GetKudoTypeById(int id)
+        public async Task<IActionResult> GetKudoTypeByIdAsync(int id)
         {
             try
             {
-                var kudoType = _kudoTypeService.GetKudoTypeById(id);
+                var kudoType = await _kudoTypeService.GetKudoTypeByIdAsync(id);
                 return Ok(kudoType);
             }
             catch (BussinessException ex)
@@ -80,11 +80,11 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpPost]
-        public IActionResult CreateKudoType(KudoType kudoType)
+        public async Task<IActionResult> CreateKudoTypeAsync(KudoType kudoType)
         {
             try
             {
-                _kudoTypeService.CreateKudoType(kudoType);
+                await _kudoTypeService.CreateKudoTypeAsync(kudoType);
                 return Ok();
             }
             catch (BussinessException ex)
@@ -101,11 +101,11 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Success: returns 200 status code
         /// Failure: returns 500 status code with an exception message
         [HttpPut]
-        public IActionResult UpdateKudoType(KudoType kudoType)
+        public async Task<IActionResult> UpdateKudoTypeAsync(KudoType kudoType)
         {
             try
             {
-                _kudoTypeService.UpdateKudoType(kudoType);
+                await _kudoTypeService.UpdateKudoTypeAsync(kudoType);
                 return Ok();
             }
             catch (BussinessException ex)
@@ -122,11 +122,11 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Success: returns 200 status code
         /// Failure: returns 500 status code with an exception message
         [HttpDelete]
-        public IActionResult DeleteKudoType(KudoType kudoType)
+        public async Task<IActionResult> DeleteKudoTypeAsync(KudoType kudoType)
         {
             try
             {
-                _kudoTypeService.DeleteKudoType(kudoType);
+                await _kudoTypeService.DeleteKudoTypeAsync(kudoType);
                 return Ok();
             }
             catch (BussinessException ex)

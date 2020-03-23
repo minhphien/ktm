@@ -46,7 +46,7 @@ namespace KMS.Product.Ktm.Repository
                 await context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity, bool saveChange = true)
+        public async Task UpdateAsync(T entity, bool saveChange = true)
         {
             if (entity == null)
             {
@@ -58,7 +58,7 @@ namespace KMS.Product.Ktm.Repository
                 await context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity, bool saveChange = true)
+        public async Task DeleteAsync(T entity, bool saveChange = true)
         {
             if (entity == null)
             {

@@ -3,18 +3,19 @@ using KMS.Product.Ktm.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Services.Implement
 {
     public class KudoTypeService : IKudoTypeService
     {
-        private readonly IRepository<KudoType> _kudoTypeRepository;
+        private readonly IKudoTypeRepository _kudoTypeRepository;
 
         /// <summary>
         /// Inject KudoType repository
         /// </summary>
         /// <returns></returns>
-        public KudoTypeService(IRepository<KudoType> kudoTypeRepository)
+        public KudoTypeService(IKudoTypeRepository kudoTypeRepository)
         {
             _kudoTypeRepository = kudoTypeRepository ?? throw new ArgumentNullException($"{nameof(kudoTypeRepository)}");
         }
@@ -23,45 +24,45 @@ namespace KMS.Product.Ktm.Services.Implement
         /// Get all kudo types
         /// </summary>
         /// <returns>Returns a collection of all kudo types</returns>
-        public IEnumerable<KudoType> GetAllKudoTypes()
+        public async Task<IEnumerable<KudoType>> GetAllKudoTypesAsync()
         {
-            return _kudoTypeRepository.GetAll();
+            return await _kudoTypeRepository.GetKudoTypesAsync();
         }
 
         /// <summary>
         /// Get kudo types by id
         /// </summary>
         /// <returns>Returns a kudo type by id</returns>
-        public KudoType GetKudoTypeById(int kudoTypeId)
+        public async Task<KudoType> GetKudoTypeByIdAsync(int kudoTypeId)
         {
-            return _kudoTypeRepository.Get(kudoTypeId);
+            return await _kudoTypeRepository.GetByIdAsync(kudoTypeId);
         }
 
         /// <summary>
         /// Create a new kudo type
         /// </summary>
         /// <returns></returns>
-        public void CreateKudoType(KudoType kudoType)
+        public async Task CreateKudoTypeAsync(KudoType kudoType)
         {
-            _kudoTypeRepository.Insert(kudoType);
+            await _kudoTypeRepository.InsertAsync(kudoType);
         }
 
         /// <summary>
         /// Update an existing kudo type
         /// </summary>
         /// <returns></returns>
-        public void UpdateKudoType(KudoType kudoType)
+        public async Task UpdateKudoTypeAsync(KudoType kudoType)
         {
-            _kudoTypeRepository.Update(kudoType);
+            await _kudoTypeRepository.UpdateAsync(kudoType);
         }
 
         /// <summary>
         /// Delete an existing kudo type
         /// </summary>
         /// <returns></returns>
-        public void DeleteKudoType(KudoType kudoType)
+        public async Task DeleteKudoTypeAsync(KudoType kudoType)
         {
-            _kudoTypeRepository.Delete(kudoType);
+            await _kudoTypeRepository.DeleteAsync(kudoType);
         }
     }
 }

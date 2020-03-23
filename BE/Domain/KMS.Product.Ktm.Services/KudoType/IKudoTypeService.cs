@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Services.Interfaces
 {
@@ -11,30 +12,30 @@ namespace KMS.Product.Ktm.Services.Interfaces
         /// Get all kudo types
         /// </summary>
         /// <returns>Returns a collection of all kudo types</returns>
-        IEnumerable<KudoType> GetAllKudoTypes();
+        Task<IEnumerable<KudoType>> GetAllKudoTypesAsync();
 
         /// <summary>
         /// Get kudo types by id
         /// </summary>
         /// <returns>Returns a kudo type by id</returns>
-        KudoType GetKudoTypeById(int kudoTypeId);
+        Task<KudoType> GetKudoTypeByIdAsync(int kudoTypeId);
 
         /// <summary>
         /// Create a new kudo type
         /// </summary>
         /// <returns></returns>
-        void CreateKudoType(KudoType kudoType);
+        Task CreateKudoTypeAsync(KudoType kudoType);
 
         /// <summary>
         /// Update an existing kudo type
         /// </summary>
         /// <returns></returns>
-        void UpdateKudoType(KudoType kudoType);
+        Task UpdateKudoTypeAsync(KudoType kudoType);
 
         /// <summary>
         /// Delete an existing kudo type
         /// </summary>
         /// <returns></returns>
-        void DeleteKudoType(KudoType kudoType);
+        Task DeleteKudoTypeAsync(KudoType kudoType);
     }
 }
