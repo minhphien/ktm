@@ -58,6 +58,7 @@ namespace KMS.Product.Ktm.Repository
                 throw new ArgumentNullException("entity");
             }
             entity.Modified = DateTime.Now;
+            entities.Update(entity);
             if (saveChange)
                 context.SaveChanges();
         }
