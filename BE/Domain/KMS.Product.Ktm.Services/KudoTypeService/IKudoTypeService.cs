@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KMS.Product.Ktm.Services.Interfaces
+namespace KMS.Product.Ktm.Services.KudoTypeService
 {
     public interface IKudoTypeService
     {

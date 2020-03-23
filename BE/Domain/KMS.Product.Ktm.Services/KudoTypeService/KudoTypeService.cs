@@ -1,11 +1,11 @@
 ﻿using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
-namespace KMS.Product.Ktm.Services.Implement
+namespace KMS.Product.Ktm.Services.KudoTypeService
 {
     public class KudoTypeService : IKudoTypeService
     {

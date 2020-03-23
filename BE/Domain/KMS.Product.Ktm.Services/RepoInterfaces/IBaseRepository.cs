@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KMS.Product.Ktm.Services.Interfaces
+namespace KMS.Product.Ktm.Services.RepoInterfaces
 {
     /// <summary>
     /// An interface of base repository using asynchronous operations for other inteface repositories to inherit

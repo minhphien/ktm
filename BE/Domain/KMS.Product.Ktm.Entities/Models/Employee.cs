@@ -12,7 +12,9 @@ namespace KMS.Product.Ktm.Entities.Models
         public string Email { get; set; }
         public string SlackAccount { get; set; }
         public DateTime JoinedDate { get; set; }
+        public int EmployeeRoleId {get; set;}
 
-        public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
+        public virtual EmployeeRole EmployeeRole { get; set; }
+        public virtual ICollection<EmployeeTeam> employeeTeams { get; set; }
     }
 }

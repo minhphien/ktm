@@ -36,6 +36,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.Property<string>("EmployeeBadgeId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("EmployeeRoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstMidName")
                         .HasColumnType("nvarchar(max)");
 
@@ -53,7 +56,31 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EmployeeRoleId");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("EmployeeRoleId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RoleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeRoles");
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeTeam", b =>
@@ -99,13 +126,10 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("KudoTypeId")
+                    b.Property<int>("KudoDetailId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Modified")
@@ -119,7 +143,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KudoTypeId");
+                    b.HasIndex("KudoDetailId");
 
                     b.HasIndex("ReceiverId")
                         .IsUnique();
@@ -128,6 +152,33 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .IsUnique();
 
                     b.ToTable("Kudos");
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.KudoDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("KudoDetailId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("KudoTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KudoTypeId");
+
+                    b.ToTable("KudoDetails");
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.KudoType", b =>
@@ -174,10 +225,19 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Employee", b =>
+                {
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeRole", "EmployeeRole")
+                        .WithMany("Employees")
+                        .HasForeignKey("EmployeeRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeTeam", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Employee")
-                        .WithMany("EmployeeTeams")
+                        .WithMany("employeeTeams")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -191,9 +251,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Kudo", b =>
                 {
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.KudoType", "KudoType")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.KudoDetail", "KudoDetail")
                         .WithMany("Kudos")
-                        .HasForeignKey("KudoTypeId")
+                        .HasForeignKey("KudoDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -206,6 +266,15 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeTeam", "Sender")
                         .WithOne()
                         .HasForeignKey("KMS.Product.Ktm.Entities.Models.Kudo", "SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.KudoDetail", b =>
+                {
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.KudoType", "KudoType")
+                        .WithMany("Kudos")
+                        .HasForeignKey("KudoTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
