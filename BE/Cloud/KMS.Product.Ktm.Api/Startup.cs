@@ -35,8 +35,9 @@ namespace KMS.Product.Ktm.Api
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddDbContextPool<KtmDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("KMS.Product.Ktm.Repository")));
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IKudoTypeService, KudoTypeService>();
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
