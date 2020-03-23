@@ -16,14 +16,25 @@ namespace KMS.Product.Ktm.Api.Controllers
     {
         private readonly IKudoTypeService _kudoTypeService;
 
+        /// <summary>
+        /// Inject KudoType service
+        /// </summary>
+        /// <returns></returns>
         public KudoTypeController(IKudoTypeService kudoTypeService)
         {
-            _kudoTypeService = kudoTypeService;
+            _kudoTypeService = kudoTypeService ?? throw new ArgumentNullException($"{nameof(kudoTypeService)}");
         }
 
-        // GET: api/KudoType
+        /// <summary>
+        /// Get all kudo types
+        /// GET: api/KudoType
+        /// </summary>
+        /// <returns>
+        /// Success: returns 200 status code with a collection of all kudo types        
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllKudoTypes()
         {
             try
             {
@@ -36,9 +47,17 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
         }
 
-        // GET: api/KudoType/id
+        /// <summary>
+        /// Get a kudo type by id
+        /// GET: api/KudoType/id
+        /// </summary>
+        /// <param name="id">query string</param>
+        /// <returns>
+        /// Success: returns 200 status code with a kudo type 
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetKudoTypeById(int id)
         {
             try
             {
@@ -51,9 +70,17 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
         }
 
-        // POST: api/KudoType
+        /// <summary>
+        /// Create new kudo type
+        /// POST: api/KudoType
+        /// </summary>
+        /// <param name="kudoType">KudoType object body request</param>
+        /// <returns>
+        /// Success: returns 200 status code
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
         [HttpPost]
-        public IActionResult Post(KudoType kudoType)
+        public IActionResult CreateKudoType(KudoType kudoType)
         {
             try
             {
@@ -66,9 +93,15 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
         }
 
-        // PUT: api/KudoType
+        /// <summary>
+        /// Update a kudo type
+        /// PUT: api/KudoType
+        /// </summary>
+        /// <param name="kudoType">KudoType object body request</param>
+        /// Success: returns 200 status code
+        /// Failure: returns 500 status code with an exception message
         [HttpPut]
-        public IActionResult Put(KudoType kudoType)
+        public IActionResult UpdateKudoType(KudoType kudoType)
         {
             try
             {
@@ -81,9 +114,15 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
         }
 
-        // DELETE: api/KudoType
+        /// <summary>
+        /// Delete new kudo type
+        /// DELETE: api/KudoType
+        /// </summary>
+        /// <param name="kudoType">KudoType object body request</param>
+        /// Success: returns 200 status code
+        /// Failure: returns 500 status code with an exception message
         [HttpDelete]
-        public IActionResult Delete(KudoType kudoType)
+        public IActionResult DeleteKudoType(KudoType kudoType)
         {
             try
             {
