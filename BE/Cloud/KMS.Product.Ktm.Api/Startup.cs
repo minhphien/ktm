@@ -13,8 +13,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using KMS.Product.Ktm.Api.Authentication;
 using KMS.Product.Ktm.Repository;
-using KMS.Product.Ktm.Services.Interfaces;
-using KMS.Product.Ktm.Services.Implement;
+using KMS.Product.Ktm.Services.KudoTypeService;
+using KMS.Product.Ktm.Services.KudoService;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -36,8 +37,10 @@ namespace KMS.Product.Ktm.Api
             services.AddDbContextPool<KtmDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("KMS.Product.Ktm.Repository")));
             services.AddScoped<IKudoTypeService, KudoTypeService>();
+            services.AddScoped<IKudoService, KudoService>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
+            services.AddScoped<IKudoRepository, KudoRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -15,10 +15,12 @@ namespace KMS.Product.Ktm.Repository
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeeRole> EmployeeRoles { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<EmployeeTeam> EmployeeTeams { get; set; }
         public DbSet<KudoType> KudoTypes { get; set; }
         public DbSet<Kudo> Kudos { get; set; }
+        public DbSet<KudoDetail> KudoDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

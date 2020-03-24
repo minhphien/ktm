@@ -1,5 +1,5 @@
 ﻿using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.Interfaces;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
