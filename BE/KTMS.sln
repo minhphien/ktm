@@ -23,11 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMS.Product.Ktm.Repository"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMS.Product.Ktm.Utilities", "Infrastructure\KMS.Product.Ktm.Utilities\KMS.Product.Ktm.Utilities.csproj", "{F3AF89FB-8C06-4414-9741-5F8C950DC6AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMS.Product.Ktm.Api.Test", "Test\KMS.Product.Ktm.Api.Test\KMS.Product.Ktm.Api.Test.csproj", "{8B26AA80-A8E1-4041-83EF-111648FE0E37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMS.Product.Ktm.Api.Test", "Test\KMS.Product.Ktm.Api.Test\KMS.Product.Ktm.Api.Test.csproj", "{8B26AA80-A8E1-4041-83EF-111648FE0E37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMS.Product.Ktm.Services.Test", "Test\KMS.Product.Ktm.Services.Test\KMS.Product.Ktm.Services.Test.csproj", "{E919908D-B62A-4479-8DB7-D513F5F5EBA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMS.Product.Ktm.Services.Test", "Test\KMS.Product.Ktm.Services.Test\KMS.Product.Ktm.Services.Test.csproj", "{E919908D-B62A-4479-8DB7-D513F5F5EBA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMS.Product.Ktm.Services", "Domain\KMS.Product.Ktm.Services\KMS.Product.Ktm.Services.csproj", "{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KMS.Product.Ktm.Services", "Domain\KMS.Product.Ktm.Services\KMS.Product.Ktm.Services.csproj", "{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KMS.Product.Ktm.KudosReceiver", "Cloud\KMS.Product.Ktm.KudosReceiver\KMS.Product.Ktm.KudosReceiver.csproj", "{D4470FF3-5676-4DA8-83A3-75CD722FD48D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4470FF3-5676-4DA8-83A3-75CD722FD48D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4470FF3-5676-4DA8-83A3-75CD722FD48D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4470FF3-5676-4DA8-83A3-75CD722FD48D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4470FF3-5676-4DA8-83A3-75CD722FD48D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 		{8B26AA80-A8E1-4041-83EF-111648FE0E37} = {A224E370-3446-4B95-9A3B-437DAC8202C7}
 		{E919908D-B62A-4479-8DB7-D513F5F5EBA6} = {A224E370-3446-4B95-9A3B-437DAC8202C7}
 		{8D59DC4E-4434-4CC4-ABFF-7E7191CD589E} = {730325A8-DAF8-4333-9375-E1294D128DC5}
+		{D4470FF3-5676-4DA8-83A3-75CD722FD48D} = {8C15EB21-B264-419D-8BC7-B8A23753DDE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5C834F6B-E77B-4DB7-9765-9FDBF01046DC}
