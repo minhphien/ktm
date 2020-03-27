@@ -12,11 +12,17 @@ namespace KMS.Product.Ktm.Api.HostedService
     public class EmailHostedService : IHostedService
     {
         private readonly IServiceScopeFactory _scopeFactory;
+
         public EmailHostedService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
 
+        /// <summary>
+        /// start the background task
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = _scopeFactory.CreateScope();
@@ -24,6 +30,11 @@ namespace KMS.Product.Ktm.Api.HostedService
             await iIdleEmailService.RunAsync();
         }
 
+        /// <summary>
+        /// end the background task
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
