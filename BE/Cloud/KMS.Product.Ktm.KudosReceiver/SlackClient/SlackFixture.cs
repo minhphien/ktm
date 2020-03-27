@@ -1,4 +1,5 @@
 ﻿using KMS.Product.Ktm.KudosReceiver.SlackClient.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Polly;
 using SlackAPI;
@@ -11,7 +12,7 @@ using System.Reflection;
 
 namespace KMS.Product.Ktm.KudosReceiver.SlackClient
 {
-    public class IntegrationFixture : IDisposable
+    public class SlackFixture : IDisposable
     {
         private const int MaxConnectionAttempts = 5;
 
@@ -22,9 +23,9 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
 
         private readonly Policy connectRetryPolicy;
 
-        public IntegrationFixture()
+        private SlackFixture(IConfiguration configuration)
         {
-            this.Config = this.GetConfig();
+            this.Config = this.GetConfig(configuration);
 
             this.connectRetryPolicy = Policy
                 .Handle<InvalidOperationException>(exception => exception.Message.Contains("ratelimited"))
@@ -37,6 +38,16 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
             this.botClientAsync = new Lazy<SlackTaskClient>(() => new SlackTaskClient(this.Config.BotAuthToken));
         }
 
+        static SlackFixture instance = null;
+        
+        public static SlackFixture Instance()
+        {
+            return instance;
+        }
+        public static void Initialize(IConfiguration configuration)
+        {
+            instance ??= new SlackFixture(configuration);
+        }
         public SlackConfig Config { get; }
 
         public TimeSpan ConnectionTimeout => TimeSpan.FromSeconds(Enumerable.Range(1, MaxConnectionAttempts).Sum(ComputeExponentialBackoff)) + TimeSpan.FromSeconds(10); // Maximum exponential backoff + 10 seconds for connections attemps
@@ -84,15 +95,11 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
             }
         }
 
-        private SlackConfig GetConfig()
+        private SlackConfig GetConfig(IConfiguration configuration)
         {
-            var currentAssembly = this.GetType().GetTypeInfo().Assembly.Location;
-            var assemblyDirectory = Path.GetDirectoryName(currentAssembly);
-            string fileName = Path.Combine(assemblyDirectory, @"configuration\config.json");
-            string json = System.IO.File.ReadAllText(fileName);
-
-            var jsonObject = new { slack = (SlackConfig)null };
-            return JsonConvert.DeserializeAnonymousType(json, jsonObject).slack;
+            var slackConfig = new SlackConfig();
+            configuration.GetSection("slack")?.Bind(slackConfig);
+            return slackConfig;
         }
 
         private SlackSocketClient CreateClient(string authToken, IWebProxy proxySettings = null, bool maintainPresenceChanges = false, Action<SlackSocketClient, PresenceChange> presenceChanged = null)
@@ -140,6 +147,25 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
         {
             // Retries after 4, 8, 16, 32, 64... seconds
             return 2 * (int)Math.Pow(2, retryAttempt);
+        }
+        public void StartUserListening()
+        {
+            UserClient.OnMessageReceived += Client_OnMessageReceived;
+        }
+        private void Client_OnMessageReceived(NewMessage message)
+        {
+            Console.WriteLine($"Received {message?.text} from channel {message?.channel} by {message?.username}.");
+            if (IsKudosMessage(message?.text) && string.IsNullOrEmpty(message.username))
+            {
+                UserClient.PostMessage(sentResponse =>
+                {
+                    Console.WriteLine("Auto replied.");
+                }, message?.channel, "thanks for :clap:!");
+            }
+        }
+        private static bool IsKudosMessage(string value)
+        {
+            return value?.Contains(":clap:") ?? false;
         }
     }
 }
