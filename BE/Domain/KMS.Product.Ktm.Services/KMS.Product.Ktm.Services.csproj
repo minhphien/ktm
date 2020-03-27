@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mailkit" Version="2.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
   </ItemGroup>
 
