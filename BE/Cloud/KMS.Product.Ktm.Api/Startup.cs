@@ -48,6 +48,8 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
             services.AddScoped<IKudoRepository, KudoRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
