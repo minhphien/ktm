@@ -11,5 +11,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
         Task<IEnumerable<Kudo>> GetKudosAsync();
+
+        /// <summary>
+        /// insert mutiply kudo
+        /// </summary>
+        /// <param name="kudos"></param>
+        /// <returns></returns>
+        Task InsertKudos(IEnumerable<Kudo> kudo);
     }
 }

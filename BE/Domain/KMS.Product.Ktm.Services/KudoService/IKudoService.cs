@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Entities.Common;
 
 namespace KMS.Product.Ktm.Services.KudoService
 {
@@ -35,5 +36,12 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// </summary>
         /// <returns></returns>
         Task DeleteKudoAsync(Kudo kudo);
+        
+        /// <summary>
+        /// add kudos from emails
+        /// </summary>
+        /// <param name="emails"></param>
+        /// <returns></returns>
+        Task InsertKudoFromEmails(List<EmailMessage> emails);
     }
 }

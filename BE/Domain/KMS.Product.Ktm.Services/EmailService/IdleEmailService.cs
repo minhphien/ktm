@@ -3,17 +3,21 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
+using MimeKit;
 using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Security;
 using KMS.Product.Ktm.Entities.Configurations;
+using KMS.Product.Ktm.Entities.Common;
+using KMS.Product.Ktm.Services.KudoService;
 
 namespace KMS.Product.Ktm.Services.EmailService
 {
 	public class IdleEmailService : IIdleEmailService, IDisposable
 	{
 		private readonly IEmailConfiguration _emailConfiguration;
-		private readonly IEmailService _emailService;
+		private readonly IKudoService _kudoService;
 		private readonly SecureSocketOptions sslOptions;
 		private readonly List<IMessageSummary> messages;
 		private readonly CancellationTokenSource cancel;
@@ -21,10 +25,10 @@ namespace KMS.Product.Ktm.Services.EmailService
 		private CancellationTokenSource done;
 		private bool messagesArrived;
 
-		public IdleEmailService(IEmailConfiguration emailConfiguration, IEmailService emailService)
+		public IdleEmailService(IEmailConfiguration emailConfiguration, IKudoService kudoService)
 		{
 			_emailConfiguration = emailConfiguration;
-			_emailService = emailService;
+			_kudoService = kudoService;
 			sslOptions = SecureSocketOptions.Auto;
 			messages = new List<IMessageSummary>();
 			cancel = new CancellationTokenSource();
@@ -112,14 +116,27 @@ namespace KMS.Product.Ktm.Services.EmailService
 				}
 			} while (true);
 
+			var emails = new List<EmailMessage>();
 			foreach (var message in fetched)
 			{
 				if (!firstTime)
 				{
 					var detail = await client.Inbox.GetMessageAsync(message.Index);
-					//TODO: insert data into DB
+					var emailMessage = new EmailMessage
+					{
+						Content = !string.IsNullOrEmpty(detail.HtmlBody) ? detail.HtmlBody : detail.TextBody,
+						Subject = detail.Subject
+					};
+					emailMessage.ToAddresses.AddRange(detail.To.Select(x => (MailboxAddress)x).Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));
+					emailMessage.FromAddresses.AddRange(detail.From.Select(x => (MailboxAddress)x).Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));
+					emails.Add(emailMessage);
 				}
 				messages.Add(message);
+			}
+			
+			if(emails.Count > 0)
+			{
+				await _kudoService.InsertKudoFromEmails(emails);
 			}
 		}
 
