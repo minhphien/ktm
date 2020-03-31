@@ -13,8 +13,9 @@ namespace KMS.Product.Ktm.Entities.Models
         public string SlackAccount { get; set; }
         public DateTime JoinedDate { get; set; }
         public int EmployeeRoleId {get; set;}
+        public string CurrentTeam { get; set; }
 
         public virtual EmployeeRole EmployeeRole { get; set; }
-        public virtual ICollection<EmployeeTeam> employeeTeams { get; set; }
+        public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
     }
 }

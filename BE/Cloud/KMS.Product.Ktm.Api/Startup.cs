@@ -19,6 +19,10 @@ using KMS.Product.Ktm.Services.KudoTypeService;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
+using AutoMapper;
+using KMS.Product.Ktm.Utilities.AutoMapper;
+using KMS.Product.Ktm.Services.TeamService;
+using KMS.Product.Ktm.Services.EmployeeService;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -45,11 +49,14 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IKudoService, KudoService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IIdleEmailService, IdleEmailService>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
             services.AddScoped<IKudoRepository, KudoRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
