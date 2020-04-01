@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.LoginService;
+using KMS.Product.Ktm.EntitiesServices.DTOs;
+using KMS.Product.Ktm.EntitiesServices.Responses;
+using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using Newtonsoft.Json;
 using System;
@@ -18,17 +20,19 @@ namespace KMS.Product.Ktm.Services.TeamService
     {
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
-        private readonly ILoginService _loginService;
+        private readonly IAuthenticateService _authenticateService;
+
+        public const string KmsTeamRequestUrl = "https://hr.kms-technology.com/api/projects/ReturnListProjectClient";
 
         /// <summary>
-        /// Inject Team repository
+        /// Inject Team repository, AutoMapper, Authenticate service
         /// </summary>
         /// <returns></returns>
-        public TeamService(ITeamRepository teamRepository, IMapper mapper, ILoginService loginService)
+        public TeamService(ITeamRepository teamRepository, IMapper mapper, IAuthenticateService authenticateService)
         {
             _teamRepository = teamRepository ?? throw new ArgumentNullException($"{nameof(teamRepository)}");
             _mapper = mapper ?? throw new ArgumentNullException($"{nameof(mapper)}");
-            _loginService = loginService ?? throw new ArgumentNullException($"{nameof(loginService)}");
+            _authenticateService = authenticateService ?? throw new ArgumentNullException($"{nameof(authenticateService)}");
         }
 
         /// <summary>
@@ -43,14 +47,13 @@ namespace KMS.Product.Ktm.Services.TeamService
         /// <summary>
         /// Get team by id
         /// </summary>
-        /// <returns>An team by id</returns>
+        /// <returns>Team by id</returns>
         public async Task<Team> GetTeamByIdAsync(int teamId)
         {
             return await _teamRepository.GetByIdAsync(teamId);
         }
-
         /// <summary>
-        /// Create team
+        /// Create a new team
         /// </summary>
         /// <returns></returns>
         public async Task CreateTeamAsync(Team team)
@@ -59,7 +62,7 @@ namespace KMS.Product.Ktm.Services.TeamService
         }
 
         /// <summary>
-        /// Update team
+        /// Update an existent team
         /// </summary>
         /// <returns></returns>
         public async Task UpdateTeamAsync(Team team)
@@ -68,7 +71,7 @@ namespace KMS.Product.Ktm.Services.TeamService
         }
 
         /// <summary>
-        /// Delete team
+        /// Delete an existent team
         /// </summary>
         /// <returns></returns>
         public async Task DeleteTeamAsync(Team team)
@@ -77,16 +80,17 @@ namespace KMS.Product.Ktm.Services.TeamService
         }
 
         /// <summary>
-        /// Get team Id from team name
+        /// Get team id from team name
         /// </summary>
         /// <param name="teamName"></param>
         /// <returns>
         /// If team exists, return team id
-        /// Else, create new team and return new team id
-        /// </returns>
+        /// Else, create a new team and return that new team id
+        /// </returns>s
         public async Task<int> GetTeamIdByTeamNameAsync(string teamName)
         {
             var team = (await _teamRepository.GetTeamsByConditionAsync(t => t.TeamName == teamName)).SingleOrDefault();
+
             if (team.Equals(null))
             {
                 var newTeam = new Team()
@@ -96,85 +100,23 @@ namespace KMS.Product.Ktm.Services.TeamService
                 await CreateTeamAsync(newTeam);
                 return newTeam.Id;
             }
+
             return team.Id;
         }
 
         /// <summary>
-        /// Get all teams from KMS HRM system
-        /// https://hr.kms-technology.com/api/projects/ReturnListProjectClient
-        /// </summary>
-        /// <returns>A collection of all teams from KMS HRM system</returns>
-        public async Task<IEnumerable<TeamFromKmsDto>> GetTeamsFromKmsAsync()
-        {
-            var teamsFromKms = new List<TeamFromKmsDto>();
-            // Initialize httpclient with token from login service to send request to KMS HRM 
-            //var bearerToken = await _loginService.LoginWithConfiguration();
-            var bearerToken = _loginService.LoginWithTokens();
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-            var requestUrl = "https://hr.kms-technology.com/api/projects/ReturnListProjectClient";
-            var response = await client.GetAsync(requestUrl);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                // Convert response JSON to object
-                var contentString = await response.Content.ReadAsStringAsync();
-                var kmsTeamResponse = JsonConvert.DeserializeObject<TeamFromKmsResponse>(contentString);
-                // Add KMS teams to list
-                var kmsTeamDtos = kmsTeamResponse.KmsTeamDtos;
-                teamsFromKms.AddRange(kmsTeamDtos);
-            }
-            return teamsFromKms;
-        }
-
-        /// <summary>
-        /// Add new teams from KMS 
-        /// </summary>
-        /// <param name="newTeams"></param>
-        /// <returns></returns>
-        public async Task SyncNewTeams(IEnumerable<Team> newTeams)
-        {
-            foreach (var newTeam in newTeams)
-            {
-                await CreateTeamAsync(newTeam);
-            }
-        }
-
-        /// <summary>
-        /// Update teams in database from KMS
-        /// </summary>
-        /// <param name="currentTeams"></param>
-        /// <returns></returns>
-        public async Task SyncCurrentTeams(IEnumerable<Team> currentTeams)
-        {
-            foreach (var currentTeam in currentTeams)
-            {
-                await UpdateTeamAsync(currentTeam);
-            }
-        }
-
-        /// <summary>
-        /// Update quit employee in database by setting released date to current
-        /// </summary>
-        /// <param name="quitTeams"></param>
-        /// <returns></returns>
-        public async Task SyncQuitTeams(IEnumerable<Team> quitTeams)
-        {
-            foreach (var oldTeam in quitTeams)
-            {
-                await UpdateTeamAsync(oldTeam);
-            }
-        }
-
-        /// <summary>
-        /// Add new teams to database from list of all teams after GET request to KMS HRM API
-        /// If team's badge is not in database, it is a new team 
+        /// There are 3 cases when syncing:
+        /// 1. New teams
+        ///     Add new teams to database
+        /// 2. Active teams
+        /// 3. Disband teams
         /// </summary>
         /// <returns></returns>
         public async Task SyncTeamDatabaseWithKmsAsync()
         {
-            // Fetch employees from KMS and map from DTO to Employee
+            // Fetch teams from KMS and map from DTO to Team
             var fetchedTeamsDto = await GetTeamsFromKmsAsync();
-            var fetchedTeams = _mapper.Map<IEnumerable<TeamFromKmsDto>, IEnumerable<Team>>(fetchedTeamsDto);
+            var fetchedTeams = _mapper.Map<IEnumerable<KmsTeamDTO>, IEnumerable<Team>>(fetchedTeamsDto);
             // Get teams from database
             var databaseTeams = await GetAllTeamsAsync();
             // Get team names
@@ -183,12 +125,77 @@ namespace KMS.Product.Ktm.Services.TeamService
             // Sync new teams
             var newTeams = fetchedTeams.Where(e => !databaseTeamNames.Contains(e.TeamName));
             await SyncNewTeams(newTeams);
-            // Sync current teams
-            var currentTeams = fetchedTeams.Where(e => databaseTeamNames.Contains(e.TeamName));
-            await SyncCurrentTeams(currentTeams);
-            // Sync quit teams
-            var quitTeams = databaseTeams.Where(e => !fetchedTeamNames.Contains(e.TeamName));
-            await SyncQuitTeams(quitTeams);
+            // Sync active teams
+            var activeTeams = fetchedTeams.Where(e => databaseTeamNames.Contains(e.TeamName));
+            await SyncActiveTeams(activeTeams);
+            // Sync disband teams
+            var disbandTeams = databaseTeams.Where(e => !fetchedTeamNames.Contains(e.TeamName));
+            await SyncDisbandTeams(disbandTeams);
+        }
+
+        /// <summary>
+        /// Get all teams from KMS by KMS API
+        /// API: https://hr.kms-technology.com/api/projects/ReturnListProjectClient
+        /// </summary>
+        /// <returns>A collection of all KMS team DTOs</returns>
+        private async Task<IEnumerable<KmsTeamDTO>> GetTeamsFromKmsAsync()
+        {
+            var KmsTeamDTOs = new List<KmsTeamDTO>();
+            // Initialize httpclient with token from login service to send request to KMS HRM 
+            var bearerToken = _authenticateService.AuthenticateUsingToken();
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+            var response = await client.GetAsync(KmsTeamRequestUrl);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                // Convert response JSON to object
+                var contentString = await response.Content.ReadAsStringAsync();
+                var kmsTeamResponse = JsonConvert.DeserializeObject<KmsTeamResponse>(contentString);
+                // Add KMS team DTOs to list
+                KmsTeamDTOs.AddRange(kmsTeamResponse.KmsTeamDTOs);
+            }
+
+            return KmsTeamDTOs;
+        }
+
+        /// <summary>
+        /// Add new teams from KMS 
+        /// </summary>
+        /// <param name="newTeams"></param>
+        /// <returns></returns>
+        private async Task SyncNewTeams(IEnumerable<Team> newTeams)
+        {
+            foreach (var newTeam in newTeams)
+            {
+                await CreateTeamAsync(newTeam);
+            }
+        }
+
+        /// <summary>
+        /// Update active teams in database 
+        /// </summary>
+        /// <param name="activeTeams"></param>
+        /// <returns></returns>
+        private async Task SyncActiveTeams(IEnumerable<Team> activeTeams)
+        {
+            foreach (var activeTeam in activeTeams)
+            {
+                await UpdateTeamAsync(activeTeam);
+            }
+        }
+
+        /// <summary>
+        /// Update disband teams in database 
+        /// </summary>
+        /// <param name="disbandTeams"></param>
+        /// <returns></returns>
+        private async Task SyncDisbandTeams(IEnumerable<Team> disbandTeams)
+        {
+            foreach (var disband in disbandTeams)
+            {
+                await UpdateTeamAsync(disband);
+            }
         }
     }
 }

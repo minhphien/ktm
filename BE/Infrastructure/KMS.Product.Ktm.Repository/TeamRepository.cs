@@ -27,7 +27,7 @@ namespace KMS.Product.Ktm.Repository
         /// <summary>
         /// Get all teams by condition
         /// </summary>
-        /// <returns>A collection of all teams</returns>
+        /// <returns>A collection of all teams by condition</returns>
         public async Task<IEnumerable<Team>> GetTeamsByConditionAsync(Expression<Func<Team, bool>> expression)
         {
             return await Task.FromResult(GetByCondition(expression).ToList());

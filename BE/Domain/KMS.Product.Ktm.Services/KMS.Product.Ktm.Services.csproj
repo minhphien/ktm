@@ -7,11 +7,11 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Mailkit" Version="2.5.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\KMS.Product.Ktm.EntitiesServices\KMS.Product.Ktm.EntitiesServices.csproj" />
     <ProjectReference Include="..\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
   </ItemGroup>
 

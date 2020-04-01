@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.LoginService;
+using KMS.Product.Ktm.EntitiesServices.DTOs;
+using KMS.Product.Ktm.EntitiesServices.Responses;
+using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using KMS.Product.Ktm.Services.TeamService;
 using Newtonsoft.Json;
@@ -19,18 +21,20 @@ namespace KMS.Product.Ktm.Services.EmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
-        private readonly ILoginService _loginService;
+        private readonly IAuthenticateService _authenticateService;
         private readonly ITeamService _teamService;
 
+        public const string KmsEmployeeRequestUrl = "https://hr.kms-technology.com/api/contact/ReturnContactList";
+
         /// <summary>
-        /// Inject Employee repository
+        /// Inject Employee repository, AutoMapper, Authenticate service, Team service
         /// </summary>
         /// <returns></returns>
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, ILoginService loginService, ITeamService teamService)
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper, IAuthenticateService authenticateService, ITeamService teamService)
         {
             _employeeRepository = employeeRepository ?? throw new ArgumentNullException($"{nameof(employeeRepository)}");
             _mapper = mapper ?? throw new ArgumentNullException($"{nameof(mapper)}");
-            _loginService = loginService ?? throw new ArgumentNullException($"{nameof(loginService)}");
+            _authenticateService = authenticateService ?? throw new ArgumentNullException($"{nameof(authenticateService)}");
             _teamService = teamService ?? throw new ArgumentNullException($"{nameof(teamService)}");
         }
 
@@ -44,16 +48,16 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         }
 
         /// <summary>
-        /// Get an employee by id
+        /// Get employee by id
         /// </summary>
-        /// <returns>An employee by id</returns>
+        /// <returns>Employee by id</returns>
         public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
         {
             return await _employeeRepository.GetByIdAsync(employeeId);
         }
 
         /// <summary>
-        /// Create an employee
+        /// Create a new employee
         /// </summary>
         /// <returns></returns>
         public async Task CreateEmployeeAsync(Employee employee)
@@ -62,7 +66,7 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         }
 
         /// <summary>
-        /// Update an employee
+        /// Update an existing employee
         /// </summary>
         /// <returns></returns>
         public async Task UpdateEmployeeAsync(Employee employee)
@@ -71,7 +75,7 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         }
 
         /// <summary>
-        /// Delete an employee
+        /// Delete an existing employee
         /// </summary>
         /// <returns></returns>
         public async Task DeleteEmployeeAsync(Employee employee)
@@ -80,42 +84,76 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         }
 
         /// <summary>
-        /// Get all employees from KMS HRM system
-        /// https://hr.kms-technology.com/api/contact/ReturnContactList/{pageIndex}/{pageSize}
-        /// Index: 1
-        /// Page size: 10
+        /// There are 3 cases when syncing:
+        /// 1. New employees
+        ///     Add new employee to database
+        /// 2. Active employees
+        ///     If join new team
+        ///         Update released date of the current team to now
+        ///         Add new join team
+        /// 3. Quit employees
+        ///     Update release date of the current team to now
         /// </summary>
-        /// <returns>A collection of all employess from KMS HRM system</returns>
-        public async Task<IEnumerable<EmployeeFromKmsDto>> GetEmployeesFromKmsAsync()
+        /// <returns></returns>
+        public async Task SyncEmployeeDatabaseWithKms()
         {
-            var employeesFromKms = new List<EmployeeFromKmsDto>();
+            // Fetch employees from KMS and map from DTO to Employee
+            var fetchedEmployeeDTOs = await GetEmployeesFromKmsAsync();
+            var fetchedEmployees = _mapper.Map<IEnumerable<KmsEmployeeDTO>, IEnumerable<Employee>>(fetchedEmployeeDTOs);
+            // Get employees from database
+            var databaseEmployees = await GetAllEmployeesAsync();
+            // Get employee badge ids
+            var fetchedEmployeeBadgeIds = fetchedEmployees.Select(e => e.EmployeeBadgeId);
+            var databaseEmployeeBadgeIds = databaseEmployees.Select(e => e.EmployeeBadgeId);
+            // Sync new employees
+            var newEmployees = fetchedEmployees.Where(e => !databaseEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
+            await SyncNewEmployees(newEmployees);
+            // Sync active employees 
+            var activeEmployees = fetchedEmployees.Where(e => databaseEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
+            await SyncActiveEmployees(activeEmployees);
+            // Sync quit employees
+            var quitEmployees = databaseEmployees.Where(e => !fetchedEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
+            await SyncQuitEmployees(quitEmployees);
+        }
+
+        /// <summary>
+        /// Get all teams from KMS by KMS API
+        /// API: https://hr.kms-technology.com/api/contact/ReturnContactList/{pageIndex}/{pageSize}
+        ///     Default page index: 1
+        ///     Default page size: 10
+        /// </summary>
+        /// <returns>A collection of all KMS employee DTOs</returns>
+        private async Task<IEnumerable<KmsEmployeeDTO>> GetEmployeesFromKmsAsync()
+        {
+            var KmsEmployeeDTOs = new List<KmsEmployeeDTO>();
             // Initialize query string for request to KMS HRM API
             var pageIndex = 1;
             var pageSize = 100;
             var totalCount = 0;
             // Initialize httpclient with token to send request to KMS HRM 
-            //var bearerToken = await _loginService.LoginWithConfiguration();
-            var bearerToken = _loginService.LoginWithTokens();
+            var bearerToken = _authenticateService.AuthenticateUsingToken();
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+
             do
             {
-                var requestUrl = $"https://hr.kms-technology.com/api/contact/ReturnContactList/{pageIndex}/{pageSize}";
-                var response = await client.GetAsync(requestUrl);
+                var response = await client.GetAsync($"{KmsEmployeeRequestUrl}/{pageIndex}/{pageSize}");
+
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     // Convert response JSON to object and get total count
                     var contentString = await response.Content.ReadAsStringAsync();
-                    var kmsEmployeeResponse = JsonConvert.DeserializeObject<EmployeeFromKmsResponse>(contentString);
+                    var kmsEmployeeResponse = JsonConvert.DeserializeObject<KmsEmployeeResponse>(contentString);
                     totalCount = kmsEmployeeResponse.TotalCount;
-                    // Add KMS employees to list
-                    var kmsEmployeeDtos = kmsEmployeeResponse.KmsEmployeeDtos;
-                    employeesFromKms.AddRange(kmsEmployeeDtos);
+                    // Add KMS employee DTOs to list
+                    KmsEmployeeDTOs.AddRange(kmsEmployeeResponse.KmsEmployeeDTOs);
                     // Prepare next request
                     pageIndex += 1;
                 }
+
             } while (totalCount >= (pageSize * (pageIndex - 1)));
-            return employeesFromKms;
+
+            return KmsEmployeeDTOs;
         }
 
         /// <summary>
@@ -123,7 +161,7 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         /// </summary>
         /// <param name="newEmployees"></param>
         /// <returns></returns>
-        public async Task SyncNewEmployees(IEnumerable<Employee> newEmployees)
+        private async Task SyncNewEmployees(IEnumerable<Employee> newEmployees)
         {
             foreach (var newEmployee in newEmployees)
             {
@@ -140,41 +178,46 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         }
 
         /// <summary>
-        /// Update employees in database from KMS
+        /// Update active employees in database 
+        /// If the employee joins new team
+        ///     Update released date of curernt team to now
+        ///     Add new join team
         /// </summary>
-        /// <param name="currentEmployees"></param>
+        /// <param name="activeEmployees"></param>
         /// <returns></returns>
-        public async Task SyncCurrentEmployees(IEnumerable<Employee> currentEmployees)
+        private async Task SyncActiveEmployees(IEnumerable<Employee> activeEmployees)
         {
-            foreach (var currentEmployee in currentEmployees)
-            {            
-                var currentTeam = currentEmployee.CurrentTeam;
+            foreach (var activeEmployee in activeEmployees)
+            {
+                var currentTeam = activeEmployee.CurrentTeam;
                 var currentTeamId = await _teamService.GetTeamIdByTeamNameAsync(currentTeam);
+
                 // Employee joins new team
-                if (! currentEmployee.EmployeeTeams.Select(e => e.TeamID).Contains(currentTeamId))
+                if (!activeEmployee.EmployeeTeams.Select(e => e.TeamID).Contains(currentTeamId))
                 {
-                    // Update released date of current team
-                    currentEmployee.EmployeeTeams.OrderByDescending(e => e.JoinedDate)
+                    // Update released date of current team to now
+                    activeEmployee.EmployeeTeams.OrderByDescending(e => e.JoinedDate)
                        .FirstOrDefault()
                        .ReleseadDate = DateTime.Now;
-                    // Add new team
-                    currentEmployee.EmployeeTeams.Add(new EmployeeTeam()
+                    // Add new join team
+                    activeEmployee.EmployeeTeams.Add(new EmployeeTeam()
                     {
                         TeamID = currentTeamId,
                         JoinedDate = DateTime.Now,
                         ReleseadDate = null
                     });
                 }
-                await UpdateEmployeeAsync(currentEmployee);
+
+                await UpdateEmployeeAsync(activeEmployee);
             }
         }
 
         /// <summary>
-        /// Update quit employee in database by setting released date to current
+        /// Update quit employee in database by setting released date to now
         /// </summary>
         /// <param name="quitEmployees"></param>
         /// <returns></returns>
-        public async Task SyncQuitEmployees(IEnumerable<Employee> quitEmployees)
+        private async Task SyncQuitEmployees(IEnumerable<Employee> quitEmployees)
         {
             foreach (var oldEmployee in quitEmployees)
             {
@@ -183,39 +226,6 @@ namespace KMS.Product.Ktm.Services.EmployeeService
                       .ReleseadDate = DateTime.Now;
                 await UpdateEmployeeAsync(oldEmployee);
             }
-        }
-
-        /// <summary>
-        /// There are 3 cases when syncing:
-        /// 1. New employees
-        ///     Add new employee to database
-        /// 2. Current employees
-        ///     If join new team
-        ///         Update released date of the current team 
-        ///         Add new team
-        /// 3. Quit employees
-        ///     Update release date
-        /// </summary>
-        /// <returns></returns>
-        public async Task SyncEmployeeDatabaseWithKms()
-        {
-            // Fetch employees from KMS and map from DTO to Employee
-            var fetchedEmployeesDto = await GetEmployeesFromKmsAsync();
-            var fetchedEmployees = _mapper.Map<IEnumerable<EmployeeFromKmsDto>, IEnumerable<Employee>>(fetchedEmployeesDto);
-            // Get employees from database
-            var databaseEmployees = await GetAllEmployeesAsync();
-            // Get employee badge ids
-            var fetchedEmployeeBadgeIds = fetchedEmployees.Select(e => e.EmployeeBadgeId);
-            var databaseEmployeeBadgeIds = databaseEmployees.Select(e => e.EmployeeBadgeId);
-            // Sync new employees
-            var newEmployees = fetchedEmployees.Where(e => !databaseEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
-            await SyncNewEmployees(newEmployees);
-            // Sync current employees 
-            var currentEmployees = fetchedEmployees.Where(e => databaseEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
-            await SyncCurrentEmployees(currentEmployees);
-            // Sync quit employees
-            var quitEmployees = databaseEmployees.Where(e => !fetchedEmployeeBadgeIds.Contains(e.EmployeeBadgeId));
-            await SyncQuitEmployees(quitEmployees);
         }
     }
 }

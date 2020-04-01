@@ -15,42 +15,45 @@ namespace KMS.Product.Ktm.Services.TeamService
         Task<IEnumerable<Team>> GetAllTeamsAsync();
 
         /// <summary>
-        /// Get a team by id
+        /// Get team by id
         /// </summary>
-        /// <returns>An team by id</returns>
+        /// <returns>Team by id</returns>
         Task<Team> GetTeamByIdAsync(int teamId);
 
         /// <summary>
-        /// Create a team
+        /// Create a new team
         /// </summary>
         /// <returns></returns>
         Task CreateTeamAsync(Team team);
 
         /// <summary>
-        /// Update a team
+        /// Update an existing team
         /// </summary>
         /// <returns></returns>
         Task UpdateTeamAsync(Team team);
 
         /// <summary>
-        /// Delete a team
+        /// Delete an existing team
         /// </summary>
         /// <returns></returns>
         Task DeleteTeamAsync(Team team);
 
         /// <summary>
-        /// Get team Id from team name
+        /// Get team id from team name
         /// </summary>
         /// <param name="teamName"></param>
         /// <returns>
         /// If team exists, return team id
-        /// Else, create new team and return new team id
+        /// Else, create a new team and return that new team id
         /// </returns>
         Task<int> GetTeamIdByTeamNameAsync(string teamName);
 
         /// <summary>
-        /// Add new teams to database from list of all teams after GET request to KMS HRM API
-        /// If team's badge is not in database, it is a new team 
+        /// There are 3 cases when syncing:
+        /// 1. New teams
+        ///     Add new teams to database
+        /// 2. Active teams
+        /// 3. Disband teams
         /// </summary>
         /// <returns></returns>
         Task SyncTeamDatabaseWithKmsAsync();

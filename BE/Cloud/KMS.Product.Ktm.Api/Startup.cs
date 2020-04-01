@@ -20,9 +20,10 @@ using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using AutoMapper;
-using KMS.Product.Ktm.Utilities.AutoMapper;
 using KMS.Product.Ktm.Services.TeamService;
 using KMS.Product.Ktm.Services.EmployeeService;
+using KMS.Product.Ktm.Services.AutoMapper;
+using KMS.Product.Ktm.Services.AuthenticateService;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -49,6 +50,7 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IKudoService, KudoService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IIdleEmailService, IdleEmailService>();
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

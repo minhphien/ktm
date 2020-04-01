@@ -15,9 +15,9 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         Task<IEnumerable<Employee>> GetAllEmployeesAsync();
 
         /// <summary>
-        /// Get an employee by id
+        /// Get employee by id
         /// </summary>
-        /// <returns>An employee by id</returns>
+        /// <returns>Employee by id</returns>
         Task<Employee> GetEmployeeByIdAsync(int employeeId);
 
         /// <summary>
@@ -39,8 +39,15 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         Task DeleteEmployeeAsync(Employee employee);
 
         /// <summary>
-        /// Update existing employees' information in the database from list of all employees after GET request to KMS HRM API
-        /// Only update if the information changes
+        /// There are 3 cases when syncing:
+        /// 1. New employees
+        ///     Add new employee to database
+        /// 2. Active employees
+        ///     If join new team
+        ///         Update released date of the current team to now
+        ///         Add new join team
+        /// 3. Quit employees
+        ///     Update release date of the current team to now
         /// </summary>
         /// <returns></returns>
         Task SyncEmployeeDatabaseWithKms();
