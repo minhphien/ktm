@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using KMS.Product.Ktm.KudosReceiver.SlackClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,9 +9,21 @@ namespace KMS.Product.Ktm.KudosReceiver
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json",
+                         optional: false,
+                         reloadOnChange: true)
+            .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -25,6 +32,7 @@ namespace KMS.Product.Ktm.KudosReceiver
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            SlackFixture.Initialize(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,14 +48,15 @@ namespace KMS.Product.Ktm.KudosReceiver
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            SlackFixture.Initialize(Configuration);
-            SlackFixture.Instance().StartUserListening();
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("api", "slack/{controller=Home}/{action=Index}");
+                endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
 

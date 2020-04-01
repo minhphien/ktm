@@ -1,18 +1,16 @@
 ﻿using KMS.Product.Ktm.KudosReceiver.SlackClient.Models;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Polly;
 using SlackAPI;
 using SlackAPI.WebSocketMessages;
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 
 namespace KMS.Product.Ktm.KudosReceiver.SlackClient
 {
-    public class SlackFixture : IDisposable
+    public class SlackFixture
     {
         private const int MaxConnectionAttempts = 5;
 
@@ -36,9 +34,24 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
             this.botClient = new Lazy<SlackSocketClient>(() => connectRetryPolicy.Execute(() => this.CreateClient(this.Config.BotAuthToken)));
             this.userClientAsync = new Lazy<SlackTaskClient>(() => new SlackTaskClient(this.Config.UserAuthToken));
             this.botClientAsync = new Lazy<SlackTaskClient>(() => new SlackTaskClient(this.Config.BotAuthToken));
+            PopulateData();
+        }
+
+        private void PopulateData()
+        {
+            using (var syncClient = new InSync($"{nameof(SlackFixture.PopulateData)} - Connected callback"))
+            {
+                this.UserClient.GetUserList(list =>
+                {
+                    Console.WriteLine($"Obtained user list. Count: {list?.members?.Length}");
+                    this.Users = list?.members?.ToDictionary(x => x.name, x => x);
+                });
+                syncClient.Proceed();
+            }
         }
 
         static SlackFixture instance = null;
+        public Dictionary<string, User> Users { get; set; }
         
         public static SlackFixture Instance()
         {
@@ -148,24 +161,8 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
             // Retries after 4, 8, 16, 32, 64... seconds
             return 2 * (int)Math.Pow(2, retryAttempt);
         }
-        public void StartUserListening()
-        {
-            UserClient.OnMessageReceived += Client_OnMessageReceived;
-        }
-        private void Client_OnMessageReceived(NewMessage message)
-        {
-            Console.WriteLine($"Received {message?.text} from channel {message?.channel} by {message?.username}.");
-            if (IsKudosMessage(message?.text) && string.IsNullOrEmpty(message.username))
-            {
-                UserClient.PostMessage(sentResponse =>
-                {
-                    Console.WriteLine("Auto replied.");
-                }, message?.channel, "thanks for :clap:!");
-            }
-        }
-        private static bool IsKudosMessage(string value)
-        {
-            return value?.Contains(":clap:") ?? false;
-        }
+        
+        
+        
     }
 }
