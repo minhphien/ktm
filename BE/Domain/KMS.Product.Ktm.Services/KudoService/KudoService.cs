@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Linq.Expressions;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Entities.Common;
+using KMS.Product.Ktm.Entities.DTO;
 
 namespace KMS.Product.Ktm.Services.KudoService
 {
@@ -69,6 +71,26 @@ namespace KMS.Product.Ktm.Services.KudoService
         }
 
         /// <summary>
+        /// Get kudos for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        public async Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+            DateTime? dateFrom, 
+            DateTime? dateTo, 
+            List<int> teamIds, 
+            List<int> kudoTypeIds)
+        {
+            if(dateFrom != null && dateTo != null)
+            {
+                return await _kudoRepository.GetKudosForReportWithDateRange(dateFrom, dateTo, teamIds, kudoTypeIds);
+            }
+            else
+            {
+                return await _kudoRepository.GetKudosForReport(teamIds, kudoTypeIds);
+            }
+        }
+
+        /// <summary>
         /// add kudos from emails
         /// </summary>
         /// <param name="emails"></param>
@@ -103,9 +125,12 @@ namespace KMS.Product.Ktm.Services.KudoService
                             kudos.Add(kudo);
                         }
                     }
-
-                    await _kudoRepository.InsertKudos(kudos);
                 }
+            }
+
+            if(kudos.Count > 0)
+            {
+                await _kudoRepository.InsertKudos(kudos);
             }
         }
     }
