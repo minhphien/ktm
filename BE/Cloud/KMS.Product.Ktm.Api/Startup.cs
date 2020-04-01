@@ -59,12 +59,7 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IEmployeeTeamRepository, EmployeeTeamRepository>();
 
             // mapper
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapping());
-            });
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(KudosProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

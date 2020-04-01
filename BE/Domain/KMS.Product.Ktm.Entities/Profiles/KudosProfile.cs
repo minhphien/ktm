@@ -7,12 +7,12 @@ using KMS.Product.Ktm.Entities.DTO;
 
 namespace KMS.Product.Ktm.Entities.Profiles
 {
-    public class AutoMapping : Profile
+    public class KudosProfile : Profile
     {
         /// <summary>
         /// auto mapper profile
         /// </summary>
-        public AutoMapping()
+        public KudosProfile()
         {
             // map kudo to kudo report dto
             CreateMap<Kudo, KudoReportDto>()
