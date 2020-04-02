@@ -1,9 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 
 namespace KMS.Product.Ktm.KudosReceiver.SlackClient

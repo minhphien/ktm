@@ -1,9 +1,14 @@
 using KMS.Product.Ktm.KudosReceiver.SlackClient;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace KMS.Product.Ktm.KudosReceiver
 {
@@ -22,7 +27,10 @@ namespace KMS.Product.Ktm.KudosReceiver
             {
                 builder.AddUserSecrets<Startup>();
             }
-
+            var settings = builder.Build();
+            builder.AddAzureAppConfiguration(options => {
+                options.Connect(settings["ConnectionStrings:AppConfig"]);
+            });
             Configuration = builder.Build();
         }
 
@@ -32,7 +40,6 @@ namespace KMS.Product.Ktm.KudosReceiver
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            SlackFixture.Initialize(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,11 +51,13 @@ namespace KMS.Product.Ktm.KudosReceiver
             }
             else
             {
+                app.UseAzureAppConfiguration();
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+
+            SlackFixture.Initialize(Configuration);
+            SlackFixture.Instance().HostEnvironment += $"{env.EnvironmentName}"; 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

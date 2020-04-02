@@ -10,7 +10,7 @@ using System.Net;
 
 namespace KMS.Product.Ktm.KudosReceiver.SlackClient
 {
-    public class SlackFixture
+    public class SlackFixture : IDisposable
     {
         private const int MaxConnectionAttempts = 5;
 
@@ -21,6 +21,7 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
 
         private readonly Policy connectRetryPolicy;
 
+        public string HostEnvironment { get; set; }
         private SlackFixture(IConfiguration configuration)
         {
             this.Config = this.GetConfig(configuration);
@@ -44,7 +45,7 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
                 this.UserClient.GetUserList(list =>
                 {
                     Console.WriteLine($"Obtained user list. Count: {list?.members?.Length}");
-                    this.Users = list?.members?.ToDictionary(x => x.name, x => x);
+                    this.Users = list?.members?.ToDictionary(x => x.id, x => x);
                 });
                 syncClient.Proceed();
             }
@@ -161,8 +162,5 @@ namespace KMS.Product.Ktm.KudosReceiver.SlackClient
             // Retries after 4, 8, 16, 32, 64... seconds
             return 2 * (int)Math.Pow(2, retryAttempt);
         }
-        
-        
-        
     }
 }

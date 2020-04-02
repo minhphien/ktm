@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using KMS.Product.Ktm.KudosReceiver.SlackClient;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace KMS.Product.Ktm.KudosReceiver.Pages
