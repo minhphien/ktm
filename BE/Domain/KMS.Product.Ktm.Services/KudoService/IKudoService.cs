@@ -51,6 +51,16 @@ namespace KMS.Product.Ktm.Services.KudoService
             List<int> kudoTypeIds);
 
         /// <summary>
+        /// Get kudos summary for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        Task<IEnumerable<KudoSumReportDto>> GetKudosummaryForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> filterIds,
+            int summaryReportType);
+
+        /// <summary>
         /// add kudos from emails
         /// </summary>
         /// <param name="emails"></param>

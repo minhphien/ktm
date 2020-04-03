@@ -29,8 +29,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         }
 
         /// <summary>
-        /// Get all kudos
-        /// GET: api/Kudo
+        /// Get kudos dto for report
         /// </summary>
         /// <returns>
         /// Success: returns 200 status code with a collection of all kudos        
@@ -46,6 +45,31 @@ namespace KMS.Product.Ktm.Api.Controllers
             try
             {
                 IEnumerable<KudoReportDto> kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
+                return Ok(kudos);
+            }
+            catch (BussinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Get kudos summary for report
+        /// </summary>
+        /// <returns>
+        /// Success: returns 200 status code with a collection of all kudos        
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetKudosummaryForReport(
+            [FromQuery] DateTime? dateFrom,
+            [FromQuery] DateTime? dateTo,
+            [FromQuery] List<int> filterIds,
+            [FromQuery] int type)
+        {
+            try
+            {
+                IEnumerable<KudoSumReportDto> kudos = await _kudoService.GetKudosummaryForReport(dateFrom, dateTo, filterIds, type);
                 return Ok(kudos);
             }
             catch (BussinessException ex)
