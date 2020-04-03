@@ -19,14 +19,34 @@ using KMS.Product.Ktm.Services.KudoTypeService;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
+using KMS.Product.Ktm.Services.SlackService;
 
 namespace KMS.Product.Ktm.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json",
+                         optional: false,
+                         reloadOnChange: true)
+            .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+            else
+            {
+                var settings = builder.Build();
+                builder.AddAzureAppConfiguration(options =>
+                {
+                    options.Connect(settings["ConnectionStrings:AppConfig"]);
+                });
+            }
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -49,6 +69,7 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
             services.AddScoped<IKudoRepository, KudoRepository>();
             services.AddScoped<IEmployeeTeamRepository, EmployeeTeamRepository>();
+            services.AddSingleton<ISlackService, SlackService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +83,7 @@ namespace KMS.Product.Ktm.Api
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
