@@ -20,6 +20,7 @@ namespace KMS.Product.Ktm.Api
 {
     public class Startup
     {
+        
         public static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
