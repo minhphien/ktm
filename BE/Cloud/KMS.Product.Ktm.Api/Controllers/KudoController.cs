@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.KudoService;
-using Microsoft.AspNetCore.Mvc;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class KudoController : ControllerBase
     {
 
@@ -39,7 +42,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
             catch (BussinessException ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
 
@@ -62,7 +65,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
             catch (BussinessException ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
 
@@ -85,7 +88,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
             catch (BussinessException ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
 
@@ -106,7 +109,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
             catch (BussinessException ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
 
@@ -127,7 +130,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             }
             catch (BussinessException ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
     }
