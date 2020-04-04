@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using KMS.Product.Ktm.Api.Authentication;
-using KMS.Product.Ktm.Api.HostedService;
 using KMS.Product.Ktm.Repository;
 using KMS.Product.Ktm.Entities.Configurations;
+using KMS.Product.Ktm.Entities.Profiles;
 using KMS.Product.Ktm.Services.KudoTypeService;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
@@ -25,6 +20,9 @@ namespace KMS.Product.Ktm.Api
 {
     public class Startup
     {
+        public static readonly ILoggerFactory MyLoggerFactory
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -59,8 +57,11 @@ namespace KMS.Product.Ktm.Api
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddDbContextPool<KtmDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
-                b => b.MigrationsAssembly("KMS.Product.Ktm.Repository")));
+                options => options
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                    b => b.MigrationsAssembly("KMS.Product.Ktm.Repository"))
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(MyLoggerFactory));
             services.AddScoped<IKudoTypeService, KudoTypeService>();
             services.AddScoped<IKudoService, KudoService>();
             services.AddScoped<IEmailService, EmailService>();
@@ -70,6 +71,8 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IKudoRepository, KudoRepository>();
             services.AddScoped<IEmployeeTeamRepository, EmployeeTeamRepository>();
             services.AddSingleton<ISlackService, SlackService>();
+            // mapper
+            services.AddAutoMapper(typeof(KudosProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
