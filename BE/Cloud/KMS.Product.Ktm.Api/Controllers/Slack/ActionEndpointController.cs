@@ -13,16 +13,20 @@ namespace KMS.Product.Ktm.KudosReceiver.Controllers
         {
             this.slackService = slackService;
         }
-        // GET: slack/InteractiveEnpoint
+
+        /// <summary>Get Method for testing.</summary>
+        /// <returns>Test data</returns>
         [HttpGet]
         public SlackEvent Get()
         {
             return new SlackEvent { Challenge = "OK" };
         }
 
-        // POST: slack/InteractiveEnpoint
+        /// <summary>Post method the specified data.</summary>
+        /// <param name="data">The Slack request payload.</param>
+        /// <returns>data.Challenge</returns>
         [HttpPost]
-        public string Body([FromBody] SlackEvent data)
+        public string Post([FromBody] SlackEvent data)
         {
             var result = data?.Challenge;
             var sender =  slackService.Users?[data?.Event.User];
