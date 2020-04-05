@@ -29,10 +29,9 @@ namespace KMS.Product.Ktm.KudosReceiver.Controllers
         public string Post([FromBody] SlackEvent data)
         {
             var result = data?.Challenge;
-            var sender =  slackService.Users?[data?.Event.User];
+            var sender = slackService.Users?[data.Event?.User];
             if (sender?.is_bot ?? true) return result;
-            slackService.SendConfirmationResponse(sender, data?.Event.Text);
-            slackService.SendInformMessages(sender, data?.Event.Text);
+            slackService.ProceedReceviedMessage(sender.id, data.Event.Text);
             return result;
         }
     }

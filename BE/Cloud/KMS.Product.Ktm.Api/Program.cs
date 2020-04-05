@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using KMS.Product.Ktm.Api.HostedService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using KMS.Product.Ktm.Api.HostedService;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -24,6 +19,11 @@ namespace KMS.Product.Ktm.Api
             {
                 webBuilder.UseStartup<Startup>();
             })
+            .ConfigureAppConfiguration((context, appConfig) => 
+                appConfig
+                .AddEnvironmentVariables()
+                .AddAzureAppConfiguration(appConfig.Build()["ConnectionStrings:AppConfig"], true)
+            )
             .ConfigureServices(services =>
             {
                 services.AddHostedService<EmailHostedService>();
