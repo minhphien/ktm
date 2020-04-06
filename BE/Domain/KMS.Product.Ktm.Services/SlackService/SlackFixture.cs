@@ -11,14 +11,18 @@ namespace KMS.Product.Ktm.Services.SlackService
 {
     internal class SlackFixture : IDisposable
     {
+        #region Private Properties
+        
         private const int MaxConnectionAttempts = 5;
         private readonly Lazy<SlackSocketClient> botClient;
         private readonly Lazy<SlackTaskClient> botClientAsync;
         private readonly Policy connectRetryPolicy;
         private readonly Lazy<SlackSocketClient> userClient;
         private readonly Lazy<SlackTaskClient> userClientAsync;
-        public Dictionary<string, User> Users { get; set; }
-        public SlackConfig Config { get; }
+        private static SlackFixture instance = null;
+
+        #endregion
+
         private SlackFixture(IConfiguration configuration)
         {
             this.Config = this.GetHostConfig(configuration);
@@ -34,61 +38,30 @@ namespace KMS.Product.Ktm.Services.SlackService
             this.botClientAsync = new Lazy<SlackTaskClient>(() => new SlackTaskClient(this.Config.BotAuthToken));
             FetchData();
         }
-        private void FetchData()
-        {
-            using (var syncClient = new InSync($"{nameof(SlackFixture.FetchData)} - Connected callback"))
-            {
-                this.UserClient.GetUserList(list =>
-                {
-                    Console.WriteLine($"Slack users retrieved. Total: {list?.members?.Length}");
-                    this.Users = list?.members?.ToDictionary(x => x.id, x => x);
-                });
-                syncClient.Proceed();
-            }
-        }
-        private int ComputeExponentialBackoff(int retryAttempt)
-        {
-            // Retries after 4, 8, 16, 32, 64... seconds
-            return 2 * (int)Math.Pow(2, retryAttempt);
-        }
-        private SlackConfig GetHostConfig(IConfiguration configuration)
-        {
-            var slackConfig = new SlackConfig();
-            configuration.GetSection("slack")?.Bind(slackConfig);
-            return slackConfig;
-        }
-        public void Dispose()
-        {
-            if (this.userClient.IsValueCreated)
-            {
-                this.UserClient.CloseSocket();
-            }
 
-            if (this.botClient.IsValueCreated)
-            {
-                this.BotClient.CloseSocket();
-            }
-        }
-        public SlackSocketClient BotClient
-        {
-            get
-            {
-                return botClient.Value;
-            }
-        }
+        #region Public Properties
+
+        public Dictionary<string, User> Users { get; set; }
+
+        public SlackConfig Config { get; }
+
+        public SlackSocketClient BotClient => botClient.Value;
+
         public SlackTaskClient BotClientAsync => botClientAsync.Value;
-        public SlackSocketClient UserClient
-        {
-            get
-            {
-                return userClient.Value;
-            }
-        }
+
+        public SlackSocketClient UserClient => userClient.Value;
+
         public SlackTaskClient UserClientAsync => userClientAsync.Value;
+        
+        #endregion
+
+        #region Public Methods
+
         public SlackSocketClient CreateBotClient(IWebProxy proxySettings = null)
         {
             return this.connectRetryPolicy.Execute(() => this.CreateClient(this.Config.BotAuthToken, proxySettings));
         }
+
         public SlackSocketClient CreateClient(string authToken, IWebProxy proxySettings = null, bool maintainPresenceChanges = false, Action<SlackSocketClient, PresenceChange> presenceChanged = null)
         {
             SlackSocketClient client;
@@ -129,22 +102,68 @@ namespace KMS.Product.Ktm.Services.SlackService
 
             return client;
         }
+
         public SlackSocketClient CreateUserClient(IWebProxy proxySettings = null, bool maintainPresenceChangesStatus = false, Action<SlackSocketClient, PresenceChange> presenceChanged = null)
         {
             return this.connectRetryPolicy.Execute(() => this.CreateClient(this.Config.UserAuthToken, proxySettings, maintainPresenceChangesStatus, presenceChanged));
         }
 
-        private static SlackFixture instance = null;
-        internal static SlackFixture Instance
+        public static SlackFixture Instance
         {
             get
             {
                 return instance;
             }
         }
-        internal static void Intialize(IConfiguration configuration, bool optional = true)
+
+        public static void Intialize(IConfiguration configuration, bool optional = true)
         {
             instance = optional ? instance ?? new SlackFixture(configuration) : new SlackFixture(configuration);
         }
+
+        public void Dispose()
+        {
+            if (this.userClient.IsValueCreated)
+            {
+                this.UserClient.CloseSocket();
+            }
+
+            if (this.botClient.IsValueCreated)
+            {
+                this.BotClient.CloseSocket();
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void FetchData()
+        {
+            using (var syncClient = new InSync($"{nameof(SlackFixture.FetchData)} - Connected callback"))
+            {
+                this.UserClient.GetUserList(list =>
+                {
+                    Console.WriteLine($"Slack users retrieved. Total: {list?.members?.Length}");
+                    this.Users = list?.members?.ToDictionary(x => x.id, x => x);
+                });
+                syncClient.Proceed();
+            }
+        }
+
+        private int ComputeExponentialBackoff(int retryAttempt)
+        {
+            // Retries after 4, 8, 16, 32, 64... seconds
+            return 2 * (int)Math.Pow(2, retryAttempt);
+        }
+
+        private SlackConfig GetHostConfig(IConfiguration configuration)
+        {
+            var slackConfig = new SlackConfig();
+            configuration.GetSection("slack")?.Bind(slackConfig);
+            return slackConfig;
+        }
+
+        #endregion
     }
 }

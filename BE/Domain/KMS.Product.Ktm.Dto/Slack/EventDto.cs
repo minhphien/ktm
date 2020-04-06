@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 
-namespace KMS.Product.Ktm.Api.Models.Events
+namespace KMS.Product.Ktm.Dto.Slack
 {
-    public partial class Event
+    public partial class EventDto
     {
         [JsonProperty("bot_id")]
         public string BotId { get; set; }
 
         [JsonProperty("bot_profile")]
-        public BotProfile BotProfile { get; set; }
+        public BotProfileDto BotProfile { get; set; }
 
         [JsonProperty("channel")]
         public string Channel { get; set; }
