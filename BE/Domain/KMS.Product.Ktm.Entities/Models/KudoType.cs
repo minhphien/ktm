@@ -8,6 +8,6 @@ namespace KMS.Product.Ktm.Entities.Models
     {
         public string TypeName { get; set; }
 
-        public virtual ICollection<KudoDetail> Kudos { get; set; }
+        public virtual ICollection<KudoDetail> KudoDetails { get; set; }
     }
 }
