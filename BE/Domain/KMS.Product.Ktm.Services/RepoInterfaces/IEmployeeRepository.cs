@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 
-namespace KMS.Product.Ktm.Repository
+namespace KMS.Product.Ktm.Services.RepoInterfaces
 {
     public interface IEmployeeRepository: IBaseRepository<Employee>
     {

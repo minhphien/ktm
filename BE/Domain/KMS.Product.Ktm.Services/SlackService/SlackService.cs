@@ -1,5 +1,5 @@
-﻿using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Repository;
+﻿using KMS.Product.Ktm.Repository;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 using Microsoft.Extensions.Configuration;
 using SlackAPI;
 using System;
