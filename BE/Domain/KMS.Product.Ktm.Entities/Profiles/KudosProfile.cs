@@ -15,20 +15,7 @@ namespace KMS.Product.Ktm.Entities.Profiles
         public KudosProfile()
         {
             // map kudo to kudo report dto
-            CreateMap<Kudo, KudoReportDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Created, opt => opt.MapFrom(src => src.Created))
-                .ForMember(dest => dest.Modified, opt => opt.MapFrom(src => src.Modified))
-                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.KudoDetail.Content))
-                .ForMember(dest => dest.TypeName, opt => opt.MapFrom(src => src.KudoDetail.KudoType.TypeName))
-                .ForMember(dest => dest.SenderBadgeId, opt => opt.MapFrom(src => src.Sender.Employee.EmployeeBadgeId))
-                .ForMember(dest => dest.SenderFirstMidName, opt => opt.MapFrom(src => src.Sender.Employee.FirstMidName))
-                .ForMember(dest => dest.SenderLastName, opt => opt.MapFrom(src => src.Sender.Employee.LastName))
-                .ForMember(dest => dest.SenderTeam, opt => opt.MapFrom(src => src.Sender.Team.TeamName))
-                .ForMember(dest => dest.ReceiverBadgeId, opt => opt.MapFrom(src => src.Receiver.Employee.EmployeeBadgeId))
-                .ForMember(dest => dest.ReceiverFirstMidName, opt => opt.MapFrom(src => src.Receiver.Employee.FirstMidName))
-                .ForMember(dest => dest.ReceiverLastName, opt => opt.MapFrom(src => src.Receiver.Employee.LastName))
-                .ForMember(dest => dest.ReceiverTeam, opt => opt.MapFrom(src => src.Receiver.Team.TeamName));
+            CreateMap<Kudo, KudoReportDto>();
         }
     }
 }

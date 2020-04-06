@@ -14,16 +14,16 @@ namespace KMS.Product.Ktm.Services.KudoService
     public class KudoService : IKudoService
     {
         private readonly IKudoRepository _kudoRepository;
-        private readonly IEmployeeTeamRepository _employeeTeamRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
         /// <summary>
         /// Inject Kudo repository
         /// </summary>
         /// <returns></returns>
-        public KudoService(IKudoRepository kudoRepository, IEmployeeTeamRepository employeeTeamRepository)
+        public KudoService(IKudoRepository kudoRepository, IEmployeeRepository employeeRepository)
         {
             _kudoRepository = kudoRepository ?? throw new ArgumentNullException($"{nameof(kudoRepository)}");
-            _employeeTeamRepository = employeeTeamRepository ?? throw new ArgumentNullException($"{nameof(employeeTeamRepository)}");
+            _employeeRepository = employeeRepository ?? throw new ArgumentNullException($"{nameof(employeeRepository)}");
         }
 
         /// <summary>
@@ -128,19 +128,19 @@ namespace KMS.Product.Ktm.Services.KudoService
 
             foreach(var email in emails)
             {
-                var senders = await _employeeTeamRepository.GetEmployeeTeamByEmails(email.FromAddresses.Select(i => i.Address.ToString()).ToList());
+                var senders = await _employeeRepository.GetEmployeeByEmails(email.FromAddresses.Select(i => i.Address.ToString()).ToList());
                 if(senders.Count() > 0)
                 {
                     var senderInfo = senders.Single();
-                    var receivers = await _employeeTeamRepository.GetEmployeeTeamByEmails(email.ToAddresses.Select(i => i.Address.ToString()).ToList());
+                    var receivers = await _employeeRepository.GetEmployeeByEmails(email.ToAddresses.Select(i => i.Address.ToString()).ToList());
                     if(receivers.Count() > 0)
                     {
                         foreach(var receiver in receivers)
                         {
                             var kudo = new Kudo
                             {
-                                Sender = senderInfo,
-                                Receiver = receiver,
+                                SenderId = senderInfo.Id,
+                                ReceiverId = receiver.Id,
                                 KudoDetail = new KudoDetail
                                 {
                                     Content = email.Content,

@@ -64,9 +64,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     LastName = table.Column<string>(nullable: true),
                     FirstMidName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    SlackAccount = table.Column<string>(nullable: true),
                     JoinedDate = table.Column<DateTime>(nullable: false),
-                    EmployeeRoleId = table.Column<int>(nullable: false)
+                    EmployeeRoleId = table.Column<int>(nullable: false),
+                    CurrentTeam = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,16 +153,16 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         principalColumn: "KudoDetailId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Kudos_EmployeeTeams_ReceiverId",
+                        name: "FK_Kudos_Employees_ReceiverId",
                         column: x => x.ReceiverId,
-                        principalTable: "EmployeeTeams",
-                        principalColumn: "EmployeeTeamId",
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Kudos_EmployeeTeams_SenderId",
+                        name: "FK_Kudos_Employees_SenderId",
                         column: x => x.SenderId,
-                        principalTable: "EmployeeTeams",
-                        principalColumn: "EmployeeTeamId",
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -194,35 +194,33 @@ namespace KMS.Product.Ktm.Repository.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Kudos_ReceiverId",
                 table: "Kudos",
-                column: "ReceiverId",
-                unique: true);
+                column: "ReceiverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Kudos_SenderId",
                 table: "Kudos",
-                column: "SenderId",
-                unique: true);
+                column: "SenderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "EmployeeTeams");
+
+            migrationBuilder.DropTable(
                 name: "Kudos");
+
+            migrationBuilder.DropTable(
+                name: "Teams");
 
             migrationBuilder.DropTable(
                 name: "KudoDetails");
 
             migrationBuilder.DropTable(
-                name: "EmployeeTeams");
-
-            migrationBuilder.DropTable(
-                name: "KudoTypes");
-
-            migrationBuilder.DropTable(
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "KudoTypes");
 
             migrationBuilder.DropTable(
                 name: "EmployeeRoles");

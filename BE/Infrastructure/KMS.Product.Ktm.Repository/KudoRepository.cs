@@ -45,13 +45,38 @@ namespace KMS.Product.Ktm.Repository
             List<int> kudoTypeIds,
             bool hasDateRange)
         {
-            return await kudo
-                .Where(k =>
-                    (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
-                    && (teamIds.Count() == 0 || teamIds.Contains(k.Sender.TeamID))
-                    && (kudoTypeIds.Count() == 0 || kudoTypeIds.Contains(k.KudoDetail.KudoTypeId)))
-                .ProjectTo<KudoReportDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            return await (from k in kudo
+                          join es in context.Set<Employee>() on k.SenderId equals es.Id
+                          join ets in context.Set<EmployeeTeam>() on es.Id equals ets.EmployeeID
+                          join ts in context.Set<Team>() on ets.TeamID equals ts.Id
+                          join er in context.Set<Employee>() on k.ReceiverId equals er.Id
+                          join etr in context.Set<EmployeeTeam>() on er.Id equals etr.EmployeeID
+                          join tr in context.Set<Team>() on etr.TeamID equals tr.Id
+                          join kd in context.Set<KudoDetail>() on k.KudoDetailId equals kd.Id
+                          join ty in context.Set<KudoType>() on  kd.KudoTypeId equals ty.Id
+                          where (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                            && (teamIds.Count() == 0 || teamIds.Contains(ts.Id)) 
+                            && k.Created >= ets.JoinedDate
+                            && (ets.ReleseadDate == null || k.Created <= ets.ReleseadDate)
+                            && k.Created >= etr.JoinedDate
+                            && (etr.ReleseadDate == null || k.Created <= etr.ReleseadDate)
+                          select new KudoReportDto
+                          {
+                              Id = k.Id,
+                              Created = k.Created,
+                              Modified = k.Modified,
+                              Content = kd.Content,
+                              TypeName = ty.TypeName,
+                              SenderBadgeId = es.EmployeeBadgeId,
+                              SenderFirstMidName = es.FirstMidName,
+                              SenderLastName = es.LastName,
+                              SenderTeam = ts.TeamName,
+                              ReceiverBadgeId = er.EmployeeBadgeId,
+                              ReceiverFirstMidName = er.FirstMidName,
+                              ReceiverLastName = er.LastName,
+                              ReceiverTeam = tr.TeamName
+                          }
+                ).ToListAsync();
         }
 
         /// <summary>
@@ -64,17 +89,21 @@ namespace KMS.Product.Ktm.Repository
             List<int> filterIds,
             bool hasDateRange)
         {
-            return await kudo
-                .Where(k =>
-                (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
-                && filterIds.Contains(k.Sender.Id))
-                .GroupBy(g => new {g.Sender.EmployeeID, g.Sender.Employee.LastName, g.Sender.Employee.FirstMidName, g.Sender.Team.TeamName })
-                .Select(k => new KudoSumReportDto
-                {
-                    FilterName = k.Key.FirstMidName + ' ' + k.Key.LastName,
-                    TeamName = k.Key.TeamName,
-                    CountNums = k.Count()
-                })
+            return await (from k in kudo
+                          join e in context.Set<Employee>() on k.SenderId equals e.Id
+                          join et in context.Set<EmployeeTeam>() on e.Id equals et.EmployeeID
+                          join t in context.Set<Team>() on et.TeamID equals t.Id
+                          where (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                            && (filterIds.Count == 0 || filterIds.Contains(e.Id))
+                            && k.Created >= et.JoinedDate
+                            && (et.ReleseadDate == null || k.Created <= et.ReleseadDate)
+                          group new { e, t } by new { e.Id, e.LastName, e.FirstMidName, t.TeamName } into Result
+                          select new KudoSumReportDto
+                          {
+                              FilterName = Result.Key.FirstMidName + ' ' + Result.Key.LastName,
+                              TeamName = Result.Key.TeamName,
+                              CountNums = Result.Count()
+                          })
                 .ToListAsync();
         }
 
@@ -88,17 +117,20 @@ namespace KMS.Product.Ktm.Repository
             List<int> filterIds,
             bool hasDateRange)
         {
-            return await kudo
-                .Where(k =>
-                (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
-                && filterIds.Contains(k.Sender.TeamID))
-                .GroupBy(g => new { g.Sender.TeamID, g.Sender.Team.TeamName })
-                .Select(k => new KudoSumReportDto
-                {
-                    FilterName = k.Key.TeamName,
-                    TeamName = k.Key.TeamName,
-                    CountNums = k.Count()
-                })
+            return await (from k in kudo
+                          join et in context.Set<EmployeeTeam>() on k.SenderId equals et.EmployeeID
+                          join t in context.Set<Team>() on et.TeamID equals t.Id
+                          where (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                            && (filterIds.Count == 0 || filterIds.Contains(t.Id))
+                            && k.Created >= et.JoinedDate
+                            && (et.ReleseadDate == null || k.Created <= et.ReleseadDate)
+                          group t by new { t.Id, t.TeamName } into Result
+                          select new KudoSumReportDto
+                          {
+                              FilterName = Result.Key.TeamName,
+                              TeamName = Result.Key.TeamName,
+                              CountNums = Result.Count()
+                          })
                 .ToListAsync();
         }
 

@@ -33,14 +33,14 @@ namespace KMS.Product.Ktm.Repository
             }
 
             modelBuilder.Entity<Kudo>()
-                .HasOne<EmployeeTeam>(a => a.Sender)
-                .WithOne()
-                .HasForeignKey<Kudo>(a => a.SenderId);
+                .HasOne(a => a.Sender)
+                .WithMany(a => a.KudoSends)
+                .HasForeignKey(a => a.SenderId);
 
             modelBuilder.Entity<Kudo>()
-                .HasOne<EmployeeTeam>(a => a.Receiver)
-                .WithOne()
-                .HasForeignKey<Kudo>(a => a.ReceiverId)
+                .HasOne(a => a.Receiver)
+                .WithMany(a => a.KudoReceives)
+                .HasForeignKey(a => a.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 

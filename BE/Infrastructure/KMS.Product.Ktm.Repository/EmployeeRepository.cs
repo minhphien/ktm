@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Repository
 {
@@ -32,6 +35,16 @@ namespace KMS.Product.Ktm.Repository
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
             return await Task.FromResult(GetAll().ToList());
+        }
+
+        /// <summary>
+        /// get employee by email
+        /// </summary>
+        /// <param name="emailaddresses"></param>
+        /// <returns>employee</returns>
+        public async Task<IEnumerable<Employee>> GetEmployeeByEmails(List<string> emailaddresses)
+        {
+            return await employee.Where(e => emailaddresses.Contains(e.Email)).ToListAsync();
         }
     }
 }

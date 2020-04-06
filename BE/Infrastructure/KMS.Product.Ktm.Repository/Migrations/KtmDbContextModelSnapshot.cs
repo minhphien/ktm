@@ -30,6 +30,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CurrentTeam")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -50,9 +53,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("SlackAccount")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SlackUserId")
                         .HasColumnType("nvarchar(max)");
@@ -148,11 +148,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.HasIndex("KudoDetailId");
 
-                    b.HasIndex("ReceiverId")
-                        .IsUnique();
+                    b.HasIndex("ReceiverId");
 
-                    b.HasIndex("SenderId")
-                        .IsUnique();
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Kudos");
                 });
@@ -244,7 +242,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeTeam", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Employee")
-                        .WithMany("employeeTeams")
+                        .WithMany("EmployeeTeams")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -264,15 +262,15 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeTeam", "Receiver")
-                        .WithOne()
-                        .HasForeignKey("KMS.Product.Ktm.Entities.Models.Kudo", "ReceiverId")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Receiver")
+                        .WithMany("KudoReceives")
+                        .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeTeam", "Sender")
-                        .WithOne()
-                        .HasForeignKey("KMS.Product.Ktm.Entities.Models.Kudo", "SenderId")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Sender")
+                        .WithMany("KudoSends")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -280,7 +278,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.KudoDetail", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.KudoType", "KudoType")
-                        .WithMany("Kudos")
+                        .WithMany("KudoDetails")
                         .HasForeignKey("KudoTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
