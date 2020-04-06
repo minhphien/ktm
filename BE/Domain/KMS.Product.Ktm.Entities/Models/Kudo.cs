@@ -10,8 +10,8 @@ namespace KMS.Product.Ktm.Entities.Models
         public int ReceiverId { get; set; }
         public int KudoDetailId { get; set; }
 
-        public virtual EmployeeTeam Sender { get; set; }
-        public virtual EmployeeTeam Receiver { get; set; }
+        public virtual Employee Sender { get; set; }
+        public virtual Employee Receiver { get; set; }
         public virtual KudoDetail KudoDetail { get; set; }
     }
 }

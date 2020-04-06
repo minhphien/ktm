@@ -13,5 +13,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// </summary>
         /// <returns>A collection of all employees</returns>
         Task<IEnumerable<Employee>> GetEmployeesAsync();
+
+        /// <summary>
+        /// get employee by email
+        /// </summary>
+        /// <param name="emailaddresses"></param>
+        /// <returns>employee</returns>
+        Task<IEnumerable<Employee>> GetEmployeeByEmails(List<string> emailaddresses);
     }
 }
