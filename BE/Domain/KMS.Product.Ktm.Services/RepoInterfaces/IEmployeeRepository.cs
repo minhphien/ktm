@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Repository
 {

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KMS.Product.Ktm.EntitiesServices.DTOs
+namespace KMS.Product.Ktm.Dto
 {
-    public class KmsTeamDTO
+    public class KmsTeamDto
     {
         /// <summary>
         /// Map ClientName in JSON response to TeamName when deserializing

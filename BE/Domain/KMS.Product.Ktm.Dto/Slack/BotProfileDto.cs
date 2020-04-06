@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace KMS.Product.Ktm.Dto.Slack
+namespace KMS.Product.Ktm.Dto
 {
     public partial class BotProfileDto
     {

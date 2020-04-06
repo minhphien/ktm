@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
+using KMS.Product.Ktm.Dto;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.EntitiesServices.DTOs;
-using KMS.Product.Ktm.EntitiesServices.Responses;
 using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using Newtonsoft.Json;
@@ -116,7 +115,7 @@ namespace KMS.Product.Ktm.Services.TeamService
         {
             // Fetch teams from KMS and map from DTO to Team
             var fetchedTeamsDto = await GetTeamsFromKmsAsync();
-            var fetchedTeams = _mapper.Map<IEnumerable<KmsTeamDTO>, IEnumerable<Team>>(fetchedTeamsDto);
+            var fetchedTeams = _mapper.Map<IEnumerable<KmsTeamDto>, IEnumerable<Team>>(fetchedTeamsDto);
             // Get teams from database
             var databaseTeams = await GetAllTeamsAsync();
             // Get team names
@@ -138,9 +137,9 @@ namespace KMS.Product.Ktm.Services.TeamService
         /// API: https://hr.kms-technology.com/api/projects/ReturnListProjectClient
         /// </summary>
         /// <returns>A collection of all KMS team DTOs</returns>
-        private async Task<IEnumerable<KmsTeamDTO>> GetTeamsFromKmsAsync()
+        private async Task<IEnumerable<KmsTeamDto>> GetTeamsFromKmsAsync()
         {
-            var KmsTeamDTOs = new List<KmsTeamDTO>();
+            var KmsTeamDTOs = new List<KmsTeamDto>();
             // Initialize httpclient with token from login service to send request to KMS HRM 
             var bearerToken = _authenticateService.AuthenticateUsingToken();
             var client = new HttpClient();
@@ -151,9 +150,9 @@ namespace KMS.Product.Ktm.Services.TeamService
             {
                 // Convert response JSON to object
                 var contentString = await response.Content.ReadAsStringAsync();
-                var kmsTeamResponse = JsonConvert.DeserializeObject<KmsTeamResponse>(contentString);
+                var kmsTeamResponse = JsonConvert.DeserializeObject<KmsTeamResponseDto>(contentString);
                 // Add KMS team DTOs to list
-                KmsTeamDTOs.AddRange(kmsTeamResponse.KmsTeamDTOs);
+                KmsTeamDTOs.AddRange(kmsTeamResponse.KmsTeams);
             }
 
             return KmsTeamDTOs;

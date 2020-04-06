@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\KMS.Product.Ktm.EntitiesServices\KMS.Product.Ktm.EntitiesServices.csproj" />
+    <ProjectReference Include="..\KMS.Product.Ktm.Dto\KMS.Product.Ktm.Dto.csproj" />
     <ProjectReference Include="..\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using KMS.Product.Ktm.Dto.Slack;
+﻿using KMS.Product.Ktm.Dto;
 using KMS.Product.Ktm.Services.SlackService;
 using Microsoft.AspNetCore.Mvc;
 
