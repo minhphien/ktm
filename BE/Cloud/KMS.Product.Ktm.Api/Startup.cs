@@ -1,37 +1,55 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using KMS.Product.Ktm.Api.Authentication;
-using KMS.Product.Ktm.Api.HostedService;
 using KMS.Product.Ktm.Repository;
 using KMS.Product.Ktm.Entities.Configurations;
+using KMS.Product.Ktm.Entities.Profiles;
 using KMS.Product.Ktm.Services.KudoTypeService;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
-using AutoMapper;
 using KMS.Product.Ktm.Services.TeamService;
 using KMS.Product.Ktm.Services.EmployeeService;
 using KMS.Product.Ktm.Services.AutoMapper;
 using KMS.Product.Ktm.Services.AuthenticateService;
+using KMS.Product.Ktm.Services.SlackService;
 
 namespace KMS.Product.Ktm.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        
+        public static readonly ILoggerFactory MyLoggerFactory
+            = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json",
+                         optional: false,
+                         reloadOnChange: true)
+            .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+            else
+            {
+                var settings = builder.Build();
+                builder.AddAzureAppConfiguration(options =>
+                {
+                    options.Connect(settings["ConnectionStrings:AppConfig"]);
+                });
+            }
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -44,8 +62,11 @@ namespace KMS.Product.Ktm.Api
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddDbContextPool<KtmDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
-                b => b.MigrationsAssembly("KMS.Product.Ktm.Repository")));
+                options => options
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                    b => b.MigrationsAssembly("KMS.Product.Ktm.Repository"))
+                .EnableSensitiveDataLogging()
+                .UseLoggerFactory(MyLoggerFactory));
             services.AddScoped<IKudoTypeService, KudoTypeService>();
             services.AddScoped<IKudoService, KudoService>();
             services.AddScoped<IEmailService, EmailService>();
@@ -58,7 +79,11 @@ namespace KMS.Product.Ktm.Api
             services.AddScoped<IKudoRepository, KudoRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
-            services.AddAutoMapper(typeof(AutoMapperProfile));
+            services.AddScoped<IEmployeeTeamRepository, EmployeeTeamRepository>();
+            services.AddSingleton<ISlackService, SlackService>();
+            
+            // mapper
+            services.AddAutoMapper(typeof(KudosProfile), typeof(AutoMapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +97,7 @@ namespace KMS.Product.Ktm.Api
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
