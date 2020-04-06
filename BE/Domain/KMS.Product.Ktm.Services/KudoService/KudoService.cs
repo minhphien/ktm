@@ -7,6 +7,7 @@ using KMS.Product.Ktm.Services.RepoInterfaces;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Entities.Common;
 using KMS.Product.Ktm.Entities.DTO;
+using KMS.Product.Ktm.Services.AppConstants;
 
 namespace KMS.Product.Ktm.Services.KudoService
 {
@@ -82,11 +83,37 @@ namespace KMS.Product.Ktm.Services.KudoService
         {
             if(dateFrom != null && dateTo != null)
             {
-                return await _kudoRepository.GetKudosForReportWithDateRange(dateFrom, dateTo, teamIds, kudoTypeIds);
+                return await _kudoRepository.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds, true);
             }
             else
             {
-                return await _kudoRepository.GetKudosForReport(teamIds, kudoTypeIds);
+                return await _kudoRepository.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds, false);
+            }
+        }
+
+        /// <summary>
+        /// Get kudos summary for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        public async Task<IEnumerable<KudoSumReportDto>> GetKudosummaryForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> filterIds,
+            int summaryReportType)
+        {
+            bool hasDateRange = false;
+            if (dateFrom != null && dateTo != null)
+            {
+                hasDateRange = true;
+            }
+
+            if(summaryReportType == KudoConstants.summaryReportType.TEAM)
+            { 
+                return await _kudoRepository.GetKudosummaryTeam(dateFrom, dateTo, filterIds, hasDateRange);
+            }
+            else
+            {
+                return await _kudoRepository.GetKudosummaryEmployee(dateFrom, dateTo, filterIds, hasDateRange);
             }
         }
 

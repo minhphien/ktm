@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// </summary>
         /// <returns></returns>
         IQueryable<T> GetAll();
+
+        /// <summary>
+        /// Get all the entities
+        /// </summary>
+        /// <returns></returns>
+        IQueryable<T> GetByCondition(Expression<Func<T, bool>> expression);
 
         /// <summary>
         /// Get entity by Id

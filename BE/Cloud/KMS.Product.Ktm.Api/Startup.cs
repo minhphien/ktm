@@ -14,6 +14,10 @@ using KMS.Product.Ktm.Services.KudoTypeService;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.EmailService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
+using KMS.Product.Ktm.Services.TeamService;
+using KMS.Product.Ktm.Services.EmployeeService;
+using KMS.Product.Ktm.Services.AutoMapper;
+using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.SlackService;
 using System;
 using KMS.Product.Ktm.Api.Entensions;
@@ -61,7 +65,7 @@ namespace KMS.Product.Ktm.Api
             services.AddKtmRepositories();
             services.AddKtmServices();
             // mapper
-            services.AddAutoMapper(typeof(KudosProfile));
+            services.AddAutoMapper(typeof(KudosProfile), typeof(AutoMapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

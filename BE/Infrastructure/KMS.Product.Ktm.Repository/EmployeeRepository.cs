@@ -1,8 +1,10 @@
-﻿using System;
+using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.RepoInterfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using KMS.Product.Ktm.Entities.Models;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Repository
 {
@@ -21,6 +23,15 @@ namespace KMS.Product.Ktm.Repository
         public IQueryable<Employee> GetEmployeeTeamBySlackUserIds(IEnumerable<string> slackUserIds)
         {
             return employee.Where(e => slackUserIds.Contains(e.SlackUserId));
+        }
+
+        /// <summary>
+        /// Get all employees
+        /// </summary>
+        /// <returns>A collection of all employees</returns>
+        public async Task<IEnumerable<Employee>> GetEmployeesAsync()
+        {
+            return await Task.FromResult(GetAll().ToList());
         }
     }
 }

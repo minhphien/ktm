@@ -19,17 +19,32 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        Task<IEnumerable<KudoReportDto>> GetKudosForReport(List<int> teamIds, List<int> kudoTypeIds);
-
-        /// <summary>
-        /// Get kudos for report with date range
-        /// </summary>
-        /// <returns>Returns a collection of kudos</returns>
-        Task<IEnumerable<KudoReportDto>> GetKudosForReportWithDateRange(
+        Task<IEnumerable<KudoReportDto>> GetKudosForReport(
             DateTime? dateFrom,
             DateTime? dateTo,
             List<int> teamIds,
-            List<int> kudoTypeIds);
+            List<int> kudoTypeIds,
+            bool hasDateRange);
+
+        /// <summary>
+        /// Get kudos summary by employee for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        Task<IEnumerable<KudoSumReportDto>> GetKudosummaryEmployee(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> filterIds,
+            bool hasDateRange);
+
+        /// <summary>
+        /// Get kudos summary by team for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        Task<IEnumerable<KudoSumReportDto>> GetKudosummaryTeam(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> filterIds,
+            bool hasDateRange);
 
         /// <summary>
         /// insert mutiply kudo
