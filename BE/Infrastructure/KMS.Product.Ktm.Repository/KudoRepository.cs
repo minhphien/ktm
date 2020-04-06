@@ -38,32 +38,67 @@ namespace KMS.Product.Ktm.Repository
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        public async Task<IEnumerable<KudoReportDto>> GetKudosForReport(List<int> teamIds, List<int> kudoTypeIds)
+        public async Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds, 
+            List<int> kudoTypeIds,
+            bool hasDateRange)
         {
             return await kudo
-                .Where(k => 
-                    (teamIds.Contains(k.Sender.TeamID) || teamIds.Count() == 0) 
-                    && (kudoTypeIds.Contains(k.KudoDetail.KudoTypeId) || kudoTypeIds.Count() == 0))
+                .Where(k =>
+                    (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                    && (teamIds.Count() == 0 || teamIds.Contains(k.Sender.TeamID))
+                    && (kudoTypeIds.Count() == 0 || kudoTypeIds.Contains(k.KudoDetail.KudoTypeId)))
                 .ProjectTo<KudoReportDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
         /// <summary>
-        /// Get kudos for report with date range
+        /// Get kudos summary by employee for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        public async Task<IEnumerable<KudoReportDto>> GetKudosForReportWithDateRange(
+        public async Task<IEnumerable<KudoSumReportDto>> GetKudosummaryEmployee(
             DateTime? dateFrom,
             DateTime? dateTo,
-            List<int> teamIds, 
-            List<int> kudoTypeIds)
+            List<int> filterIds,
+            bool hasDateRange)
         {
             return await kudo
                 .Where(k =>
-                    k.Created >= dateFrom && k.Created <= dateTo
-                    && (teamIds.Contains(k.Sender.TeamID) || teamIds.Count() == 0)
-                    && (kudoTypeIds.Contains(k.KudoDetail.KudoTypeId) || kudoTypeIds.Count() == 0))
-                .ProjectTo<KudoReportDto>(_mapper.ConfigurationProvider)
+                (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                && filterIds.Contains(k.Sender.Id))
+                .GroupBy(g => new {g.Sender.EmployeeID, g.Sender.Employee.LastName, g.Sender.Employee.FirstMidName, g.Sender.Team.TeamName })
+                .Select(k => new KudoSumReportDto
+                {
+                    FilterName = k.Key.FirstMidName + ' ' + k.Key.LastName,
+                    TeamName = k.Key.TeamName,
+                    CountNums = k.Count()
+                })
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Get kudos summary by team for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        public async Task<IEnumerable<KudoSumReportDto>> GetKudosummaryTeam(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> filterIds,
+            bool hasDateRange)
+        {
+            return await kudo
+                .Where(k =>
+                (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                && filterIds.Contains(k.Sender.TeamID))
+                .GroupBy(g => new { g.Sender.TeamID, g.Sender.Team.TeamName })
+                .Select(k => new KudoSumReportDto
+                {
+                    FilterName = k.Key.TeamName,
+                    TeamName = k.Key.TeamName,
+                    CountNums = k.Count()
+                })
                 .ToListAsync();
         }
 
