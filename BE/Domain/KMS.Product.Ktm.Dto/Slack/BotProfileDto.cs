@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace KMS.Product.Ktm.Api.Models.Events
+namespace KMS.Product.Ktm.Dto
 {
-    public partial class BotProfile
+    public partial class BotProfileDto
     {
         [JsonProperty("app_id")]
         public string AppId { get; set; }
@@ -11,7 +11,7 @@ namespace KMS.Product.Ktm.Api.Models.Events
         public bool Deleted { get; set; }
 
         [JsonProperty("icons")]
-        public Icons Icons { get; set; }
+        public IconsDto Icons { get; set; }
 
         [JsonProperty("id")]
         public string Id { get; set; }

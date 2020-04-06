@@ -1,18 +1,17 @@
-﻿using KMS.Product.Ktm.EntitiesServices.DTOs;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KMS.Product.Ktm.EntitiesServices.Responses
+namespace KMS.Product.Ktm.Dto
 {
-    public class KmsEmployeeResponse
+    public class KmsEmployeeResponseDto
     {
         /// <summary>
         /// Map Items in JSON response to KmsEmployeeDTOs when deserializing
         /// </summary>
         [JsonProperty("Items")]
-        public IEnumerable<KmsEmployeeDTO> KmsEmployeeDTOs { get; set; }
+        public IEnumerable<KmsEmployeeDto> KmsEmployees { get; set; }
 
         public int PageIndex { get; set; }
 

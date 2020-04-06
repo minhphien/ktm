@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace KMS.Product.Ktm.Api.Models.Events
+namespace KMS.Product.Ktm.Dto
 {
-    public partial class Icons
+    public partial class IconsDto
     {
         [JsonProperty("image_36")]
         public Uri Image36 { get; set; }

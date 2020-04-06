@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using KMS.Product.Ktm.Dto;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.EntitiesServices.DTOs;
-using KMS.Product.Ktm.EntitiesServices.Responses;
+using KMS.Product.Ktm.Repository;
 using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using KMS.Product.Ktm.Services.TeamService;
@@ -99,7 +99,7 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         {
             // Fetch employees from KMS and map from DTO to Employee
             var fetchedEmployeeDTOs = await GetEmployeesFromKmsAsync();
-            var fetchedEmployees = _mapper.Map<IEnumerable<KmsEmployeeDTO>, IEnumerable<Employee>>(fetchedEmployeeDTOs);
+            var fetchedEmployees = _mapper.Map<IEnumerable<KmsEmployeeDto>, IEnumerable<Employee>>(fetchedEmployeeDTOs);
             // Get employees from database
             var databaseEmployees = await GetAllEmployeesAsync();
             // Get employee badge ids
@@ -123,9 +123,9 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         ///     Default page size: 10
         /// </summary>
         /// <returns>A collection of all KMS employee DTOs</returns>
-        private async Task<IEnumerable<KmsEmployeeDTO>> GetEmployeesFromKmsAsync()
+        private async Task<IEnumerable<KmsEmployeeDto>> GetEmployeesFromKmsAsync()
         {
-            var KmsEmployeeDTOs = new List<KmsEmployeeDTO>();
+            var KmsEmployeeDTOs = new List<KmsEmployeeDto>();
             // Initialize query string for request to KMS HRM API
             var pageIndex = 1;
             var pageSize = 100;
@@ -143,10 +143,10 @@ namespace KMS.Product.Ktm.Services.EmployeeService
                 {
                     // Convert response JSON to object and get total count
                     var contentString = await response.Content.ReadAsStringAsync();
-                    var kmsEmployeeResponse = JsonConvert.DeserializeObject<KmsEmployeeResponse>(contentString);
+                    var kmsEmployeeResponse = JsonConvert.DeserializeObject<KmsEmployeeResponseDto>(contentString);
                     totalCount = kmsEmployeeResponse.TotalCount;
                     // Add KMS employee DTOs to list
-                    KmsEmployeeDTOs.AddRange(kmsEmployeeResponse.KmsEmployeeDTOs);
+                    KmsEmployeeDTOs.AddRange(kmsEmployeeResponse.KmsEmployees);
                     // Prepare next request
                     pageIndex += 1;
                 }

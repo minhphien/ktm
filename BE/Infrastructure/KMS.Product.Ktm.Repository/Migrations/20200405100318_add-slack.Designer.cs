@@ -4,14 +4,16 @@ using KMS.Product.Ktm.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KMS.Product.Ktm.Repository.Migrations
 {
     [DbContext(typeof(KtmDbContext))]
-    partial class KtmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200405100318_add-slack")]
+    partial class addslack
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("CurrentTeam")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -53,6 +52,9 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("SlackAccount")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SlackUserId")
                         .HasColumnType("nvarchar(max)");
@@ -148,9 +150,11 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.HasIndex("KudoDetailId");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("ReceiverId")
+                        .IsUnique();
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("SenderId")
+                        .IsUnique();
 
                     b.ToTable("Kudos");
                 });
@@ -242,7 +246,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeTeam", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Employee")
-                        .WithMany("EmployeeTeams")
+                        .WithMany("employeeTeams")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -262,15 +266,15 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Receiver")
-                        .WithMany("KudoReceives")
-                        .HasForeignKey("ReceiverId")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeTeam", "Receiver")
+                        .WithOne()
+                        .HasForeignKey("KMS.Product.Ktm.Entities.Models.Kudo", "ReceiverId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Sender")
-                        .WithMany("KudoSends")
-                        .HasForeignKey("SenderId")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.EmployeeTeam", "Sender")
+                        .WithOne()
+                        .HasForeignKey("KMS.Product.Ktm.Entities.Models.Kudo", "SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -278,7 +282,7 @@ namespace KMS.Product.Ktm.Repository.Migrations
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.KudoDetail", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.KudoType", "KudoType")
-                        .WithMany("KudoDetails")
+                        .WithMany("Kudos")
                         .HasForeignKey("KudoTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

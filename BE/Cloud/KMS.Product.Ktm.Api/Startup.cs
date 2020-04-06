@@ -19,6 +19,8 @@ using KMS.Product.Ktm.Services.EmployeeService;
 using KMS.Product.Ktm.Services.AutoMapper;
 using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.SlackService;
+using System;
+using KMS.Product.Ktm.Api.Entensions;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -41,14 +43,6 @@ namespace KMS.Product.Ktm.Api
             {
                 builder.AddUserSecrets<Startup>();
             }
-            else
-            {
-                var settings = builder.Build();
-                builder.AddAzureAppConfiguration(options =>
-                {
-                    options.Connect(settings["ConnectionStrings:AppConfig"]);
-                });
-            }
             Configuration = builder.Build();
         }
 
@@ -57,6 +51,7 @@ namespace KMS.Product.Ktm.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSlackClient(Configuration);
             services.AddControllers(); 
             services.AddAuthentication("KmsTokenAuth")
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
@@ -67,21 +62,8 @@ namespace KMS.Product.Ktm.Api
                     b => b.MigrationsAssembly("KMS.Product.Ktm.Repository"))
                 .EnableSensitiveDataLogging()
                 .UseLoggerFactory(MyLoggerFactory));
-            services.AddScoped<IKudoTypeService, KudoTypeService>();
-            services.AddScoped<IKudoService, KudoService>();
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IIdleEmailService, IdleEmailService>();
-            services.AddScoped<IAuthenticateService, AuthenticateService>();
-            services.AddScoped<ITeamService, TeamService>();
-            services.AddScoped<IEmployeeService, EmployeeService>();
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-            services.AddScoped<IKudoTypeRepository, KudoTypeRepository>();
-            services.AddScoped<IKudoRepository, KudoRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<ITeamRepository, TeamRepository>();
-            services.AddScoped<IEmployeeTeamRepository, EmployeeTeamRepository>();
-            services.AddSingleton<ISlackService, SlackService>();
-            
+            services.AddKtmRepositories();
+            services.AddKtmServices();
             // mapper
             services.AddAutoMapper(typeof(KudosProfile), typeof(AutoMapperProfile));
         }

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace KMS.Product.Ktm.Api.Models.Events
+namespace KMS.Product.Ktm.Dto
 {
-    public partial class SlackEvent
+    public partial class SlackEventDto
     {
         [JsonProperty("api_app_id")]
         public string ApiAppId { get; set; }
@@ -14,7 +14,7 @@ namespace KMS.Product.Ktm.Api.Models.Events
         public string Challenge { get; set; }
 
         [JsonProperty("event")]
-        public Event Event { get; set; }
+        public EventDto Event { get; set; }
 
         [JsonProperty("event_id")]
         public string EventId { get; set; }

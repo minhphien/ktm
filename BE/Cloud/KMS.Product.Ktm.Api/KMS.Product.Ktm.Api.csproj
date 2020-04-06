@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Dto\KMS.Product.Ktm.Dto.csproj" />
     <ProjectReference Include="..\..\Domain\KMS.Product.Ktm.Entities\KMS.Product.Ktm.Entities.csproj" />
     <ProjectReference Include="..\..\Infrastructure\KMS.Product.Ktm.Common\KMS.Product.Ktm.Common.csproj" />
     <ProjectReference Include="..\..\Infrastructure\KMS.Product.Ktm.Repository\KMS.Product.Ktm.Repository.csproj" />

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace KMS.Product.Ktm.EntitiesServices.DTOs
+namespace KMS.Product.Ktm.Dto
 {
-    public class KmsEmployeeDTO
+    public class KmsEmployeeDto
     {
         /// <summary>
         /// Map EmployeeCode in JSON response to EmployeeBadgeId when deserializing

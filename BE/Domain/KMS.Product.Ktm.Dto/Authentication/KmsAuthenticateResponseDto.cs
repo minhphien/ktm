@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KMS.Product.Ktm.EntitiesServices.Responses
+namespace KMS.Product.Ktm.Dto
 {
-    public class KmsAuthenticateResponse
+    public class KmsAuthenticateResponseDto
     {
         public string Token { get; set; }
     }
