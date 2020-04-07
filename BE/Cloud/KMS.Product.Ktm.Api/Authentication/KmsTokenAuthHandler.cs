@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -14,21 +10,32 @@ using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Api.Authentication
 {
-    // Customized authentication handler for KMS token verification
+    /// <summary>
+    /// Customized authentication handler for KMS token verification
+    /// </summary>
     public class KmsTokenAuthHandler : AuthenticationHandler<KmsTokenAuthOptions>
     {
+        private const string kmsAuthenticateUrl = "https://home.kms-technology.com/api/account/authenticate";
 
+        /// <summary>
+        /// Init KmsTokenAuthHandler
+        /// </summary>
         public KmsTokenAuthHandler(IOptionsMonitor<KmsTokenAuthOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) 
             : base(options, logger, encoder, clock)
         {
         }
 
+        /// <summary>
+        /// Handle authenticate
+        /// </summary>
+        /// <returns></returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             HttpClient client = new HttpClient();
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            var response = await client.GetAsync("https://home.kms-technology.com/api/account/authenticate");
+            var response = await client.GetAsync(kmsAuthenticateUrl);
+
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 // not safe , just as an example , should custom claims on your own 

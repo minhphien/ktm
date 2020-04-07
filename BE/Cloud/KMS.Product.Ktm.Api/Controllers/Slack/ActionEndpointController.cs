@@ -1,18 +1,23 @@
 ﻿using KMS.Product.Ktm.Dto;
 using KMS.Product.Ktm.Services.SlackService;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace KMS.Product.Ktm.KudosReceiver.Controllers
 {
-    [Route("slack/[controller]")]
+    [Route("api/slack/[controller]")]
     [ApiController]
     public class ActionEndpointController : ControllerBase
     {
-        private readonly ISlackService slackService;
+        private readonly ISlackService _slackService;
 
+        /// <summary>
+        /// Init ActionEndpointController
+        /// </summary>
+        /// <param name="slackService"></param>
         public ActionEndpointController(ISlackService slackService)
         {
-            this.slackService = slackService;
+            _slackService = slackService ?? throw new ArgumentNullException($"{nameof(slackService)}"); ;
         }
 
         /// <summary>Get Method for testing.</summary>
@@ -30,9 +35,9 @@ namespace KMS.Product.Ktm.KudosReceiver.Controllers
         public string Post([FromBody] SlackEventDto data)
         {
             var result = data?.Challenge;
-            var sender = slackService.Users?[data.Event?.User];
+            var sender = _slackService.Users?[data.Event?.User];
             if (sender?.is_bot ?? true) return result;
-            slackService.ProceedReceviedMessage(sender.id, data.Event.Text);
+            _slackService.ProceedReceviedMessage(sender.id, data.Event.Text);
             return result;
         }
     }

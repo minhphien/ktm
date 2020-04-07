@@ -25,7 +25,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         public ReportController(IKudoService kudoService, IMapper mapper)
         {
             _kudoService = kudoService ?? throw new ArgumentNullException($"{nameof(kudoService)}");
-            _mapper = mapper;
+            _mapper = mapper ?? throw new ArgumentNullException($"{nameof(mapper)}");
         }
 
         /// <summary>
