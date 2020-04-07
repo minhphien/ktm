@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KMS.Product.Ktm.Api.Exceptions;
+﻿using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.KudoTypeService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
