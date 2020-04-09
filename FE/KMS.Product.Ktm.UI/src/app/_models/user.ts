@@ -2,10 +2,14 @@
 
 export class User {
     id: number;
-    username: string;
-    password: string;
+    employeeCode: string;
     firstName: string;
     lastName: string;
-    role: Role;
+    middleName: string;
+    displayName: string;
+    userName: string;
+    email: string;
     token?: string;
+    fullName: string;
+    shortName: string;
 }
