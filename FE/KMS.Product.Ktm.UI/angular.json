@@ -28,7 +28,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less",
+              "src/assets/scss/argon.scss"
             ],
             "scripts": []
           },

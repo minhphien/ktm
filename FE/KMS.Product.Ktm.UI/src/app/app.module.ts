@@ -10,9 +10,12 @@ import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
 
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { HomeComponent } from './home';
-import { AdminComponent } from './admin';
-import { LoginComponent } from './login';
+import { HomeComponent } from './pages/home';
+import { AdminComponent } from './pages/admin';
+import { LoginComponent } from './pages/login';
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+// import { SidebarComponent } from './components/sidebar/sidebar.component';
+
 
 @NgModule({
     imports: [
@@ -25,7 +28,9 @@ import { LoginComponent } from './login';
         AppComponent,
         HomeComponent,
         AdminComponent,
-        LoginComponent
+        LoginComponent,
+        UserProfileComponent
+        
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
