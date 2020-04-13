@@ -21,18 +21,7 @@ export class AuthenticationService {
     }
 
     login(accessToken: string) {
-        // return this.http.get<any>(`${environment.apiUrl}/api/me`}
-        //     .pipe(map(user => {
-        //         // login successful if there's a jwt token in the response
-        //         if (user && user.token) {
-        //             // store user details and jwt token in local storage to keep user logged in between page refreshes
-        //             localStorage.setItem('currentUser', JSON.stringify(user));
-        //             this.currentUserSubject.next(user);
-        //         }
-
-        //         return user;
-        //     }));
-        return this.http.get<User>(`${environment.apiUrl}/api/me`, { headers: {
+        return this.http.get<User>(`${environment.homeSSO}/api/account/authenticate`, { headers: {
             "Authorization": `Bearer ${accessToken}`
         }}).pipe(map(user => {
             console.log(user);
