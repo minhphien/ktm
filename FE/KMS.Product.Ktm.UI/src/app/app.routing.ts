@@ -20,7 +20,7 @@ const routes: Routes = [
         children: authorizedRoutes
     },
     {
-        path: '',
+        path: "",
         component: AnonymousLayoutComponent,
         children: [
             { path: "login", component: LoginComponent }
