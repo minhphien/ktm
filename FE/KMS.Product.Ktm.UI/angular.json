@@ -24,12 +24,17 @@
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": [
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              },
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.less",
-              "src/assets/scss/argon.scss"
+              "src/assets/scss/argon.scss",
+              "src/styles.less"
             ],
             "scripts": []
           },

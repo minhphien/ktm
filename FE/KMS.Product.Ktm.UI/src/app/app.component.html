@@ -1,27 +1,11 @@
 <div *ngIf="!loading">
-    
-    <!-- nav -->
-    <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" routerLink="/">Home</a>
-            <a class="nav-item nav-link" routerLink="/admin" *ngIf="isAdmin">Admin</a>
-            <a class="nav-item nav-link" routerLink="/user-profile">User Profile</a>
-            <a class="nav-item nav-link" (click)="logout()">Logout</a>
-        </div>
-    </nav>
-
-    <!-- <app-sidebar></app-sidebar> -->
-    <!-- main app container -->
-    <div class="container">
-        <router-outlet></router-outlet>
-    </div>
-
+    <router-outlet></router-outlet>
     <!-- credits -->
     <div class="text-center mt-4">
-
-    <div  *ngIf="loading" class="d-flex align-items-center justify-content-center vh-100">
-        <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="sr-only">Loading...</span>
+        <div  *ngIf="loading" class="d-flex align-items-center justify-content-center vh-100">
+            <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
     </div>
 </div>

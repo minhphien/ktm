@@ -1,33 +1,31 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
-
 import { HomeComponent } from './pages/home';
-import { AdminComponent } from './pages/admin';
 import { LoginComponent } from './pages/login';
 import { AuthGuard } from './_helpers';
-import { Role } from './_models';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';
+import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-layout.component';
+
+const authorizedRoutes: Routes = [
+    { path: "", redirectTo: "home", pathMatch: "full" },
+    { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
+    { path: "user-profile", component: UserProfileComponent, canActivate: [AuthGuard] }
+];
 
 const routes: Routes = [
     {
-        path: '',
-        component: HomeComponent,
-        canActivate: [AuthGuard]
-    },
-    {
-        path: 'admin',
-        component: AdminComponent,
+        path: "",
+        component: MasterLayoutComponent,
         canActivate: [AuthGuard],
-        // data: { roles: [Role.Admin] }
+        children: authorizedRoutes
     },
     {
-        path: 'login',
-        component: LoginComponent
+        path: '',
+        component: AnonymousLayoutComponent,
+        children: [
+            { path: "login", component: LoginComponent }
+        ]
     },
-    {
-        path: 'user-profile',
-        component: UserProfileComponent
-    },
-
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
 ];

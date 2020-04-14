@@ -7,14 +7,11 @@ import { first } from 'rxjs/operators';
 
 @Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent implements OnInit {
-    currentUser: User;
     loading = false;
-
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService
     ) {
-        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
 
     }
     ngOnInit(): void {
