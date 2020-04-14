@@ -1,14 +1,18 @@
-﻿
-<div class="card mt-4">
-    <h4 class="card-header">Home</h4>
-    <div class="card-body">
-        <p>You're logged in with Angular 8 & JWT!!</p>
-        <p>Your role is: <strong>{{currentUser.role}}</strong>.</p>
-        <p>This page can be accessed by <u>all authenticated users</u>.</p>
-        <p class="mb-1">Current user from secure api end point:</p>
-        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-        <ul *ngIf="userFromApi">
-            <li>{{userFromApi.firstName}} {{userFromApi.lastName}}</li>
-        </ul>
-    </div>
+﻿<div nz-row [nzGutter]="gutter">
+  <div nz-col nzXs="24" nzLg="18" class=" gutter-row">
+    <h2 style="position: absolute;">Kudos board</h2>
+
+    <nz-tabset nzTabPosition="top">
+      <nz-tab nzTitle="Kudos received">
+        <app-table></app-table>
+      </nz-tab>
+      <nz-tab nzTitle="Kudos sent">
+        <app-table></app-table>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+
+  <div nz-col nzXs="24" nzLg="6" style="display: inline-block" class="card card-profile shadow gutter-row">
+    <app-user-info-panel [currentUser]="currentUser"></app-user-info-panel>
+  </div>
 </div>

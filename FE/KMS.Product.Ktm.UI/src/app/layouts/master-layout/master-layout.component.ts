@@ -12,6 +12,16 @@ import { Router } from '@angular/router';
 export class MasterLayoutComponent implements OnInit {
   currentUser: User;
   loading = false;
+  menus = [
+    {
+      name: 'Home',
+      path: '/home'
+    },
+    {
+      name: 'User info',
+      path: '/user-profile'
+    }
+  ]
 
   constructor(
     private authenticationService: AuthenticationService,
