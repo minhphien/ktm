@@ -3,6 +3,7 @@ import { AuthenticationService } from '@app/_services';
 import { User } from '@app/_models';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-master-layout',
@@ -40,7 +41,7 @@ export class MasterLayoutComponent implements OnInit {
         this.router.navigate([window.location.pathname]);
       });
     } else {
-      window.location.replace(`https://home.kms-technology.com/login?returnUrl=${window.location.href}`)
+      window.location.replace(`${environment.homeSSO}/login?returnUrl=${window.location.href}`)
     }
   }
 
