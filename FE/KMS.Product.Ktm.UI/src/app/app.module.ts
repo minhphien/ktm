@@ -23,7 +23,7 @@ import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-l
 import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';;
 import { UserInfoPanelComponent } from './components/home/user-info-panel/user-info-panel.component'
 ;
-import { TableComponent } from './components/_shared/table/table.component'
+import { TableComponent } from './components/home/table/table.component'
 // import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 registerLocaleData(en);
