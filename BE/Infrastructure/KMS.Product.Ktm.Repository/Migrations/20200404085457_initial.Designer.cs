@@ -4,18 +4,20 @@ using KMS.Product.Ktm.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KMS.Product.Ktm.Repository.Migrations
 {
     [DbContext(typeof(KtmDbContext))]
-    partial class KtmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200404085457_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "5.0.0-preview.2.20120.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -54,9 +56,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SlackUserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeRoleId");
@@ -84,15 +83,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmployeeRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(2020, 4, 16, 15, 33, 8, 796, DateTimeKind.Local).AddTicks(2038),
-                            Modified = new DateTime(2020, 4, 16, 15, 33, 8, 796, DateTimeKind.Local).AddTicks(2509),
-                            RoleName = "Default"
-                        });
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.EmployeeTeam", b =>
@@ -184,10 +174,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SlackEmoji")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("KudoTypeId");
@@ -215,15 +201,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("KudoTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(2020, 4, 16, 15, 33, 8, 797, DateTimeKind.Local).AddTicks(4060),
-                            Modified = new DateTime(2020, 4, 16, 15, 33, 8, 797, DateTimeKind.Local).AddTicks(4072),
-                            TypeName = "Default"
-                        });
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Team", b =>
@@ -233,9 +210,6 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .HasColumnName("TeamId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");

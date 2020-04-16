@@ -1,37 +1,45 @@
-﻿using AutoMapper;
-using KMS.Product.Ktm.Dto;
-using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.AuthenticateService;
-using KMS.Product.Ktm.Services.RepoInterfaces;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using AutoMapper;
+using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Dto.KmsTeam;
+using KMS.Product.Ktm.Services.AuthenticateService;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Services.TeamService
 {
     public class TeamService : ITeamService
     {
+        private IConfiguration Configuration { get; }
         private readonly ITeamRepository _teamRepository;
         private readonly IMapper _mapper;
         private readonly IAuthenticateService _authenticateService;
-
-        public const string KmsTeamRequestUrl = "https://hr.kms-technology.com/api/projects/ReturnListProjectClient";
+        private readonly ILogger<TeamService> _logger;
 
         /// <summary>
-        /// Inject Team repository, AutoMapper, Authenticate service
+        /// Inject Team repository, AutoMapper, Authenticate service, Logger 
         /// </summary>
         /// <returns></returns>
-        public TeamService(ITeamRepository teamRepository, IMapper mapper, IAuthenticateService authenticateService)
+        public TeamService(
+            IConfiguration configuration,
+            ITeamRepository teamRepository, 
+            IMapper mapper, 
+            IAuthenticateService authenticateService, 
+            ILogger<TeamService> logger)
         {
+            Configuration = configuration ?? throw new ArgumentNullException($"{nameof(configuration)}");
             _teamRepository = teamRepository ?? throw new ArgumentNullException($"{nameof(teamRepository)}");
             _mapper = mapper ?? throw new ArgumentNullException($"{nameof(mapper)}");
             _authenticateService = authenticateService ?? throw new ArgumentNullException($"{nameof(authenticateService)}");
+            _logger = logger ?? throw new ArgumentNullException($"{nameof(logger)}");
         }
 
         /// <summary>
@@ -51,6 +59,7 @@ namespace KMS.Product.Ktm.Services.TeamService
         {
             return await _teamRepository.GetByIdAsync(teamId);
         }
+
         /// <summary>
         /// Create a new team
         /// </summary>
@@ -90,7 +99,7 @@ namespace KMS.Product.Ktm.Services.TeamService
         {
             var team = (await _teamRepository.GetTeamsByConditionAsync(t => t.TeamName == teamName)).SingleOrDefault();
 
-            if (team.Equals(null))
+            if (team == null)
             {
                 var newTeam = new Team()
                 {
@@ -111,25 +120,36 @@ namespace KMS.Product.Ktm.Services.TeamService
         /// 3. Disband teams
         /// </summary>
         /// <returns></returns>
-        public async Task SyncTeamDatabaseWithKmsAsync()
+        public async Task SyncTeamDatabaseWithKmsAsync(DateTime now)
         {
+            _logger.LogInformation("Start sync team");
             // Fetch teams from KMS and map from DTO to Team
             var fetchedTeamsDto = await GetTeamsFromKmsAsync();
-            var fetchedTeams = _mapper.Map<IEnumerable<KmsTeamDto>, IEnumerable<Team>>(fetchedTeamsDto);
+            var fetchedDistinctTeamsDto = fetchedTeamsDto.GroupBy(t => t.TeamName)
+                .Select(t => t.First())
+                .ToList();
+            var fetchedTeams = _mapper.Map<IEnumerable<KmsTeamDto>, IEnumerable<Team>>(fetchedDistinctTeamsDto);
+
             // Get teams from database
             var databaseTeams = await GetAllTeamsAsync();
+
             // Get team names
             var fetchedTeamNames = fetchedTeams.Select(e => e.TeamName).ToList();
             var databaseTeamNames = databaseTeams.Select(e => e.TeamName).ToList();
+
             // Sync new teams
-            var newTeams = fetchedTeams.Where(e => !databaseTeamNames.Contains(e.TeamName));
-            await SyncNewTeams(newTeams);
-            // Sync active teams
-            var activeTeams = fetchedTeams.Where(e => databaseTeamNames.Contains(e.TeamName));
-            await SyncActiveTeams(activeTeams);
+            var newTeams = fetchedTeams.Where(e => !databaseTeamNames.Contains(e.TeamName)).ToList();
+            if (newTeams.Count() > 0)
+            {
+                await SyncNewTeams(newTeams);
+            }
+
             // Sync disband teams
-            var disbandTeams = databaseTeams.Where(e => !fetchedTeamNames.Contains(e.TeamName));
-            await SyncDisbandTeams(disbandTeams);
+            var disbandTeams = databaseTeams.Where(e => !fetchedTeamNames.Contains(e.TeamName)).ToList();
+            if (disbandTeams.Count() > 0)
+            {
+                await SyncDisbandTeams(disbandTeams);
+            }
         }
 
         /// <summary>
@@ -139,23 +159,25 @@ namespace KMS.Product.Ktm.Services.TeamService
         /// <returns>A collection of all KMS team DTOs</returns>
         private async Task<IEnumerable<KmsTeamDto>> GetTeamsFromKmsAsync()
         {
-            var KmsTeamDTOs = new List<KmsTeamDto>();
+            var kmsTeamDTOs = new List<KmsTeamDto>();
+
             // Initialize httpclient with token from login service to send request to KMS HRM 
-            var bearerToken = _authenticateService.AuthenticateUsingToken();
+            var bearerToken = await _authenticateService.AuthenticateUsingConfiguration();
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
-            var response = await client.GetAsync(KmsTeamRequestUrl);
+            var response = await client.GetAsync(Configuration.GetValue<string>("KmsInfo:KmsTeamRequestUrl"));
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 // Convert response JSON to object
                 var contentString = await response.Content.ReadAsStringAsync();
-                var kmsTeamResponse = JsonConvert.DeserializeObject<KmsTeamResponseDto>(contentString);
+                var jsonKmsTeamDTOs = JsonConvert.DeserializeObject<IEnumerable<KmsTeamDto>>(contentString);
+
                 // Add KMS team DTOs to list
-                KmsTeamDTOs.AddRange(kmsTeamResponse.KmsTeams);
+                kmsTeamDTOs.AddRange(jsonKmsTeamDTOs);
             }
 
-            return KmsTeamDTOs;
+            return kmsTeamDTOs;
         }
 
         /// <summary>
@@ -167,21 +189,10 @@ namespace KMS.Product.Ktm.Services.TeamService
         {
             foreach (var newTeam in newTeams)
             {
-                await CreateTeamAsync(newTeam);
+                newTeam.Active = true;
             }
-        }
 
-        /// <summary>
-        /// Update active teams in database 
-        /// </summary>
-        /// <param name="activeTeams"></param>
-        /// <returns></returns>
-        private async Task SyncActiveTeams(IEnumerable<Team> activeTeams)
-        {
-            foreach (var activeTeam in activeTeams)
-            {
-                await UpdateTeamAsync(activeTeam);
-            }
+            await _teamRepository.CreateTeams(newTeams);
         }
 
         /// <summary>
@@ -193,8 +204,10 @@ namespace KMS.Product.Ktm.Services.TeamService
         {
             foreach (var disband in disbandTeams)
             {
-                await UpdateTeamAsync(disband);
+                disband.Active = false;
             }
-        }
+
+            await _teamRepository.UpdateTeams(disbandTeams);
+        } 
     }
 }

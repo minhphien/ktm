@@ -50,6 +50,6 @@ namespace KMS.Product.Ktm.Services.EmployeeService
         ///     Update release date of the current team to now
         /// </summary>
         /// <returns></returns>
-        Task SyncEmployeeDatabaseWithKms();
+        Task SyncEmployeeDatabaseWithKms(DateTime now);
     }
 }

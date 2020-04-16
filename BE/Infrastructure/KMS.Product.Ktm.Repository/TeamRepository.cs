@@ -1,5 +1,7 @@
 ﻿using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.RepoInterfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +13,13 @@ namespace KMS.Product.Ktm.Repository
 {
     public class TeamRepository : BaseRepository<Team>, ITeamRepository
     {
-        public TeamRepository(KtmDbContext context) : base(context)
+        private readonly KtmDbContext context;
+        private readonly DbSet<Team> team;
+
+        public TeamRepository(KtmDbContext context, ILogger<Team> logger) : base(context, logger)
         {
+            this.context = context;
+            team = context.Set<Team>();
         }
 
         /// <summary>
@@ -31,6 +38,26 @@ namespace KMS.Product.Ktm.Repository
         public async Task<IEnumerable<Team>> GetTeamsByConditionAsync(Expression<Func<Team, bool>> expression)
         {
             return await Task.FromResult(GetByCondition(expression).ToList());
+        }
+
+        /// <summary>
+        /// Create teams
+        /// </summary>
+        /// <returns></returns>
+        public async Task CreateTeams(IEnumerable<Team> teams)
+        {
+            team.AddRange(teams);
+            await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Update teams
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateTeams(IEnumerable<Team> teams)
+        {
+            team.UpdateRange(teams);
+            await context.SaveChangesAsync();
         }
     }
 }
