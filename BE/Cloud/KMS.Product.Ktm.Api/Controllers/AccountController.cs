@@ -9,7 +9,7 @@ using KMS.Product.Ktm.Api.Exceptions;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
-    [Route("api")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
