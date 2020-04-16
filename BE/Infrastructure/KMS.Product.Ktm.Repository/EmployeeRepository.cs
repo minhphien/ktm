@@ -1,22 +1,23 @@
-using KMS.Product.Ktm.Entities.Models;
+﻿using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Repository
 {
     public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
+        private readonly KtmDbContext context;
         private readonly DbSet<Employee> employee;
 
-        public EmployeeRepository(KtmDbContext context) : base(context)
+        public EmployeeRepository(KtmDbContext context, ILogger<Employee> logger) : base(context, logger)
         {
+            this.context = context;
             employee = context.Set<Employee>();
         }
 
@@ -34,7 +35,7 @@ namespace KMS.Product.Ktm.Repository
         /// <returns>A collection of all employees</returns>
         public async Task<IEnumerable<Employee>> GetEmployeesAsync()
         {
-            return await Task.FromResult(GetAll().ToList());
+            return await Task.FromResult(GetAll().Include(e => e.EmployeeTeams).ToList());
         }
 
         /// <summary>
@@ -45,6 +46,28 @@ namespace KMS.Product.Ktm.Repository
         public async Task<IEnumerable<Employee>> GetEmployeeByEmails(List<string> emailaddresses)
         {
             return await employee.Where(e => emailaddresses.Contains(e.Email)).ToListAsync();
+        }
+
+        /// <summary>
+        /// create employee
+        /// </summary>
+        /// <param name="employees"></param>
+        /// <returns></returns>
+        public async Task CreateEmployees(IEnumerable<Employee> employees)
+        {
+            employee.AddRange(employees);
+            await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// update employee
+        /// </summary>
+        /// <param name="employees"></param>
+        /// <returns></returns>
+        public async Task UpdateEmployees(IEnumerable<Employee> employees)
+        {
+            employee.UpdateRange(employees);
+            await context.SaveChangesAsync();
         }
     }
 }

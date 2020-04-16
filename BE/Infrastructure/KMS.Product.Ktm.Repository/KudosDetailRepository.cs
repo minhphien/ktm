@@ -1,9 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using System.Linq;
+using AutoMapper;
 using KMS.Product.Ktm.Entities.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace KMS.Product.Ktm.Repository
 {
@@ -12,7 +13,7 @@ namespace KMS.Product.Ktm.Repository
         private readonly KtmDbContext context;
         public readonly DbSet<KudoDetail> KudosDetail;
         private readonly IMapper mapper;
-        public KudosDetailRepository(KtmDbContext context, IMapper mapper) : base(context)
+        public KudosDetailRepository(KtmDbContext context, IMapper mapper, ILogger<KudoDetail> logger) : base(context, logger)
         {
             this.context = context;
             KudosDetail = context.Set<KudoDetail>();

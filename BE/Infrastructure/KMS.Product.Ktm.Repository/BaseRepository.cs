@@ -1,6 +1,7 @@
 ﻿using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace KMS.Product.Ktm.Repository
     {
         private readonly KtmDbContext context;
         private readonly DbSet<T> entities;
+        private readonly ILogger<T> _logger;
 
-        public BaseRepository(KtmDbContext context)
+        public BaseRepository(KtmDbContext context, ILogger<T> logger)
         {
             this.context = context;
             entities = context.Set<T>();
+            _logger = logger;
         }
 
         /// <summary>
@@ -73,7 +76,9 @@ namespace KMS.Product.Ktm.Repository
             entities.Add(entity);
 
             if (saveChange)
+            {
                 await context.SaveChangesAsync();
+            }
         }
 
         /// <summary>

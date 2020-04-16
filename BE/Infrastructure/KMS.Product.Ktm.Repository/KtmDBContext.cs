@@ -42,6 +42,14 @@ namespace KMS.Product.Ktm.Repository
                 .WithMany(a => a.KudoReceives)
                 .HasForeignKey(a => a.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<EmployeeRole>()
+                .HasData(
+                new EmployeeRole {Id = 1, Created = DateTime.Now, Modified = DateTime.Now, RoleName = "Default"});
+
+            modelBuilder.Entity<KudoType>()
+                .HasData(
+                new KudoType { Id = 1, Created = DateTime.Now, Modified = DateTime.Now, TypeName = "Default" });
         }
 
         public override int SaveChanges()
