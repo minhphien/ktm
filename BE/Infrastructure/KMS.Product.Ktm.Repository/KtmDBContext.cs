@@ -21,6 +21,9 @@ namespace KMS.Product.Ktm.Repository
         public DbSet<KudoType> KudoTypes { get; set; }
         public DbSet<Kudo> Kudos { get; set; }
         public DbSet<KudoDetail> KudoDetails { get; set; }
+        public DbSet<CheckListItem> CheckListItems { get; set; }
+        public DbSet<CheckListStatus> CheckListStatus { get; set; }
+        public DbSet<CheckListAssign> CheckListAssigns { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,13 +46,24 @@ namespace KMS.Product.Ktm.Repository
                 .HasForeignKey(a => a.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Employee>()
+                .HasOne(a => a.Mentor)
+                .WithMany(a => a.Mentee)
+                .HasForeignKey(a => a.MentorId);
+
             modelBuilder.Entity<EmployeeRole>()
                 .HasData(
-                new EmployeeRole {Id = 1, Created = DateTime.Now, Modified = DateTime.Now, RoleName = "Default"});
+                new EmployeeRole {Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), RoleName = "Default"});
 
             modelBuilder.Entity<KudoType>()
                 .HasData(
-                new KudoType { Id = 1, Created = DateTime.Now, Modified = DateTime.Now, TypeName = "Default" });
+                new KudoType { Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), TypeName = "Default" });
+
+            modelBuilder.Entity<CheckListStatus>()
+                .HasData(
+                new CheckListStatus { Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "To Do" },
+                new CheckListStatus { Id = 2, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "In Progress" },
+                new CheckListStatus { Id = 3, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "Done" });
         }
 
         public override int SaveChanges()
