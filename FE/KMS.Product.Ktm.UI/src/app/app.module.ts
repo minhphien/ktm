@@ -22,7 +22,7 @@ import { FooterComponent } from './components/_shared/footer/footer.component';
 import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-layout.component';
 import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';;
 import { UserInfoPanelComponent } from './components/home/user-info-panel/user-info-panel.component';
-import { TableComponent } from './components/_shared/table/table.component';
+import { TableComponent } from './components/home/table/table.component';
 import { CreateKudosComponent } from './components/_shared/create-kudos/create-kudos.component';
 import { LoaderComponent } from './components/_shared/loader/loader.component'// import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { appStateReducer } from './appState.reducer';
