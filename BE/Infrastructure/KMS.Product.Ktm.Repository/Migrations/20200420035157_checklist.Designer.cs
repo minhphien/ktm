@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KMS.Product.Ktm.Repository.Migrations
 {
     [DbContext(typeof(KtmDbContext))]
-    [Migration("20200417073636_checklist")]
+    [Migration("20200420035157_checklist")]
     partial class checklist
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,11 +21,11 @@ namespace KMS.Product.Ktm.Repository.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListAssign", b =>
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Assignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("CheckListAssignId")
+                        .HasColumnName("AssignmentId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -53,22 +53,59 @@ namespace KMS.Product.Ktm.Repository.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("CheckListAssigns");
+                    b.ToTable("Assignments");
                 });
 
-            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListItem", b =>
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.AssignmentItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("CheckListItemId")
+                        .HasColumnName("AssignmentItemId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AssigneeComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AssignmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CheckListItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MentorComment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("CheckListItemId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("AssignmentItems");
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("CheckListId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Detail")
                         .HasColumnType("nvarchar(max)");
@@ -79,61 +116,40 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Tilte")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("CheckListItems");
+                    b.ToTable("CheckLists");
                 });
 
-            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListStatus", b =>
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("CheckListStatusId")
+                        .HasColumnName("CheckListItemId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CheckListId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("CheckListStatus");
+                    b.HasIndex("CheckListId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "To Do"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "In Progress"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "Done"
-                        });
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("CheckListItems");
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Employee", b =>
@@ -252,6 +268,36 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.ToTable("EmployeeTeams");
                 });
 
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ItemId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Detail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Tilte")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Items");
+                });
+
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Kudo", b =>
                 {
                     b.Property<int>("Id")
@@ -348,6 +394,51 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         });
                 });
 
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("StatusId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Status");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "To Do"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "In Progress"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Created = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Modified = new DateTime(2020, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Done"
+                        });
+                });
+
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Team", b =>
                 {
                     b.Property<int>("Id")
@@ -373,32 +464,62 @@ namespace KMS.Product.Ktm.Repository.Migrations
                     b.ToTable("Teams");
                 });
 
-            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListAssign", b =>
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Assignment", b =>
                 {
                     b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Assignee")
-                        .WithMany("CheckListAssigns")
+                        .WithMany("Assignments")
                         .HasForeignKey("AssigneeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.CheckListStatus", "Status")
-                        .WithMany("CheckListAssigns")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Status", "Status")
+                        .WithMany("Assignments")
                         .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.AssignmentItem", b =>
+                {
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Assignment", "Assignment")
+                        .WithMany("AssignmentItems")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.CheckListItem", "CheckListItem")
+                        .WithMany("AssignmentItems")
+                        .HasForeignKey("CheckListItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Status", "Status")
+                        .WithMany("AssignmentItems")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckList", b =>
+                {
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Team", "Team")
+                        .WithMany("CheckLists")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.CheckListItem", b =>
                 {
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Creator")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.CheckList", "CheckList")
                         .WithMany("CheckListItems")
-                        .HasForeignKey("CreatorId")
+                        .HasForeignKey("CheckListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KMS.Product.Ktm.Entities.Models.Team", "Team")
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Item", "Item")
                         .WithMany("CheckListItems")
-                        .HasForeignKey("TeamId")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -428,6 +549,15 @@ namespace KMS.Product.Ktm.Repository.Migrations
                         .WithMany("EmployeeTeams")
                         .HasForeignKey("TeamID")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KMS.Product.Ktm.Entities.Models.Item", b =>
+                {
+                    b.HasOne("KMS.Product.Ktm.Entities.Models.Employee", "Creator")
+                        .WithMany("CheckListItems")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

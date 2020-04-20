@@ -6,17 +6,14 @@ namespace KMS.Product.Ktm.Entities.Models
 {
     public class CheckListItem : BaseEntity
     {
-        public string Tilte { get; set; }
+        public int ItemId { get; set; }
 
-        public string Detail { get; set; }
+        public int CheckListId { get; set; }
 
-        public int CreatorId { get; set; }
+        public virtual Item Item { get; set; }
 
-        public int TeamId { get; set; }
+        public virtual CheckList CheckList { get; set; }
 
-        public virtual Employee Creator { get; set; }
-
-        public virtual Team Team { get; set; }
-
+        public virtual IEnumerable<AssignmentItem> AssignmentItems { get; set; }
     }
 }

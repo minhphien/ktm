@@ -21,9 +21,12 @@ namespace KMS.Product.Ktm.Repository
         public DbSet<KudoType> KudoTypes { get; set; }
         public DbSet<Kudo> Kudos { get; set; }
         public DbSet<KudoDetail> KudoDetails { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<Item> Items { get; set; }
         public DbSet<CheckListItem> CheckListItems { get; set; }
-        public DbSet<CheckListStatus> CheckListStatus { get; set; }
-        public DbSet<CheckListAssign> CheckListAssigns { get; set; }
+        public DbSet<CheckList> CheckLists { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<AssignmentItem> AssignmentItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +54,24 @@ namespace KMS.Product.Ktm.Repository
                 .WithMany(a => a.Mentee)
                 .HasForeignKey(a => a.MentorId);
 
+            modelBuilder.Entity<Item>()
+                .HasOne(a => a.Creator)
+                .WithMany(a => a.CheckListItems)
+                .HasForeignKey(a => a.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AssignmentItem>()
+                .HasOne(a => a.Status)
+                .WithMany(a => a.AssignmentItems)
+                .HasForeignKey(a => a.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Assignment>()
+                .HasOne(a => a.Status)
+                .WithMany(a => a.Assignments)
+                .HasForeignKey(a => a.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<EmployeeRole>()
                 .HasData(
                 new EmployeeRole {Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), RoleName = "Default"});
@@ -59,11 +80,11 @@ namespace KMS.Product.Ktm.Repository
                 .HasData(
                 new KudoType { Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), TypeName = "Default" });
 
-            modelBuilder.Entity<CheckListStatus>()
+            modelBuilder.Entity<Status>()
                 .HasData(
-                new CheckListStatus { Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "To Do" },
-                new CheckListStatus { Id = 2, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "In Progress" },
-                new CheckListStatus { Id = 3, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Status = "Done" });
+                new Status { Id = 1, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Name = "To Do" },
+                new Status { Id = 2, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Name = "In Progress" },
+                new Status { Id = 3, Created = new DateTime(2020, 4, 1), Modified = new DateTime(2020, 4, 1), Name = "Done" });
         }
 
         public override int SaveChanges()

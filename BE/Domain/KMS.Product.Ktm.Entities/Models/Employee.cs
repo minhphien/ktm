@@ -32,9 +32,9 @@ namespace KMS.Product.Ktm.Entities.Models
         
         public virtual ICollection<Kudo> KudoReceives { get; set; }
 
-        public virtual ICollection<CheckListItem> CheckListItems { get; set; }
+        public virtual ICollection<Item> CheckListItems { get; set; }
 
-        public virtual ICollection<CheckListAssign> CheckListAssigns { get; set; }
+        public virtual ICollection<Assignment> Assignments { get; set; }
 
         public virtual Employee Mentor { get; set; }
 

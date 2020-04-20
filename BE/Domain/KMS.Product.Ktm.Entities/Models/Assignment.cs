@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KMS.Product.Ktm.Entities.Models
 {
-    public class CheckListAssign : BaseEntity
+    public class Assignment : BaseEntity
     {
         public int AssigneeId { get; set; }
 
@@ -14,8 +14,10 @@ namespace KMS.Product.Ktm.Entities.Models
 
         public int StatusId { get; set; }
 
-        public virtual CheckListStatus Status { get; set; }
+        public virtual Status Status { get; set; }
 
         public virtual Employee Assignee { get; set; }
+
+        public virtual IEnumerable<AssignmentItem> AssignmentItems { get; set; }
     }
 }

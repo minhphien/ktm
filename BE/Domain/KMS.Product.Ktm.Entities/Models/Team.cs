@@ -11,6 +11,6 @@ namespace KMS.Product.Ktm.Entities.Models
 
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
 
-        public virtual ICollection<CheckListItem> CheckListItems { get; set; }
+        public virtual ICollection<CheckList> CheckLists { get; set; }
     }
 }
