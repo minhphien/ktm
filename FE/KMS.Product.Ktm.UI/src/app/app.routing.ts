@@ -1,15 +1,13 @@
 ﻿import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './pages/home';
-import { LoginComponent } from './pages/login';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './_helpers';
-import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';
 import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-layout.component';
 
 const authorizedRoutes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
-    { path: "home", component: HomeComponent, canActivate: [AuthGuard] },
-    { path: "user-profile", component: UserProfileComponent, canActivate: [AuthGuard] }
+    { path: "home", component: HomeComponent}
 ];
 
 const routes: Routes = [
@@ -30,4 +28,4 @@ const routes: Routes = [
     { path: '**', redirectTo: '' }
 ];
 
-export const appRoutingModule = RouterModule.forRoot(routes);
+export const AppRoutingModule = RouterModule.forRoot(routes);

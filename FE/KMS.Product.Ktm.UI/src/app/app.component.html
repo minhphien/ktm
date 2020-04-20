@@ -1,9 +1,2 @@
 <router-outlet></router-outlet>
-<!-- credits -->
-<!-- <div class="text-center mt-4">
-    <div *ngIf="loading" class="d-flex align-items-center justify-content-center vh-100">
-        <div class="spinner-grow text-primary" role="status" style="width: 3rem; height: 3rem;">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-</div> -->
+<app-loader *ngIf="loading$ | async"></app-loader>

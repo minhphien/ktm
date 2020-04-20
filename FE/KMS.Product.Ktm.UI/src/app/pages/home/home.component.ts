@@ -1,30 +1,24 @@
 ﻿import { Component } from '@angular/core';
-import { first } from 'rxjs/operators';
-
-import { User } from '@app/_models';
-import { UserService, AuthenticationService } from '@app/_services';
+import { User } from '@app/_models/user';
+import { Store, select } from '@ngrx/store';
+import { AppState } from '@app/_models';
+import { selectUserInfo } from '@app/appState.reducer';
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: 'home.component.html'
 })
 export class HomeComponent {
   loading = false;
-  currentUser: User;
+  currentUser$: Observable<User>;
   userFromApi: User;
   gutter = 32;
   constructor(
-    private userService: UserService,
-    private authenticationService: AuthenticationService
+    private store: Store<{appstate: AppState}>
   ) {
-    this.currentUser = this.authenticationService.currentUserValue;
+    this.currentUser$ = store.pipe(select("appstate"), select(selectUserInfo));
   }
 
   ngOnInit() {
-    // this.loading = true;
-    // this.userService.getById(this.currentUser.id).pipe(first()).subscribe(user => {
-    //     this.loading = false;
-    //     this.userFromApi = user;
-    // });
-    this.userFromApi = this.currentUser;
   }
 }

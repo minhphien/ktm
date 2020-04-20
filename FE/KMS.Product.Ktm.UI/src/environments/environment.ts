@@ -5,7 +5,15 @@
 export const environment = {
     production: false,
     apiUrl: 'https://localhost:5001',
-    homeSSO: 'https://home.kms-technology.com'
+    KmsHomeUrl: 'https://home.kms-technology.com',
+    hrmUrls: {
+        domain: "https://hr.kms-technology.com",
+        methods: {
+            ReturnInfoUserLogin: "/api/employees/ReturnInfoUserLogin",
+            ReturnPhoto: "/api/employees/photo",
+            ReturnAvatar: ""
+        }
+    }
 };
 
 /*

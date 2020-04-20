@@ -1,34 +1,45 @@
-<nz-layout class="min-vh-100">
-  <nz-header>
-    <div class="logo"></div>
-    <ul nz-menu [nzTheme]="'dark'" [nzMode]="'horizontal'" class="header-menu">
-      <li nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
-        <a routerLink={{menu.path}}>{{menu.name}}</a>
-      </li>
-      <li class="float-right">
-        <a nz-dropdown [nzDropdownMenu]="menu">
-          Hi, {{currentUser.fullName}}
-          <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
-        </a>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu>
-            <li nz-menu-item (click)="log('1st menu item')">1st menu item</li>
-            <li nz-menu-item (click)="log('2nd menu item')">2nd menu item</li>
-            <li nz-menu-item (click)="log('3rd menu item')">3rd menu item</li>
-          </ul>
-        </nz-dropdown-menu>
-      </li>
-    </ul>
-  </nz-header>
-
-  <nz-content class="inner-content">
-    <!-- <nz-layout class="inner-layout">
-      <nz-content class="inner-content"> -->
-    <router-outlet></router-outlet>
-    <!-- </nz-content>
-    </nz-layout> -->
-  </nz-content>
-
+<div> 
+  <nz-layout>
+    <nz-affix [nzOffsetTop]="offsetTop">
+    <nz-header class=" pl-4 pr-3" >
+      <div class="container">
+        
+      <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+        <li nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
+          <a routerLink={{menu.path}}>{{menu.name}}</a>
+        </li>
+        <li class="float-right">
+          <a nz-dropdown [nzDropdownMenu]="menu">
+            Hi, {{(currentUser$ | async).fullName}}
+            <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="log('1st menu item')">1st menu item</li>
+              <li nz-menu-item (click)="log('2nd menu item')">2nd menu item</li>
+              <li nz-menu-item (click)="log('3rd menu item')">3rd menu item</li>
+            </ul>
+          </nz-dropdown-menu>
+        </li>
+      </ul>
+      </div>
+    </nz-header>
+  </nz-affix>
+  </nz-layout>
+  <div class="d-flex justify-content-center">    
+    <nz-affix [nzOffsetTop]="offsetTop" class=" col-md-3 col-xl-2 p-0 border-right">
+      <nz-sider nzWidth="300" nzTheme="light" >
+        <app-user-info-panel></app-user-info-panel>
+      </nz-sider>  
+    </nz-affix>
+    <div class="container"> 
+      <nz-content>
+        <div><app-create-kudos></app-create-kudos></div>
+        <router-outlet></router-outlet>
+      </nz-content>
+    </div>
+    <div class="col-xl-2"></div>
+  </div>
+  
   <app-footer></app-footer>
-
-</nz-layout>
+</div>

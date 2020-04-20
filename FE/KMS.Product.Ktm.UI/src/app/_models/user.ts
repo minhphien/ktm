@@ -12,4 +12,5 @@ export class User {
     token?: string;
     fullName: string;
     shortName: string;
+    
 }

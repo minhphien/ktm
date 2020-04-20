@@ -27,6 +27,8 @@
         "@angular/platform-server": "~8.2.0",
         "@angular/router": "~8.2.0",
         "@ng-bootstrap/ng-bootstrap": "6.0.2",
+        "@ngrx/store": "^9.1.0",
+        "@ngrx/store-devtools": "^9.1.0",
         "ajv": "6.12.0",
         "arrive": "2.4.1",
         "bootstrap": "4.3.1",

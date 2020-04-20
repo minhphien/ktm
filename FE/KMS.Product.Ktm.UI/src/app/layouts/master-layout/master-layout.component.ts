@@ -1,22 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '@app/_services';
-import { User } from '@app/_models';
-import { first } from 'rxjs/operators';
+import { User } from '@app/_models/user';
+import { Employee } from "@app/_models/employee";
 import { Router } from '@angular/router';
-import { environment } from '@environments/environment';
+import { Store, select } from '@ngrx/store';
+import { selectUserInfo } from '@app/appState.reducer';
+import { AppState } from '@app/_models';
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { UserService } from '@app/_services';
 
 @Component({
   selector: 'app-master-layout',
   templateUrl: './master-layout.component.html',
-  styleUrls: ['./master-layout.component.less']
+  styleUrls: ['./master-layout.component.scss']
 })
 export class MasterLayoutComponent implements OnInit {
-  currentUser: User;
-  loading = false;
+  currentUser$: Observable<User>;
   menus = [
     {
       name: 'Home',
       path: '/home'
+    },
+    {
+      name: 'Report',
+      path: '/report'
     },
     {
       name: 'User info',
@@ -25,24 +32,12 @@ export class MasterLayoutComponent implements OnInit {
   ]
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private router: Router,
+    private store: Store <{appstate: AppState}>,
+    private userService: UserService
   ) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.currentUser$= store.pipe(select("appstate"),select(selectUserInfo));
   }
 
   ngOnInit() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('accessToken');
-
-    if (accessToken) {
-      this.authenticationService.login(accessToken).pipe(first()).subscribe(() => {
-        this.loading = false;
-        this.router.navigate([window.location.pathname]);
-      });
-    } else {
-      window.location.replace(`${environment.homeSSO}/login?returnUrl=${window.location.href}`)
-    }
   }
-
 }
