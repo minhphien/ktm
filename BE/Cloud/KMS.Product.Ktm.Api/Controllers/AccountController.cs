@@ -5,7 +5,11 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using KMS.Product.Ktm.Api.Exceptions;
+using KMS.Product.Ktm.Entities.Common;
+using KMS.Product.Ktm.Entities.DTO;
+using KMS.Product.Ktm.Services.KudoService;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
@@ -14,10 +18,12 @@ namespace KMS.Product.Ktm.Api.Controllers
     public class AccountController : ControllerBase
     {
         private IConfiguration Configuration { get; }
+        private readonly IKudoService _kudoService;
 
-        public AccountController(IConfiguration configuration)
+        public AccountController(IConfiguration configuration, IKudoService kudoService)
         {
             Configuration = configuration ?? throw new ArgumentNullException($"{nameof(configuration)}");
+            _kudoService = kudoService ?? throw new ArgumentNullException($"{nameof(kudoService)}");
         }
 
         /// <summary>
@@ -38,8 +44,12 @@ namespace KMS.Product.Ktm.Api.Controllers
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await client.GetAsync(Configuration.GetValue<string>("KmsInfo:AuthenticateUrl"));
                 if (response.StatusCode == HttpStatusCode.OK)
-                {                    
-                    return Ok(await response.Content.ReadAsStringAsync());
+                {
+                    var user = JsonConvert.DeserializeObject<KmsLoginResponse>(await response.Content.ReadAsStringAsync());
+                    var returnData = await _kudoService.GetUserKudosByBadgeId(user.EmployeeCode);
+                    returnData.UserInfo = user;
+
+                    return Ok(returnData);
                 }
                 else
                 {

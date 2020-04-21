@@ -66,5 +66,12 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// <param name="emails"></param>
         /// <returns></returns>
         Task InsertKudoFromEmails(List<EmailMessage> emails);
+
+        /// <summary>
+        /// get user kudo send/receive by badge id
+        /// </summary>
+        /// <param name="badgeId"></param>
+        /// <returns></returns>
+        Task<UserDataDto> GetUserKudosByBadgeId(string badgeId);
     }
 }

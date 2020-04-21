@@ -143,5 +143,27 @@ namespace KMS.Product.Ktm.Repository
             kudo.AddRange(kudos);
             await context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// get user kudo send/receive by badge id
+        /// </summary>
+        /// <param name="badgeId"></param>
+        /// <returns></returns>
+        public async Task<UserDataDto> GetUserKudosByBadgeId(string badgeId)
+        {
+            var dataReturn = new UserDataDto
+            {
+                KudoSends = await kudo
+                .Where(k => k.Sender.EmployeeBadgeId == badgeId)
+                .Include(k => k.KudoDetail)
+                .ToListAsync(),
+                KudoReceives = await kudo
+                .Where(k => k.Receiver.EmployeeBadgeId == badgeId)
+                .Include(k => k.KudoDetail)
+                .ToListAsync()
+            };
+
+            return dataReturn;
+        }
     }
 }

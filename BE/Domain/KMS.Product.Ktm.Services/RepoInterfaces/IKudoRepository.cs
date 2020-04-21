@@ -52,5 +52,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <param name="kudos"></param>
         /// <returns></returns>
         Task InsertKudos(IEnumerable<Kudo> kudo);
+
+        /// <summary>
+        /// get user kudo send/receive by badge id
+        /// </summary>
+        /// <param name="badgeId"></param>
+        /// <returns></returns>
+        Task<UserDataDto> GetUserKudosByBadgeId(string badgeId);
     }
 }

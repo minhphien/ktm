@@ -160,5 +160,15 @@ namespace KMS.Product.Ktm.Services.KudoService
                 await _kudoRepository.InsertKudos(kudos);
             }
         }
+
+        /// <summary>
+        /// get user kudo send/receive by badge id
+        /// </summary>
+        /// <param name="badgeId"></param>
+        /// <returns></returns>
+        public async Task<UserDataDto> GetUserKudosByBadgeId(string badgeId)
+        {
+            return await _kudoRepository.GetUserKudosByBadgeId(badgeId);
+        }
     }
 }
