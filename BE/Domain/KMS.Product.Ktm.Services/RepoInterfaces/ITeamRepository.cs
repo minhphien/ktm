@@ -20,5 +20,17 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// </summary>
         /// <returns>A collection of all teams</returns>
         Task<IEnumerable<Team>> GetTeamsByConditionAsync(Expression<Func<Team, bool>> expression);
+
+        /// <summary>
+        /// Create teams
+        /// </summary>
+        /// <returns></returns>
+        Task CreateTeams(IEnumerable<Team> teams);
+
+        /// <summary>
+        /// Update teams
+        /// </summary>
+        /// <returns></returns>
+        Task UpdateTeams(IEnumerable<Team> teams);
     }
 }

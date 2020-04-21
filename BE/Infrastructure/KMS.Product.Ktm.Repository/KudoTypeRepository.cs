@@ -1,16 +1,15 @@
-﻿using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.RepoInterfaces;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Services.RepoInterfaces;
 
 namespace KMS.Product.Ktm.Repository
 {
     public class KudoTypeRepository : BaseRepository<KudoType>, IKudoTypeRepository
     {
-        public KudoTypeRepository(KtmDbContext context) : base(context)
+        public KudoTypeRepository(KtmDbContext context, ILogger<KudoType> logger) : base(context, logger)
         {
         }
 

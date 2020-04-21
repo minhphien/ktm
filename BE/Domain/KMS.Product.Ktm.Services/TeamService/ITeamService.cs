@@ -56,6 +56,6 @@ namespace KMS.Product.Ktm.Services.TeamService
         /// 3. Disband teams
         /// </summary>
         /// <returns></returns>
-        Task SyncTeamDatabaseWithKmsAsync();
+        Task SyncTeamDatabaseWithKmsAsync(DateTime now);
     }
 }

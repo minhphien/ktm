@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using KMS.Product.Ktm.Dto;
 using KMS.Product.Ktm.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using KMS.Product.Ktm.Dto.KmsEmployee;
+using KMS.Product.Ktm.Dto.KmsTeam;
 
 namespace KMS.Product.Ktm.Services.AutoMapper
 {

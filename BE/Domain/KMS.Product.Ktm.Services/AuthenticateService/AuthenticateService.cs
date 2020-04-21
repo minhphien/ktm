@@ -1,21 +1,18 @@
-﻿using AutoMapper;
-using KMS.Product.Ktm.Entities.Models;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using KMS.Product.Ktm.Entities.Common;
 
 namespace KMS.Product.Ktm.Services.AuthenticateService
 {
     public class AuthenticateService : IAuthenticateService
     {
-        private IConfiguration _configuration { get; }
-
-        public const string AuthenticateRequestUrl = "https://home.kms-technology.com/api/Account/login";
+        private IConfiguration Configuration { get; }
 
         /// <summary>
         /// Inject system configuration
@@ -23,7 +20,7 @@ namespace KMS.Product.Ktm.Services.AuthenticateService
         /// <param name="configuration"></param>
         public AuthenticateService(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
         /// <summary>
@@ -34,8 +31,8 @@ namespace KMS.Product.Ktm.Services.AuthenticateService
         {
             var userLogin = new UserLogin()
             {
-                Username = _configuration.GetValue<string>("KmsLogin:Username"),
-                Password = _configuration.GetValue<string>("KmsLogin:Password")
+                Username = Configuration.GetValue<string>("KmsInfo:Username"),
+                Password = Configuration.GetValue<string>("KmsInfo:Password")
             };
             return await Authenticate(userLogin);
         }
@@ -50,16 +47,6 @@ namespace KMS.Product.Ktm.Services.AuthenticateService
         }
 
         /// <summary>
-        /// Authenticate using token from system configuration in appsettings
-        /// This is used for temporary testing only
-        /// </summary>
-        /// <returns></returns>
-        public string AuthenticateUsingToken()
-        {
-            return _configuration.GetValue<string>("KmsTestingToken");
-        }
-
-        /// <summary>
         /// Authenticate through KMS API
         /// API: https://home.kms-technology.com/api/Account/login
         /// </summary>
@@ -70,14 +57,14 @@ namespace KMS.Product.Ktm.Services.AuthenticateService
             // Initialize httpclient with token to send request to KMS HRM 
             var client = new HttpClient();
             var bodyContent = new StringContent(JsonConvert.SerializeObject(userLogin), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(AuthenticateRequestUrl, bodyContent);
+            var response = await client.PostAsync(Configuration.GetValue<string>("KmsInfo:AuthenticateRequestUrl"), bodyContent);
             
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 // Convert response JSON to object and get the token
                 var contentString = await response.Content.ReadAsStringAsync();
                 var kmsLoginResponse = JsonConvert.DeserializeObject<KmsLoginResponse>(contentString);
-                token.Concat(kmsLoginResponse.Token);
+                token = kmsLoginResponse.Token;
             }
             
             return token;

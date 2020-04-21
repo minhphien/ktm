@@ -25,5 +25,19 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <param name="emailaddresses"></param>
         /// <returns>employee</returns>
         Task<IEnumerable<Employee>> GetEmployeeByEmails(List<string> emailaddresses);
+
+        /// <summary>
+        /// create employee
+        /// </summary>
+        /// <param name="employees"></param>
+        /// <returns></returns>
+        Task CreateEmployees(IEnumerable<Employee> employees);
+
+        /// <summary>
+        /// update employee
+        /// </summary>
+        /// <param name="employees"></param>
+        /// <returns></returns>
+        Task UpdateEmployees(IEnumerable<Employee> employees);
     }
 }

@@ -1,36 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using KMS.Product.Ktm.Api.Exceptions;
-using KMS.Product.Ktm.Entities.Models;
-//using KMS.Product.Ktm.Services.EmployeeService;
-//using KMS.Product.Ktm.Services.TeamService;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using KMS.Product.Ktm.Api.Exceptions;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
-    [Route("api")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        public AccountController()
+        private IConfiguration Configuration { get; }
+
+        public AccountController(IConfiguration configuration)
         {
+            Configuration = configuration ?? throw new ArgumentNullException($"{nameof(configuration)}");
         }
 
+        /// <summary>
+        /// api/me
+        /// Get user information by token through KMS API
+        /// </summary>
+        /// <returns>
+        /// - Status OK 200 with user information
+        /// - Status Unauthorized 401 if token expires or invalid token
+        /// </returns>
         [HttpGet("me")]
-        public async Task<IActionResult> AccountUserAsync()
+        public async Task<IActionResult> GetUserInforAsync()
         {
             try
             {
                 HttpClient client = new HttpClient();
                 var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync("https://home.kms-technology.com/api/account/authenticate");
+                var response = await client.GetAsync(Configuration.GetValue<string>("KmsInfo:AuthenticateUrl"));
                 if (response.StatusCode == HttpStatusCode.OK)
                 {                    
                     return Ok(await response.Content.ReadAsStringAsync());

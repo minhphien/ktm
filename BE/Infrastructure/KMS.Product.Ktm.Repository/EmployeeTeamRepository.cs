@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.RepoInterfaces;
@@ -13,7 +14,7 @@ namespace KMS.Product.Ktm.Repository
     {
         private readonly DbSet<EmployeeTeam> employeeTeam;
 
-        public EmployeeTeamRepository(KtmDbContext context) : base(context)
+        public EmployeeTeamRepository(KtmDbContext context, ILogger<EmployeeTeam> logger) : base(context, logger)
         {
             employeeTeam = context.Set<EmployeeTeam>();
         }

@@ -1,8 +1,5 @@
-﻿using KMS.Product.Ktm.Entities.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using KMS.Product.Ktm.Entities.Common;
 
 namespace KMS.Product.Ktm.Services.AuthenticateService
 {
@@ -19,12 +16,5 @@ namespace KMS.Product.Ktm.Services.AuthenticateService
         /// </summary>
         /// <returns></returns>
         Task<string> AuthenticateUsingParameters(UserLogin userLogin);
-
-        /// <summary>
-        /// Authenticate using token from system configuration in appsettings
-        /// This is used for temporary testing only
-        /// </summary>
-        /// <returns></returns>
-        string AuthenticateUsingToken();
     }
 }

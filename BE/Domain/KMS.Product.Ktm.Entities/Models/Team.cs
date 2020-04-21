@@ -7,6 +7,10 @@ namespace KMS.Product.Ktm.Entities.Models
     {
         public string TeamName { get; set; }
 
+        public bool Active { get; set; }
+
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }
+
+        public virtual ICollection<CheckList> CheckLists { get; set; }
     }
 }

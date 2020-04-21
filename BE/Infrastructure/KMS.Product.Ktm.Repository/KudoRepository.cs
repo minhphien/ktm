@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Entities.Common;
 using KMS.Product.Ktm.Entities.DTO;
 using KMS.Product.Ktm.Services.RepoInterfaces;
 
@@ -18,7 +17,7 @@ namespace KMS.Product.Ktm.Repository
         private readonly DbSet<Kudo> kudo;
         private readonly IMapper _mapper;
 
-        public KudoRepository(KtmDbContext context, IMapper mapper) : base(context)
+        public KudoRepository(KtmDbContext context, IMapper mapper, ILogger<Kudo> logger) : base(context, logger)
         {
             this.context = context;
             kudo = context.Set<Kudo>();

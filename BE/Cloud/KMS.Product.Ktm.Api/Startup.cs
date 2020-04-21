@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,21 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using KMS.Product.Ktm.Api.Authentication;
 using KMS.Product.Ktm.Repository;
+using KMS.Product.Ktm.Api.Authentication;
 using KMS.Product.Ktm.Entities.Configurations;
 using KMS.Product.Ktm.Entities.Profiles;
-using KMS.Product.Ktm.Services.KudoTypeService;
-using KMS.Product.Ktm.Services.KudoService;
-using KMS.Product.Ktm.Services.EmailService;
-using KMS.Product.Ktm.Services.RepoInterfaces;
-using KMS.Product.Ktm.Services.TeamService;
-using KMS.Product.Ktm.Services.EmployeeService;
 using KMS.Product.Ktm.Services.AutoMapper;
-using KMS.Product.Ktm.Services.AuthenticateService;
 using KMS.Product.Ktm.Services.SlackService;
-using System;
 using KMS.Product.Ktm.Api.Entensions;
+using KMS.Product.Ktm.Api.HostedService;
 
 namespace KMS.Product.Ktm.Api
 {
@@ -68,10 +62,13 @@ namespace KMS.Product.Ktm.Api
             services.AddKtmServices();
             // mapper
             services.AddAutoMapper(typeof(KudosProfile), typeof(AutoMapperProfile));
-            services.AddCors(options =>
+            // cache
+            services.AddMemoryCache();
+            // cron job
+            services.AddCronJob<SyncDataJob>(c =>
             {
-                //TODO: temporarily allow all origins
-                options.AddPolicy(AllowAllOrigin, builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                c.TimeZoneInfo = TimeZoneInfo.Local;
+                c.CronExpression = Configuration.GetValue<string>("CronTimmer"); //use @"*/5 * * * *" every five minutes for testing
             });
         }
 
