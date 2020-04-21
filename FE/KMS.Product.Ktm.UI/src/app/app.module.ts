@@ -1,6 +1,6 @@
 ﻿import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 
@@ -34,6 +34,7 @@ registerLocaleData(en);
         BrowserModule,
         ReactiveFormsModule,
         HttpClientModule,
+        FormsModule,
         NgZorroAntdModule,
         NzDrawerModule,
         BrowserAnimationsModule,

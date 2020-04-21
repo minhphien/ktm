@@ -18,9 +18,6 @@ export class UserInfoPanelComponent implements OnInit {
   }
   ngOnInit() {
     this.profileInfo$ = this.userService.getUserCurrentState();
-    this.profileInfo$.subscribe(info=>{
-      console.log(info);
-    })
   }
 
 }

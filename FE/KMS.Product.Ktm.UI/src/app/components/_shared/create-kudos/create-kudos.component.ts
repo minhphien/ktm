@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '@app/_services';
+import { Observable } from 'rxjs';
+import { Employee } from '@app/_models';
 
 @Component({
   selector: 'app-create-kudos',
@@ -7,10 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateKudosComponent implements OnInit {
   visible = false;
+  profileInfo$: Observable<Employee>;
 
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
+    this.profileInfo$ = this.userService.getUserCurrentState();
   }
 
   open(): void {
@@ -19,5 +24,16 @@ export class CreateKudosComponent implements OnInit {
 
   close(): void {
     this.visible = false;
+  }
+
+  inputValue: string = '';
+  suggestions = ['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご'];
+
+  onChange(value: string): void {
+    console.log(value);
+  }
+
+  onSelect(suggestion: string): void {
+    console.log(`onSelect ${suggestion}`);
   }
 }
