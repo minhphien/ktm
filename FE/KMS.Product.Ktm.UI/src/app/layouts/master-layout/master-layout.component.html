@@ -1,0 +1,45 @@
+<div> 
+  <nz-layout>
+    <nz-affix [nzOffsetTop]="offsetTop">
+    <nz-header class="pl-2 pr-2" >
+      <div class="offset-xl-3 col-xl-6 col-lg-12">
+      <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+        <li nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
+          <a routerLink={{menu.path}}>{{menu.name}}</a>
+        </li>
+        <li class="float-right" *ngIf="currentUser$ | async as currentUser">
+          <div class="btn btn-default round-pill profile-menu">
+            <a nz-dropdown [nzDropdownMenu]="menu">
+            <nz-badge nzDot class="mr-2">
+              <nz-avatar nzIcon="user" nzSrc="{{currentUser.imgUrl}}" ></nz-avatar>
+            </nz-badge>
+            {{currentUser.firstName}}
+            <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu>
+              <li nz-menu-item (click)="log('1st menu item')">Settings & Preferences</li>
+              <li nz-menu-item (click)="log('2nd menu item')">Help Center</li>
+              <li nz-menu-divider></li>
+              <li nz-menu-item (click)="log('3rd menu item')">Sign Out</li>
+            </ul>
+          </nz-dropdown-menu>
+          </div>
+          
+        </li>
+      </ul>
+      </div>
+    </nz-header>
+  </nz-affix>
+  </nz-layout>
+  <div class="d-flex flex-row">    
+     <nz-affix [nzOffsetTop]="offsetTop" class="offset-lg-0 offset-xl-1 col-lg-3 col-xl-2 col-md-3 col-0 p-0 border-right"> 
+        <app-user-info-panel></app-user-info-panel>
+    </nz-affix> 
+    <div class="col-xl-6 col-lg-9 col-md-9"> 
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col-xl-4 col-lg-0 col-md-0 border-left"></div> 
+  </div>
+  <app-footer></app-footer>
+</div>

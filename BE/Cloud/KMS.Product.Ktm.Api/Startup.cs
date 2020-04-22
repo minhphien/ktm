@@ -25,6 +25,8 @@ namespace KMS.Product.Ktm.Api
         public static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
+        private const string AllowAllOrigin = nameof(AllowAllOrigin);
+
         public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -47,13 +49,13 @@ namespace KMS.Product.Ktm.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSlackClient(Configuration);
-            services.AddControllers(); 
+            services.AddControllers();
             services.AddAuthentication("KmsTokenAuth")
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
             services.AddDbContextPool<KtmDbContext>(
                 options => options
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), 
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("KMS.Product.Ktm.Repository"))
                 .EnableSensitiveDataLogging()
                 .UseLoggerFactory(MyLoggerFactory));
@@ -90,6 +92,8 @@ namespace KMS.Product.Ktm.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(AllowAllOrigin);
 
             app.UseEndpoints(endpoints =>
             {

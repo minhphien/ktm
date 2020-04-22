@@ -1,0 +1,27 @@
+<div *ngIf="profileInfo$ | async as profileInfo">
+  <div class="d-flex flex-column">
+    <div class="justify-content-center mt-5 mx-auto">
+      <nz-avatar [nzSize]="128" nzIcon="user" nzSrc="{{profileInfo.imgUrl}}"></nz-avatar>
+    </div>
+   <div class="card-body pt-0 pt-md-4">
+    <div class="text-center">
+      <h3>
+        {{profileInfo.firstName}} {{profileInfo.middleName}} {{profileInfo.lastName}}
+      </h3>
+      <div class="h5 font-weight-300">
+        <i class="ni location_pin"></i>
+      </div>
+      <div class="h5">
+        <i class="ni business_briefcase-24"></i>{{profileInfo.titleName}}
+      </div>
+      <div>
+        <i class="ni education_hat mr-2"></i>{{profileInfo.projectName}}, {{profileInfo.departmentName}}
+      </div>
+      <hr class="my-4" />
+      <p>Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his
+        own music.</p>
+      <a href="javascript:void(0)">Show more</a>
+    </div>
+  </div> 
+</div>
+</div>
