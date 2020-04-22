@@ -13,13 +13,13 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// Get all kudos
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
-        Task<IEnumerable<Kudo>> GetKudosAsync();
+        Task<IEnumerable<KudoDetailDto>> GetKudosAsync();
 
         /// <summary>
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+        Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
             DateTime? dateFrom,
             DateTime? dateTo,
             List<int> teamIds,

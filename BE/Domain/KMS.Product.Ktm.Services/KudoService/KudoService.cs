@@ -30,7 +30,7 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// Get all kudos
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
-        public async Task<IEnumerable<Kudo>> GetAllKudosAsync()
+        public async Task<IEnumerable<KudoDetailDto>> GetAllKudosAsync()
         {
             return await _kudoRepository.GetKudosAsync();
         }
@@ -75,7 +75,7 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        public async Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+        public async Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
             DateTime? dateFrom, 
             DateTime? dateTo, 
             List<int> teamIds, 

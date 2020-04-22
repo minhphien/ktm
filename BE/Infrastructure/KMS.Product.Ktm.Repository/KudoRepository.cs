@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Entities.DTO;
 using KMS.Product.Ktm.Services.RepoInterfaces;
@@ -28,16 +29,18 @@ namespace KMS.Product.Ktm.Repository
         /// Get all kudo types
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
-        public async Task<IEnumerable<Kudo>> GetKudosAsync()
+        public async Task<IEnumerable<KudoDetailDto>> GetKudosAsync()
         {
-            return await Task.FromResult(GetAll().ToList());
+            return await kudo
+                .ProjectTo<KudoDetailDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         /// <summary>
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        public async Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+        public async Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
             DateTime? dateFrom,
             DateTime? dateTo,
             List<int> teamIds, 
@@ -59,7 +62,7 @@ namespace KMS.Product.Ktm.Repository
                             && (ets.ReleseadDate == null || k.Created <= ets.ReleseadDate)
                             && k.Created >= etr.JoinedDate
                             && (etr.ReleseadDate == null || k.Created <= etr.ReleseadDate)
-                          select new KudoReportDto
+                          select new KudoDetailDto
                           {
                               Id = k.Id,
                               Created = k.Created,
@@ -155,11 +158,11 @@ namespace KMS.Product.Ktm.Repository
             {
                 KudoSends = await kudo
                 .Where(k => k.Sender.EmployeeBadgeId == badgeId)
-                .Include(k => k.KudoDetail)
+                .ProjectTo<KudoDetailDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(),
                 KudoReceives = await kudo
                 .Where(k => k.Receiver.EmployeeBadgeId == badgeId)
-                .Include(k => k.KudoDetail)
+                .ProjectTo<KudoDetailDto>(_mapper.ConfigurationProvider)
                 .ToListAsync()
             };
 

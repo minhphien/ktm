@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.AssignmentService;
@@ -10,6 +11,7 @@ namespace KMS.Product.Ktm.Api.Controllers.Onboarding
 {
     [Route("api/onboarding/[controller]")]
     [ApiController]
+    [Authorize]
     public class AssignmentController : ControllerBase
     {
 

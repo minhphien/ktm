@@ -14,7 +14,7 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// Get all kudos
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
-        Task<IEnumerable<Kudo>> GetAllKudosAsync();
+        Task<IEnumerable<KudoDetailDto>> GetAllKudosAsync();
 
         /// <summary>
         /// Get kudo by id
@@ -44,7 +44,7 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+        Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
             DateTime? dateFrom, 
             DateTime? dateTo, 
             List<int> teamIds, 

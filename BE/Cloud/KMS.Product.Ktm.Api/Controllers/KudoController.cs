@@ -2,14 +2,17 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.KudoService;
+using KMS.Product.Ktm.Services.AppConstants;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class KudoController : ControllerBase
     {
 
@@ -127,6 +130,29 @@ namespace KMS.Product.Ktm.Api.Controllers
             {
                 await _kudoService.DeleteKudoAsync(Kudo);
                 return Ok();
+            }
+            catch (BussinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Get user login kudos
+        /// GET: api/Kudo
+        /// </summary>
+        /// <returns>
+        /// Success: returns 200 status code with a collection of all kudos        
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
+        [HttpGet("userkudos")]
+        public async Task<IActionResult> GetUserKudosAsync()
+        {
+            try
+            {
+                string badgeId = User.FindFirst(KudoConstants.UserInfo.BADGEID)?.Value;
+                var kudos = await _kudoService.GetUserKudosByBadgeId(badgeId);
+                return Ok(kudos);
             }
             catch (BussinessException ex)
             {

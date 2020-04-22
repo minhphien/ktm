@@ -2,6 +2,7 @@
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Services.KudoTypeService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace KMS.Product.Ktm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class KudoTypeController : ControllerBase
     {
         private readonly IKudoTypeService _kudoTypeService;
