@@ -1,4 +1,5 @@
-<nz-table #basicTable [nzData]="listOfData">
+<nz-empty nzNotFoundImage="https://img.icons8.com/cute-clipart/344/wish-list.png" nzNotFoundContent="Let send kudos to someone as compliment on their helps." *ngIf="!(listOfData$ | async)"></nz-empty>
+<nz-table #basicTable [nzData]="listOfData$" *ngIf="listOfData$ | async">
   <thead>
     <tr>
       <th>Name</th>

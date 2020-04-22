@@ -15,19 +15,15 @@ import { UserService } from '@app/_services';
   styleUrls: ['./master-layout.component.scss']
 })
 export class MasterLayoutComponent implements OnInit {
-  currentUser$: Observable<User>;
+  currentUser$: Observable<Employee>;
   menus = [
     {
-      name: 'Home',
+      name: 'Dashboard',
       path: '/home'
     },
     {
       name: 'Report',
       path: '/report'
-    },
-    {
-      name: 'User info',
-      path: '/user-profile'
     }
   ]
 
@@ -35,9 +31,13 @@ export class MasterLayoutComponent implements OnInit {
     private store: Store <{appstate: AppState}>,
     private userService: UserService
   ) {
-    this.currentUser$= store.pipe(select("appstate"),select(selectUserInfo));
+    
   }
 
   ngOnInit() {
+    this.currentUser$= this.userService.getUserCurrentState();
+    this.currentUser$.subscribe((user)=>{
+        console.log(user);
+    })
   }
 }

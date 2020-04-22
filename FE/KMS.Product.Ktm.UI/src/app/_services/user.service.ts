@@ -26,7 +26,7 @@ export class UserService {
         sessionStorage.setItem(SESSION_USER_INFO, JSON.stringify(userInfo));
     }
 
-    getUserCurrentState(){
+    getUserCurrentState() : Observable<Employee>{
         let url = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnInfoUserLogin}`;
         console.log(url);
         return this.http.get<Employee>(url).pipe(map((employee:Employee)=>{
