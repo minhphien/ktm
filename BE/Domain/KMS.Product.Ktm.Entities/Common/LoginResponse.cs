@@ -11,5 +11,14 @@ namespace KMS.Product.Ktm.Entities.Common
     {
         // login token
         public string Token { get; set; }
+
+        // short name
+        public string ShortName { get; set; }
+
+        // employee Code
+        public string EmployeeCode { get; set; }
+
+        // email
+        public string Email { get; set; }
     }
 }

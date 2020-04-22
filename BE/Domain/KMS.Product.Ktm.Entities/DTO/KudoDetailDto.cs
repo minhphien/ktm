@@ -8,7 +8,7 @@ namespace KMS.Product.Ktm.Entities.DTO
     /// <summary>
     /// DTO kudo for report
     /// </summary>
-    public class KudoReportDto : BaseEntity
+    public class KudoDetailDto : BaseEntity
     {
         // kudo detail content
         public string Content { get; set; }

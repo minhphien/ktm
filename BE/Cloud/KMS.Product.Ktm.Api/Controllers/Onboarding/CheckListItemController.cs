@@ -5,43 +5,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
-using KMS.Product.Ktm.Services.KudoService;
-using KMS.Product.Ktm.Services.AppConstants;
+using KMS.Product.Ktm.Services.CheckListItemService;
 
-namespace KMS.Product.Ktm.Api.Controllers
+namespace KMS.Product.Ktm.Api.Controllers.Onboarding
 {
-    [Route("api/[controller]")]
+    [Route("api/onboarding/[controller]")]
     [ApiController]
     [Authorize]
-    public class KudoController : ControllerBase
+    public class CheckListItemController : ControllerBase
     {
 
-        private readonly IKudoService _kudoService;
+        private readonly ICheckListItemService _checkListItemService;
 
         /// <summary>
-        /// Inject Kudo service
+        /// Inject CheckListItem service
         /// </summary>
         /// <returns></returns>
-        public KudoController(IKudoService kudoService)
+        public CheckListItemController(ICheckListItemService checkListItemService)
         {
-            _kudoService = kudoService ?? throw new ArgumentNullException($"{nameof(kudoService)}");
+            _checkListItemService = checkListItemService ?? throw new ArgumentNullException($"{nameof(checkListItemService)}");
         }
 
         /// <summary>
-        /// Get all kudos
-        /// GET: api/Kudo
+        /// Get all checkListItems
+        /// GET: api/onboarding/checkListItem
         /// </summary>
         /// <returns>
-        /// Success: returns 200 status code with a collection of all kudos        
+        /// Success: returns 200 status code with a collection of all CheckListItems        
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllKudosAsync()
+        public async Task<IActionResult> GetAllCheckListItemsAsync()
         {
             try
             {
-                var kudos = await _kudoService.GetAllKudosAsync();
-                return Ok(kudos);
+                var checkListItems = await _checkListItemService.GetAllCheckListItemsAsync();
+                return Ok(checkListItems);
             }
             catch (BussinessException ex)
             {
@@ -50,21 +49,21 @@ namespace KMS.Product.Ktm.Api.Controllers
         }
 
         /// <summary>
-        /// Get a kudo by id
-        /// GET: api/Kudo/id
+        /// Get a checkListItem by id
+        /// GET: api/onboarding/checkListItem/id
         /// </summary>
         /// <param name="id">query string</param>
         /// <returns>
-        /// Success: returns 200 status code with a kudo
+        /// Success: returns 200 status code with a CheckListItem
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetKudoByIdAsync(int id)
+        public async Task<IActionResult> GetCheckListItemByIdAsync(int id)
         {
             try
             {
-                var Kudo = await _kudoService.GetKudoByIdAsync(id);
-                return Ok(Kudo);
+                var checkListItem = await _checkListItemService.GetCheckListItemByIdAsync(id);
+                return Ok(checkListItem);
             }
             catch (BussinessException ex)
             {
@@ -73,20 +72,20 @@ namespace KMS.Product.Ktm.Api.Controllers
         }
 
         /// <summary>
-        /// Create new kudo
-        /// POST: api/Kudo
+        /// Create new checkListItem
+        /// POST: api/onboarding/checkListItem
         /// </summary>
-        /// <param name="Kudo">Kudo object body request</param>
+        /// <param name="checkListItem">checkListItem object body request</param>
         /// <returns>
         /// Success: returns 200 status code
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpPost]
-        public async Task<IActionResult> CreateKudoAsync(Kudo Kudo)
+        public async Task<IActionResult> CreateCheckListItemAsync(CheckListItem checkListItem)
         {
             try
             {
-                await _kudoService.CreateKudoAsync(Kudo);
+                await _checkListItemService.CreateCheckListItemAsync(checkListItem);
                 return Ok();
             }
             catch (BussinessException ex)
@@ -96,18 +95,18 @@ namespace KMS.Product.Ktm.Api.Controllers
         }
 
         /// <summary>
-        /// Update a kudo
-        /// PUT: api/Kudo
+        /// Update a CheckListItem
+        /// PUT: api/onboarding/checkListItem
         /// </summary>
-        /// <param name="Kudo">Kudo object body request</param>
+        /// <param name="checkListItem">checkListItem object body request</param>
         /// Success: returns 200 status code
         /// Failure: returns 500 status code with an exception message
         [HttpPut]
-        public async Task<IActionResult> UpdateKudoAsync(Kudo Kudo)
+        public async Task<IActionResult> UpdateCheckListItemAsync(CheckListItem checkListItem)
         {
             try
             {
-                await _kudoService.UpdateKudoAsync(Kudo);
+                await _checkListItemService.UpdateCheckListItemAsync(checkListItem);
                 return Ok();
             }
             catch (BussinessException ex)
@@ -117,42 +116,19 @@ namespace KMS.Product.Ktm.Api.Controllers
         }
 
         /// <summary>
-        /// Delete new kudo
-        /// DELETE: api/Kudo
+        /// Delete new checkListItem
+        /// DELETE: api/onboarding/checkListItem
         /// </summary>
-        /// <param name="Kudo">Kudo object body request</param>
+        /// <param name="checkListItem">checkListItem object body request</param>
         /// Success: returns 200 status code
         /// Failure: returns 500 status code with an exception message
         [HttpDelete]
-        public async Task<IActionResult> DeleteKudoAsync(Kudo Kudo)
+        public async Task<IActionResult> DeleteCheckListItemAsync(CheckListItem checkListItem)
         {
             try
             {
-                await _kudoService.DeleteKudoAsync(Kudo);
+                await _checkListItemService.DeleteCheckListItemAsync(checkListItem);
                 return Ok();
-            }
-            catch (BussinessException ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Get user login kudos
-        /// GET: api/Kudo
-        /// </summary>
-        /// <returns>
-        /// Success: returns 200 status code with a collection of all kudos        
-        /// Failure: returns 500 status code with an exception message
-        /// </returns>
-        [HttpGet("userkudos")]
-        public async Task<IActionResult> GetUserKudosAsync()
-        {
-            try
-            {
-                string badgeId = User.FindFirst(KudoConstants.UserInfo.BADGEID)?.Value;
-                var kudos = await _kudoService.GetUserKudosByBadgeId(badgeId);
-                return Ok(kudos);
             }
             catch (BussinessException ex)
             {
