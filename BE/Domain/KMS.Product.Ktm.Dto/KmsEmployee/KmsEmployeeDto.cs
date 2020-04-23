@@ -32,5 +32,7 @@ namespace KMS.Product.Ktm.Dto.KmsEmployee
         /// </summary>
         [JsonProperty("ClientName")]
         public string CurrentTeam { get; set; }
+
+        public string UserName { get; set; }
     }
 }

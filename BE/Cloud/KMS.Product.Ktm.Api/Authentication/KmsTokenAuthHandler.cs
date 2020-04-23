@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using KMS.Product.Ktm.Entities.Common;
+using KMS.Product.Ktm.Services.AppConstants;
 
 namespace KMS.Product.Ktm.Api.Authentication
 {
@@ -39,25 +42,40 @@ namespace KMS.Product.Ktm.Api.Authentication
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
-            string cacheEntry;          
+            string cacheEntry;
+            var user = new KmsLoginResponse();
 
             // Check whether token in cache or not
             if (!_cache.TryGetValue(token, out _))
             {
-                if (await IsTokenValid(token))
+                 user = await GetUserLogin(token);
+                if (user != null)
                 {
                     cacheEntry = token;
+
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
                         .SetSlidingExpiration(TimeSpan.FromMinutes(Configuration.GetValue<int>("KmsInfo:CacheExpiration")));
                     // Save validated token into cache
                     _cache.Set(token, cacheEntry, cacheEntryOptions);
-                    return AuthenticateResult.Success(CreateAuthTicket(token));
+                    _cache.Set<string>(KudoConstants.UserInfo.USERNAME, user.UserName, cacheEntryOptions);
+                    _cache.Set<string>(KudoConstants.UserInfo.NAME, user.ShortName, cacheEntryOptions);
+                    _cache.Set<string>(KudoConstants.UserInfo.BADGEID, user.EmployeeCode, cacheEntryOptions);
+                    _cache.Set<string>(KudoConstants.UserInfo.EMAIL, user.Email, cacheEntryOptions);
+
+                    return AuthenticateResult.Success(CreateAuthTicket(token, user));
                 }
 
                 return AuthenticateResult.Fail("Token is invalid");
             }
+            else
+            {
+                user.UserName = _cache.Get<string>(KudoConstants.UserInfo.USERNAME);
+                user.ShortName = _cache.Get<string>(KudoConstants.UserInfo.NAME);
+                user.EmployeeCode = _cache.Get<string>(KudoConstants.UserInfo.BADGEID);
+                user.Email = _cache.Get<string>(KudoConstants.UserInfo.EMAIL);
+            }
 
-            return AuthenticateResult.Success(CreateAuthTicket(token));
+            return AuthenticateResult.Success(CreateAuthTicket(token, user));
         }
 
         /// <summary>
@@ -65,7 +83,7 @@ namespace KMS.Product.Ktm.Api.Authentication
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private async Task<bool> IsTokenValid(string token)
+        private async Task<KmsLoginResponse> GetUserLogin(string token)
         {
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -73,21 +91,29 @@ namespace KMS.Product.Ktm.Api.Authentication
 
             if (response.StatusCode == HttpStatusCode.OK)
             {                
-                return true;
+                return JsonConvert.DeserializeObject<KmsLoginResponse>(await response.Content.ReadAsStringAsync());
             }
 
-            return false;
+            return null;
         }
 
         /// <summary>
         /// Create an authentication ticket containing authentication claims when successfully authenticate via token
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        private AuthenticationTicket CreateAuthTicket(string token)
+        private AuthenticationTicket CreateAuthTicket(string token, KmsLoginResponse user)
         {
-            var id = new ClaimsIdentity(new Claim[] { new Claim("Key", token) }, Scheme.Name);
-            ClaimsPrincipal principal = new ClaimsPrincipal(id);
+            var userData = new ClaimsIdentity(
+                new Claim[] { 
+                    new Claim(KudoConstants.UserInfo.KEY, token),
+                    new Claim(KudoConstants.UserInfo.USERNAME, user.UserName),
+                    new Claim(KudoConstants.UserInfo.NAME, user.ShortName),
+                    new Claim(KudoConstants.UserInfo.BADGEID, user.EmployeeCode),
+                    new Claim(KudoConstants.UserInfo.EMAIL, user.Email)
+                }, Scheme.Name);
+            ClaimsPrincipal principal = new ClaimsPrincipal(userData);
             var ticket = new AuthenticationTicket(principal, new AuthenticationProperties(), Scheme.Name);
             return ticket;
         }

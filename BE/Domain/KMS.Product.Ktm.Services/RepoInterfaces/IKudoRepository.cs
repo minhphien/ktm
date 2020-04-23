@@ -13,13 +13,13 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// Get all kudos
         /// </summary>
         /// <returns>Returns a collection of all kudos</returns>
-        Task<IEnumerable<Kudo>> GetKudosAsync();
+        Task<IEnumerable<KudoDetailDto>> GetKudosAsync();
 
         /// <summary>
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        Task<IEnumerable<KudoReportDto>> GetKudosForReport(
+        Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
             DateTime? dateFrom,
             DateTime? dateTo,
             List<int> teamIds,
@@ -52,5 +52,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <param name="kudos"></param>
         /// <returns></returns>
         Task InsertKudos(IEnumerable<Kudo> kudo);
+
+        /// <summary>
+        /// get user kudo send/receive by badge id
+        /// </summary>
+        /// <param name="badgeId"></param>
+        /// <returns></returns>
+        Task<UserDataDto> GetUserKudosByBadgeId(string badgeId);
     }
 }

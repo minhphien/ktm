@@ -69,5 +69,15 @@ namespace KMS.Product.Ktm.Repository
             employee.UpdateRange(employees);
             await context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// get employee by username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public Employee GetEmployeeByUserName(string username)
+        {
+            return employee.Where(e => e.UserName == username).FirstOrDefault();
+        }
     }
 }

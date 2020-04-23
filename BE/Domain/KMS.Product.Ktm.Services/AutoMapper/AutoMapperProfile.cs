@@ -13,7 +13,8 @@ namespace KMS.Product.Ktm.Services.AutoMapper
         public AutoMapperProfile()
         {
             CreateMap<KmsEmployeeDto, Employee>()
-                .ForMember(dest => dest.FirstMidName, option => option.MapFrom(src => $"{src.FirstName} {src.MiddleName}"));
+                .ForMember(dest => dest.FirstMidName, option => option.MapFrom(src => $"{src.FirstName} {src.MiddleName}"))
+                .AfterMap((from, to) => to.UserName = from.Email.Split('@')[0]);
             CreateMap<KmsTeamDto, Team>();
         }
     }

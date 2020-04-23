@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.DTO;
@@ -12,6 +13,7 @@ namespace KMS.Product.Ktm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReportController : ControllerBase
     {
 
@@ -44,7 +46,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         {
             try
             {
-                IEnumerable<KudoReportDto> kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
+                IEnumerable<KudoDetailDto> kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
                 return Ok(kudos);
             }
             catch (BussinessException ex)

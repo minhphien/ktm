@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using AutoMapper;
 using KMS.Product.Ktm.Repository;
 using KMS.Product.Ktm.Api.Authentication;
@@ -70,6 +71,9 @@ namespace KMS.Product.Ktm.Api
                 c.TimeZoneInfo = TimeZoneInfo.Local;
                 c.CronExpression = Configuration.GetValue<string>("CronTimmer"); //use @"*/5 * * * *" every five minutes for testing
             });
+            //json
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

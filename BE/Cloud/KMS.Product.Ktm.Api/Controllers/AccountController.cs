@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using KMS.Product.Ktm.Api.Exceptions;
+using KMS.Product.Ktm.Entities.Common;
+using KMS.Product.Ktm.Services.KudoService;
+using KMS.Product.Ktm.Services.AppConstants;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private IConfiguration Configuration { get; }
+        private readonly IKudoService _kudoService;
 
-        public AccountController(IConfiguration configuration)
+        public AccountController(IConfiguration configuration, IKudoService kudoService)
         {
             Configuration = configuration ?? throw new ArgumentNullException($"{nameof(configuration)}");
+            _kudoService = kudoService ?? throw new ArgumentNullException($"{nameof(kudoService)}");
         }
 
         /// <summary>
@@ -29,24 +32,19 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// - Status Unauthorized 401 if token expires or invalid token
         /// </returns>
         [HttpGet("me")]
-        public async Task<IActionResult> GetUserInforAsync()
+        public IActionResult GetUserInfor()
         {
             try
             {
-                HttpClient client = new HttpClient();
-                var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var response = await client.GetAsync(Configuration.GetValue<string>("KmsInfo:AuthenticateUrl"));
-                if (response.StatusCode == HttpStatusCode.OK)
-                {                    
-                    return Ok(await response.Content.ReadAsStringAsync());
-                }
-                else
+                return Ok(new KmsLoginResponse
                 {
-                    return Unauthorized("Invalid token");
-                }
+                    UserName = User.FindFirst(KudoConstants.UserInfo.USERNAME)?.Value,
+                    ShortName = User.FindFirst(KudoConstants.UserInfo.NAME)?.Value,
+                    EmployeeCode = User.FindFirst(KudoConstants.UserInfo.BADGEID)?.Value,
+                    Email = User.FindFirst(KudoConstants.UserInfo.EMAIL)?.Value
+            });
             }
-            catch(BussinessException ex)
+            catch (BussinessException ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }

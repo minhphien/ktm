@@ -39,5 +39,12 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <param name="employees"></param>
         /// <returns></returns>
         Task UpdateEmployees(IEnumerable<Employee> employees);
+
+        /// <summary>
+        /// get employee by username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Employee GetEmployeeByUserName(string username);
     }
 }
