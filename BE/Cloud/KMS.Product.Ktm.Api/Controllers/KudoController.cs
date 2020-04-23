@@ -163,14 +163,14 @@ namespace KMS.Product.Ktm.Api.Controllers
 
         /// <summary>
         /// create kudo with username
-        /// POST: api/kudo/createwithusername
+        /// POST: api/kudo/kudobyusername
         /// </summary>
         /// <param name="kudo"></param>
         /// <returns>
         /// Success: returns 200 status code with a collection of all kudos        
         /// Failure: returns 500 status code with an exception message
         /// </returns>
-        [HttpPost("createwithusername")]
+        [HttpPost("kudobyusername")]
         public async Task<IActionResult> CreateKudoByUserNameAsync(KudoDto kudo)
         {
             try
