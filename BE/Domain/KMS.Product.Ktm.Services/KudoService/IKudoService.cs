@@ -73,5 +73,12 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// <param name="badgeId"></param>
         /// <returns></returns>
         Task<UserDataDto> GetUserKudosByBadgeId(string badgeId);
+
+        /// <summary>
+        /// create kudo with username
+        /// </summary>
+        /// <param name="kudo"></param>
+        /// <returns></returns>
+        Task CreateKudoByUserNameAsync(KudoDto kudo);
     }
 }

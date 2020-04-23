@@ -57,7 +57,8 @@ namespace KMS.Product.Ktm.Api.Authentication
                         .SetSlidingExpiration(TimeSpan.FromMinutes(Configuration.GetValue<int>("KmsInfo:CacheExpiration")));
                     // Save validated token into cache
                     _cache.Set(token, cacheEntry, cacheEntryOptions);
-                    _cache.Set<string>(KudoConstants.UserInfo.USERNAME, user.ShortName, cacheEntryOptions);
+                    _cache.Set<string>(KudoConstants.UserInfo.USERNAME, user.UserName, cacheEntryOptions);
+                    _cache.Set<string>(KudoConstants.UserInfo.NAME, user.ShortName, cacheEntryOptions);
                     _cache.Set<string>(KudoConstants.UserInfo.BADGEID, user.EmployeeCode, cacheEntryOptions);
                     _cache.Set<string>(KudoConstants.UserInfo.EMAIL, user.Email, cacheEntryOptions);
 
@@ -68,7 +69,8 @@ namespace KMS.Product.Ktm.Api.Authentication
             }
             else
             {
-                user.ShortName = _cache.Get<string>(KudoConstants.UserInfo.USERNAME);
+                user.UserName = _cache.Get<string>(KudoConstants.UserInfo.USERNAME);
+                user.ShortName = _cache.Get<string>(KudoConstants.UserInfo.NAME);
                 user.EmployeeCode = _cache.Get<string>(KudoConstants.UserInfo.BADGEID);
                 user.Email = _cache.Get<string>(KudoConstants.UserInfo.EMAIL);
             }
@@ -106,7 +108,8 @@ namespace KMS.Product.Ktm.Api.Authentication
             var userData = new ClaimsIdentity(
                 new Claim[] { 
                     new Claim(KudoConstants.UserInfo.KEY, token),
-                    new Claim(KudoConstants.UserInfo.USERNAME, user.ShortName),
+                    new Claim(KudoConstants.UserInfo.USERNAME, user.UserName),
+                    new Claim(KudoConstants.UserInfo.NAME, user.ShortName),
                     new Claim(KudoConstants.UserInfo.BADGEID, user.EmployeeCode),
                     new Claim(KudoConstants.UserInfo.EMAIL, user.Email)
                 }, Scheme.Name);

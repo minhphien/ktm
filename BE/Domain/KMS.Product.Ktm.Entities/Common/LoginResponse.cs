@@ -12,6 +12,9 @@ namespace KMS.Product.Ktm.Entities.Common
         // login token
         public string Token { get; set; }
 
+        // user name
+        public string UserName { get; set; }
+
         // short name
         public string ShortName { get; set; }
 
