@@ -1,23 +1,23 @@
-<nz-empty nzNotFoundImage="https://img.icons8.com/cute-clipart/344/wish-list.png" nzNotFoundContent="Let send kudos to someone as compliment on their helps." *ngIf="!(listOfData$ | async)"></nz-empty>
-<nz-table #basicTable [nzData]="listOfData$" *ngIf="listOfData$ | async">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Age</th>
-      <th>Address</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let data of basicTable.data">
-      <td>{{ data.name }}</td>
-      <td>{{ data.age }}</td>
-      <td>{{ data.address }}</td>
-      <td>
-        <a>Action 一 {{ data.name }}</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a>Delete</a>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
+<nz-empty *ngIf="!(kudosItems$ | async)" nzNotFoundImage="https://img.icons8.com/cute-clipart/344/wish-list.png" nzNotFoundContent="Let send kudos to someone as compliment on their helps." ></nz-empty>
+  <div *ngIf="(kudosItems$ | async) as data">
+  <nz-table #basicTable [nzData]="kudoReceives"  *ngVar="data.kudoReceives as kudoReceives">
+    <thead>
+      <tr>
+        
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Content</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{ data.senderFirstMidName }}</td>
+        <td>{{ data.receiverFirstMidName }}</td>
+        <td>{{ data.content }}</td>
+        <td>{{ data.typeName }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+

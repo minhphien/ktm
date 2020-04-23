@@ -27,6 +27,7 @@ import { CreateKudosComponent } from './components/_shared/create-kudos/create-k
 import { LoaderComponent } from './components/_shared/loader/loader.component'// import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { appStateReducer } from './appState.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { VarDirective } from './_directives/varDirective';
 
 registerLocaleData(en);
 @NgModule({
@@ -40,7 +41,8 @@ registerLocaleData(en);
         BrowserAnimationsModule,
         AppRoutingModule,
         StoreModule.forRoot({appstate: appStateReducer}),
-        StoreDevtoolsModule.instrument({maxAge: 25})
+        StoreDevtoolsModule.instrument({maxAge: 25}),
+        
     ],
     declarations: [
         AppComponent,
@@ -52,7 +54,9 @@ registerLocaleData(en);
         UserInfoPanelComponent ,
         TableComponent ,
         CreateKudosComponent ,
-        LoaderComponent  
+        LoaderComponent,
+        VarDirective
+          
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

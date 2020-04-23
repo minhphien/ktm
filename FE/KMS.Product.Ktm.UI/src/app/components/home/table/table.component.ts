@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { KudosService } from '@app/_services/kudos.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -6,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./table.component.less']
 })
 export class TableComponent implements OnInit {
+  kudosItems$: Observable<any>;
   listOfData = [
     {
       key: '1',
@@ -26,9 +29,13 @@ export class TableComponent implements OnInit {
       address: 'Sidney No. 1 Lake Park'
     }
   ];
-  constructor() { }
+  constructor(private kudosService: KudosService) { }
 
   ngOnInit() {
+    this.kudosItems$ = this.kudosService.getMyKudos();
+    this.kudosItems$.subscribe((data)=>{
+      console.log(data);
+    });
   }
 
 }

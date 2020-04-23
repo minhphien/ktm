@@ -5,6 +5,10 @@
 export const environment = {
     production: false,
     apiUrl: 'https://localhost:5001',
+    methods: {
+        UserKudos: "/api/Kudo/userkudos",
+        CreateKudos: ""
+    },
     KmsHomeUrl: 'https://home.kms-technology.com',
     hrmUrls: {
         domain: "https://hr.kms-technology.com",
