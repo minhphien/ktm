@@ -13,6 +13,7 @@ namespace KMS.Product.Ktm.Services.AppConstants
         public static class UserInfo
         {
             public const string KEY = "Key";
+            public const string NAME = "Name";
             public const string USERNAME = "UserName";
             public const string BADGEID = "BadgeId";
             public const string EMAIL = "Email";

@@ -24,6 +24,8 @@ namespace KMS.Product.Ktm.Entities.Models
 
         public int? MentorId { get; set; }
 
+        public string UserName { get; set; }
+
         public virtual EmployeeRole EmployeeRole { get; set; }
 
         public virtual ICollection<EmployeeTeam> EmployeeTeams { get; set; }

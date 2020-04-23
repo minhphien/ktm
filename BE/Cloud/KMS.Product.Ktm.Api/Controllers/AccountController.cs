@@ -38,7 +38,8 @@ namespace KMS.Product.Ktm.Api.Controllers
             {
                 return Ok(new KmsLoginResponse
                 {
-                    ShortName = User.FindFirst(KudoConstants.UserInfo.USERNAME)?.Value,
+                    UserName = User.FindFirst(KudoConstants.UserInfo.USERNAME)?.Value,
+                    ShortName = User.FindFirst(KudoConstants.UserInfo.NAME)?.Value,
                     EmployeeCode = User.FindFirst(KudoConstants.UserInfo.BADGEID)?.Value,
                     Email = User.FindFirst(KudoConstants.UserInfo.EMAIL)?.Value
             });

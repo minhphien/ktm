@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.Models;
+using KMS.Product.Ktm.Entities.DTO;
 using KMS.Product.Ktm.Services.KudoService;
 using KMS.Product.Ktm.Services.AppConstants;
 
@@ -153,6 +154,30 @@ namespace KMS.Product.Ktm.Api.Controllers
                 string badgeId = User.FindFirst(KudoConstants.UserInfo.BADGEID)?.Value;
                 var kudos = await _kudoService.GetUserKudosByBadgeId(badgeId);
                 return Ok(kudos);
+            }
+            catch (BussinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// create kudo with username
+        /// POST: api/kudo/createwithusername
+        /// </summary>
+        /// <param name="kudo"></param>
+        /// <returns>
+        /// Success: returns 200 status code with a collection of all kudos        
+        /// Failure: returns 500 status code with an exception message
+        /// </returns>
+        [HttpPost("createwithusername")]
+        public async Task<IActionResult> CreateKudoByUserNameAsync(KudoDto kudo)
+        {
+            try
+            {
+                kudo.SenderUsername = User.FindFirst(KudoConstants.UserInfo.USERNAME)?.Value;
+                await _kudoService.CreateKudoByUserNameAsync(kudo);
+                return Ok();
             }
             catch (BussinessException ex)
             {

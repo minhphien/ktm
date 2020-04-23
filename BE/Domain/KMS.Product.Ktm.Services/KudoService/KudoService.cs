@@ -170,5 +170,33 @@ namespace KMS.Product.Ktm.Services.KudoService
         {
             return await _kudoRepository.GetUserKudosByBadgeId(badgeId);
         }
+
+        /// <summary>
+        /// create kudo with username
+        /// </summary>
+        /// <param name="kudo"></param>
+        /// <returns></returns>
+        public async Task CreateKudoByUserNameAsync(KudoDto kudo)
+        {
+            var sender = _employeeRepository.GetEmployeeByUserName(kudo.SenderUsername);
+            var reciver = _employeeRepository.GetEmployeeByUserName(kudo.ReceiverUsername);
+
+            if (sender != null && reciver != null)
+            {
+                var newKudo = new Kudo
+                {
+                    SenderId = sender.Id,
+                    ReceiverId = reciver.Id,
+                    KudoDetail = new KudoDetail
+                    {
+                        Content = kudo.Content,
+                        SlackEmoji = kudo.SlackEmoji,
+                        KudoTypeId = kudo.KudoTypeId
+                    }                   
+                };
+
+                await _kudoRepository.InsertAsync(newKudo);
+            }
+        }
     }
 }
