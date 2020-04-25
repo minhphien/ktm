@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        // get return url from route parameters or default to '/'
         
         // redirect to home if already logged in
         let user = <AppState>this.appState.getValue();

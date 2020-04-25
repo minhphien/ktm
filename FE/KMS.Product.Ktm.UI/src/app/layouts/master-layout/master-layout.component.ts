@@ -28,7 +28,6 @@ export class MasterLayoutComponent implements OnInit {
   ]
 
   constructor(
-    private store: Store <{appstate: AppState}>,
     private userService: UserService
   ) {
     

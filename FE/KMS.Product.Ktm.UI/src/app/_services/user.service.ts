@@ -4,10 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { User } from '@app/_models/user';
 import { Employee } from "@app/_models/employee";
-import { Observable } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { SESSION_USER_INFO } from '@app/appState.reducer';
 import { stringify } from 'querystring';
-import { retry, map } from 'rxjs/operators';
+import { retry, map, retryWhen, flatMap, delay, take, concat } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -29,12 +29,13 @@ export class UserService {
     getUserCurrentState() : Observable<Employee>{
         let url = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnInfoUserLogin}`;
         console.log(url);
-        return this.http.get<Employee>(url).pipe(map((employee:Employee)=>{
+        return this.http.get<Employee>(url)
+        .pipe(map((employee:Employee)=>{
             if(employee){
                 employee.imgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${employee.employeeId}/300`
             }
             return employee;
-        }) ,retry(3));
+        }));
     }
     
     getUserInfoSession(): User{

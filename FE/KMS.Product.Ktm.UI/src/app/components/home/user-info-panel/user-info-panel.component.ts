@@ -14,9 +14,10 @@ export class UserInfoPanelComponent implements OnInit {
   currentUser$: Observable<User>;
   profileInfo$: Observable<Employee>;
   constructor(private store: Store <{appstate: AppState}>, private userService: UserService) {
-    this.currentUser$ = store.pipe(select("appstate"), select(selectUserInfo))
+    
   }
   ngOnInit() {
+    this.currentUser$ = this.store.pipe(select("appstate"), select(selectUserInfo))
     this.profileInfo$ = this.userService.getUserCurrentState();
   }
 

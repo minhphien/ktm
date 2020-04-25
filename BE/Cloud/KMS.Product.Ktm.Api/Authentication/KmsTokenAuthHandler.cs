@@ -41,7 +41,9 @@ namespace KMS.Product.Ktm.Api.Authentication
         /// <returns></returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
+            Console.WriteLine(token);
             string cacheEntry;
             var user = new KmsLoginResponse();
 

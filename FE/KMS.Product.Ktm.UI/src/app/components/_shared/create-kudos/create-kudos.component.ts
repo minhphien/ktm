@@ -18,16 +18,12 @@ export class CreateKudosComponent implements OnInit {
     this.profileInfo$ = this.userService.getUserCurrentState();
   }
 
-  open(): void {
-    this.visible = true;
-  }
-
-  close(): void {
-    this.visible = false;
+  createKudos(): void {
+    
   }
 
   inputValue: string = '';
-  suggestions = ['afc163', 'benjycui', 'yiminghe', 'RaoHai', '中文', 'にほんご'];
+  suggestions = ['minhphien','phienle'];
 
   onChange(value: string): void {
     console.log(value);

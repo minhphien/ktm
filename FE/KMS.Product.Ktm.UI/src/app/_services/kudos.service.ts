@@ -13,7 +13,7 @@ export class KudosService {
   constructor(private http: HttpClient) { 
     
   }
-  getMyKudos():Observable<any> {
+  getMyKudos(): Observable<any> {
     let url = `${environment.apiUrl}${environment.methods.UserKudos}`;
     console.log(url);
     return this.http.get(url).pipe(retryWhen(error => {

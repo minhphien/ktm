@@ -25,7 +25,7 @@ namespace KMS.Product.Ktm.Api
         public static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        private const string AllowAllOrigin = nameof(AllowAllOrigin);
+        private const string AllowLocalOrigin = nameof(AllowLocalOrigin);
 
         public Startup(IWebHostEnvironment env)
         {
@@ -48,8 +48,17 @@ namespace KMS.Product.Ktm.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddSlackClient(Configuration);
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(AllowLocalOrigin,
+                    builder => builder.WithOrigins("http://localhost:4201")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
             services.AddAuthentication("KmsTokenAuth")
                 .AddScheme<KmsTokenAuthOptions, KmsTokenAuthHandler>("KmsTokenAuth", "KmsTokenAuth", opts => { });
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
@@ -61,19 +70,22 @@ namespace KMS.Product.Ktm.Api
                 .UseLoggerFactory(MyLoggerFactory));
             services.AddKtmRepositories();
             services.AddKtmServices();
+            
             // mapper
             services.AddAutoMapper(typeof(KudosProfile), typeof(AutoMapperProfile));
             // cache
             services.AddMemoryCache();
             // cron job
-            services.AddCronJob<SyncDataJob>(c =>
-            {
-                c.TimeZoneInfo = TimeZoneInfo.Local;
-                c.CronExpression = Configuration.GetValue<string>("CronTimmer"); //use @"*/5 * * * *" every five minutes for testing
-            });
+            //services.AddCronJob<SyncDataJob>(c =>
+            //{
+            //    c.TimeZoneInfo = TimeZoneInfo.Local;
+            //    c.CronExpression = Configuration.GetValue<string>("CronTimmer"); //use @"*/5 * * * *" every five minutes for testing
+            //});
             //json
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,16 +96,17 @@ namespace KMS.Product.Ktm.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(AllowLocalOrigin);
+
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseCors(AllowAllOrigin);
 
             app.UseEndpoints(endpoints =>
             {

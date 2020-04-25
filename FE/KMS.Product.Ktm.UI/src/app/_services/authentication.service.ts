@@ -23,7 +23,7 @@ export class AuthenticationService {
 
     signOn(accessToken: string) {
         this.currentUser$ =  this.http.get<User>(`${environment.KmsHomeUrl}/api/account/authenticate`, 
-                { headers: { "Authorization": `Bearer ${accessToken}` } }).pipe(retry(5))
+                { headers: { "Authorization": `Bearer ${accessToken}` } });
         this.currentUser$.subscribe((user: User) => { 
             this.store.dispatch(updateUser(user));
         });

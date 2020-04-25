@@ -13,3 +13,12 @@ export class Kudos {
     created: Date;
     modified: Date;
 }
+
+export class LightKudos {
+    ReceiverUsername: string;
+    Content: string;
+    SlackEmoji: string;
+    KudoTypeId: number;
+}
+
+

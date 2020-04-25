@@ -26,7 +26,7 @@ namespace KMS.Product.Ktm.Api
             )
             .ConfigureServices(services =>
             {
-                services.AddHostedService<EmailHostedService>();
+                //services.AddHostedService<EmailHostedService>();
             });
     }
 }
