@@ -33,6 +33,7 @@
               "src/assets"
             ],
             "styles": [
+              "./node_modules/emoji-data-css/files/eo-32-emoji.min.css",
               "src/assets/scss/argon.scss",
               "src/styles.less"
             ],

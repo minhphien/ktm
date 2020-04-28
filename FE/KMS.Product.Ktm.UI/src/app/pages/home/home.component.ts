@@ -4,6 +4,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from '@app/_models';
 import { selectUserInfo } from '@app/appState.reducer';
 import { Observable } from 'rxjs';
+import { KudosService } from '@app/_services/kudos.service';
 
 @Component({
   templateUrl: 'home.component.html'
@@ -14,11 +15,15 @@ export class HomeComponent {
   userFromApi: User;
   gutter = 32;
   constructor(
-    private store: Store<{appstate: AppState}>
+    private store: Store<{appstate: AppState}>,
+    private kudosService: KudosService
   ) {
     this.currentUser$ = store.pipe(select("appstate"), select(selectUserInfo));
   }
 
   ngOnInit() {
+    this.kudosService.getMyKudos().subscribe((data)=>{
+      console.log('home', data);
+    });
   }
 }

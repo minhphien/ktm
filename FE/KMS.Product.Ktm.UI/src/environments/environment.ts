@@ -7,7 +7,7 @@ export const environment = {
     apiUrl: 'https://localhost:5001',
     methods: {
         UserKudos: "/api/Kudo/userkudos",
-        CreateKudos: ""
+        CreateKudos: "/api/kudo/kudobyusername"
     },
     KmsHomeUrl: 'https://home.kms-technology.com',
     hrmUrls: {

@@ -1,0 +1,26 @@
+<nz-empty *ngIf="!(kudosItems$ | async)" nzNotFoundImage="https://img.icons8.com/cute-clipart/344/wish-list.png" nzNotFoundContent="Let send kudos to someone as compliment on their helps." ></nz-empty>
+  <div *ngIf="(kudosItems$ | async) as data">
+  <nz-table #basicTable [nzData]="data" >
+    <thead>
+      <tr>
+        <th scope="col" class="" ></th>
+        <th scope="col" class="" >Content</th>
+        <th scope="col" class=" text-right">Created</th>
+        <th scope="col" class=" text-center">Sent by</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; trackBy: trackById">
+        <td ><span class="eo eo-{{data.emoji | emojicss}}"></span></td>
+        <td >{{ data.content }}</td>
+        <td class="text-right">{{ data.created | date: 'short' }}</td>
+        <td class="text-center" >
+          <nz-avatar [nzText]="data.senderFirstMidName + ' ' + data.senderLastName | appr" 
+            nz-popover [nzPopoverContent]="data.senderFirstMidName + ' ' + data.senderLastName" nzPopoverPlacement="top" >
+          </nz-avatar> 
+        </td >
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+

@@ -2,6 +2,7 @@
 using KMS.Product.Ktm.Entities.Models;
 using KMS.Product.Ktm.Dto.KmsEmployee;
 using KMS.Product.Ktm.Dto.KmsTeam;
+using KMS.Product.Ktm.Entities.DTO;
 
 namespace KMS.Product.Ktm.Services.AutoMapper
 {
@@ -16,6 +17,7 @@ namespace KMS.Product.Ktm.Services.AutoMapper
                 .ForMember(dest => dest.FirstMidName, option => option.MapFrom(src => $"{src.FirstName} {src.MiddleName}"))
                 .AfterMap((from, to) => to.UserName = from.Email.Split('@')[0]);
             CreateMap<KmsTeamDto, Team>();
+            
         }
     }
 }

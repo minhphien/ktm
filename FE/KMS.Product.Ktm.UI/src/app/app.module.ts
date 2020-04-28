@@ -22,12 +22,17 @@ import { FooterComponent } from './components/_shared/footer/footer.component';
 import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-layout.component';
 import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';;
 import { UserInfoPanelComponent } from './components/home/user-info-panel/user-info-panel.component';
-import { TableComponent } from './components/home/table/table.component';
+import { TableKudosReceivedComponent } from './components/home/table-kudos-recevied/table-kudos-recevied.component';
 import { CreateKudosComponent } from './components/_shared/create-kudos/create-kudos.component';
 import { LoaderComponent } from './components/_shared/loader/loader.component'// import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { appStateReducer } from './appState.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { VarDirective } from './_directives/varDirective';
+import { kudosStateReducer } from './_reducers/kudos-list.reducer';
+import { AppreviationPipe } from './_pipes/appreviation.pipe';
+import { EmojiCssPipe } from "./_pipes/emojicss.pipe";
+import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';;
+import { ReportComponent } from './pages/report/report.component'
 
 registerLocaleData(en);
 @NgModule({
@@ -40,7 +45,7 @@ registerLocaleData(en);
         NzDrawerModule,
         BrowserAnimationsModule,
         AppRoutingModule,
-        StoreModule.forRoot({appstate: appStateReducer}),
+        StoreModule.forRoot({appstate: appStateReducer, kudosState: kudosStateReducer}),
         StoreDevtoolsModule.instrument({maxAge: 25}),
         
     ],
@@ -48,14 +53,18 @@ registerLocaleData(en);
         AppComponent,
         HomeComponent,
         LoginComponent,
-        FooterComponent ,
-        MasterLayoutComponent ,
-        AnonymousLayoutComponent ,
-        UserInfoPanelComponent ,
-        TableComponent ,
+        FooterComponent,
+        MasterLayoutComponent,
+        AnonymousLayoutComponent,
+        UserInfoPanelComponent,
+        TableKudosReceivedComponent, 
+        TableKudosSentComponent,
         CreateKudosComponent ,
         LoaderComponent,
-        VarDirective
+        VarDirective,
+        AppreviationPipe,
+        EmojiCssPipe,
+        ReportComponent
           
     ],
     providers: [

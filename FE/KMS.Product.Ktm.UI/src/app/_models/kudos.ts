@@ -21,4 +21,7 @@ export class LightKudos {
     KudoTypeId: number;
 }
 
-
+export class KudosState {
+    kudoReceives: Kudos[];
+    kudoSends: Kudos[];
+}

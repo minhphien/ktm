@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '@app/_services';
 import { Observable } from 'rxjs';
-import { Employee } from '@app/_models';
+import { Employee, LightKudos } from '@app/_models';
+import { KudosService } from '@app/_services/kudos.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-create-kudos',
@@ -12,14 +14,30 @@ export class CreateKudosComponent implements OnInit {
   visible = false;
   profileInfo$: Observable<Employee>;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private kudosService: KudosService, private message: NzMessageService) { }
 
   ngOnInit() {
     this.profileInfo$ = this.userService.getUserCurrentState();
   }
 
   createKudos(): void {
-    
+    let data: LightKudos = {
+      ReceiverUsername: "phienle",
+      Content: this.inputValue,
+      SlackEmoji: ":clap:",
+      KudoTypeId: 1
+    };
+    this.kudosService.createKudos(data).subscribe(response=>{
+      this.kudosService.getMyKudos();
+      this.cleanUpModel();
+      this.message.success('Kudos. Your message is sent.', {
+        nzDuration: 1500
+      });
+    })
+  }
+
+  cleanUpModel() {
+    this.inputValue = '';
   }
 
   inputValue: string = '';

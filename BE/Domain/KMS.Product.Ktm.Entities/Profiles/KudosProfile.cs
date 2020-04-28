@@ -26,7 +26,8 @@ namespace KMS.Product.Ktm.Entities.Profiles
                 .ForMember(dest => dest.SenderLastName, opt => opt.MapFrom(src => src.Sender.LastName))
                 .ForMember(dest => dest.ReceiverBadgeId, opt => opt.MapFrom(src => src.Receiver.EmployeeBadgeId))
                 .ForMember(dest => dest.ReceiverFirstMidName, opt => opt.MapFrom(src => src.Receiver.FirstMidName))
-                .ForMember(dest => dest.ReceiverLastName, opt => opt.MapFrom(src => src.Receiver.LastName));
+                .ForMember(dest => dest.ReceiverLastName, opt => opt.MapFrom(src => src.Receiver.LastName))
+                .ForMember(dest => dest.Emoji, option => option.MapFrom(src => src.KudoDetail.SlackEmoji));
         }
     }
 }

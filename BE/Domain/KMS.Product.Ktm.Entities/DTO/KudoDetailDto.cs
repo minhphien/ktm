@@ -30,6 +30,7 @@ namespace KMS.Product.Ktm.Entities.DTO
         public string ReceiverFirstMidName { get; set; }
         // receiver team
         public string ReceiverTeam { get; set; }
+        public string Emoji { get; set; }
 
     }
 }
