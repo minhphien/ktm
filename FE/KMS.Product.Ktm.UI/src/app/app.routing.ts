@@ -4,10 +4,12 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthGuard } from './_helpers';
 import { MasterLayoutComponent } from './layouts/master-layout/master-layout.component';
 import { AnonymousLayoutComponent } from './layouts/anonymous-layout/anonymous-layout.component';
+import { ReportComponent } from './pages/report/report.component';
 
 const authorizedRoutes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
-    { path: "home", component: HomeComponent}
+    { path: "home", component: HomeComponent},
+    { path: "report", component: ReportComponent}
 ];
 
 const routes: Routes = [
