@@ -1,5 +1,4 @@
-<div> 
-    <nz-affix [nzOffsetTop]="offsetTop">
+<div class="h-100 d-block w-100 d-flex flex-column">
     <nz-header class="pl-2 pr-2" >
       <div class="offset-xl-3 col-xl-6 col-lg-12">
       <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
@@ -24,20 +23,21 @@
             </ul>
           </nz-dropdown-menu>
           </div>
-          
         </li>
       </ul>
       </div>
     </nz-header>
-  </nz-affix>
-  <div class="d-flex flex-row">    
-     <nz-affix [nzOffsetTop]="75"  class="offset-lg-0 offset-xl-1 col-lg-3 col-xl-2 col-md-3 col-0 p-0"> 
+  <div class="d-flex flex-column flex-grow-1 overflow-auto">    
+    <div class="d-flex flex-row flex-grow-1 ">
+      <nz-affix [nzOffsetTop]="75"  class="offset-lg-0 offset-xl-1 col-lg-3 col-xl-2 col-md-3 col-0 p-0"> 
         <app-user-info-panel></app-user-info-panel>
-    </nz-affix> 
-    <div class="col-xl-6 col-lg-9 col-md-9 border-left border-right"> 
-      <router-outlet></router-outlet>
+      </nz-affix>
+      <div class="col-xl-6 col-lg-9 col-md-9 border-left border-right"> 
+        <router-outlet></router-outlet>
+      </div>
+      <div class="col-xl-3 col-lg-0 col-md-0"></div> 
     </div>
-    <div class="col-xl-3 col-lg-0 col-md-0"></div> 
+    <app-footer ></app-footer>
   </div>
-  <app-footer ></app-footer>
+  
 </div>
