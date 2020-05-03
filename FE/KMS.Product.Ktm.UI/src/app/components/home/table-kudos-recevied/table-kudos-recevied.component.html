@@ -1,5 +1,5 @@
-<nz-empty *ngIf="!(kudosItems$ | async)" nzNotFoundImage="https://img.icons8.com/cute-clipart/344/wish-list.png" nzNotFoundContent="Let send kudos to someone as compliment on their helps." ></nz-empty>
-  <div *ngIf="(kudosItems$ | async) as data">
+<nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
+<div *ngIf="(kudosItems$ | async) as data">
   <nz-table #basicTable [nzData]="data" >
     <thead>
       <tr>

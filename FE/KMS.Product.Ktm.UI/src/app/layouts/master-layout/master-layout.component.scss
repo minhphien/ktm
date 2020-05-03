@@ -6,7 +6,7 @@
 
 
 .header-menu {
-  line-height: 64px;
+  line-height: 60px;
 }
 
 .sider-menu {
@@ -31,4 +31,12 @@ nz-content {
 
 .ant-layout-slider {
   position: absolute;
+}
+
+
+.ant-layout-header {
+  height: 60px;
+  padding: 0 50px;
+  line-height: 64px;
+  background: #001529;
 }
