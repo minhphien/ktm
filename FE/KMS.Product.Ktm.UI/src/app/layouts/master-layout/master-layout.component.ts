@@ -8,6 +8,7 @@ import { AppState } from '@app/_models';
 import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { UserService } from '@app/_services';
+import { KudosService } from '@app/_services/kudos.service';
 
 @Component({
   selector: 'app-master-layout',
@@ -27,16 +28,11 @@ export class MasterLayoutComponent implements OnInit {
     }
   ]
 
-  constructor(
-    private userService: UserService
-  ) {
-    
+  constructor(private userService: UserService, private kudosService: KudosService) {
+    this.currentUser$= this.userService.getUserCurrentState();
   }
 
   ngOnInit() {
-    this.currentUser$= this.userService.getUserCurrentState();
-    this.currentUser$.subscribe((user)=>{
-        console.log(user);
-    })
+    this.kudosService.getMyKudos();
   }
 }

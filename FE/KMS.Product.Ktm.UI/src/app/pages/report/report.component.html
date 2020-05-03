@@ -1,1 +1,38 @@
-<p>report works!</p>
+<div class="d-flex mb-3">
+  <div class="flex-grow-1">
+    <nz-select [(ngModel)]="filters.kudosType" class="mr-2" >
+      <nz-option *ngFor="let item of listOfOption" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
+    </nz-select>
+    <nz-select [(ngModel)]="filters.team" class="mr-2" >
+      <nz-option *ngFor="let item of listOfTeam" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
+    </nz-select>
+  </div>
+
+    <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onChange($event)"></nz-range-picker>
+    
+</div>
+    
+<nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
+<div *ngIf="(kudosItems$ | async) as data">
+  <nz-table #basicTable [nzData]="data" >
+    <thead>
+      <tr>
+        <th scope="col" class="text-center" >Member</th>
+        <th scope="col" class=" text-right">Received Total</th>
+        <th scope="col" class=" text-right">Sent Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; trackBy: trackById">
+        <td class="text-center" >
+          <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
+            nz-popover [nzPopoverContent]="data.receiverFirstMidName + ' ' + data.receiverLastName" nzPopoverPlacement="top" >
+          </nz-avatar> 
+        </td >
+        <td class=" text-right">0</td>
+        <td class=" text-right">0</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+

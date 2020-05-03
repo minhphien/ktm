@@ -12,10 +12,12 @@ import { selectKudosList, selectKudosReceived } from '@app/_reducers/kudos-list.
 })
 export class TableKudosReceivedComponent implements OnInit {
   kudosItems$: Observable<Kudos[]>;
-  constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) { }
+  constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) {
+    this.kudosItems$ = this.store.pipe(select("kudosState"),select(selectKudosReceived));
+   }
 
   ngOnInit() {
-    this.kudosItems$ = this.store.pipe(select("kudosState"),select(selectKudosReceived));
+    
   }
   // Treat the instructor ID as the unique identifier for the object
   trackById(index: number, data: Kudos): number {

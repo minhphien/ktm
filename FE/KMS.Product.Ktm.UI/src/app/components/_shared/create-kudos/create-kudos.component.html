@@ -1,8 +1,8 @@
-<!-- <button nz-button nzType="primary" >Create</button> -->
-<div class="createkudos d-flex flex-row" *ngIf="profileInfo$ | async as profileInfo">
-  <div class="pr-3">
+<div class="createkudos d-flex flex-row" >
+  <div class="pr-3" *ngVar="profileInfo$ | async as profileInfo">
     <div class="profile-thumbnail rounded-circle overflow-hidden">
-    <img src="{{profileInfo.imgUrl}}"  >
+    <img src="{{profileInfo != null ? profileInfo.imgUrl : ''}}"  >
+
   </div>
 </div>
   

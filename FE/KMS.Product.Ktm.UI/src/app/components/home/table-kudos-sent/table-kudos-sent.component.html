@@ -1,5 +1,6 @@
 <nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
 <div *ngIf="(kudosItems$ | async) as data">
+  
   <nz-table #basicTable [nzData]="data" >
     <thead>
       <tr>

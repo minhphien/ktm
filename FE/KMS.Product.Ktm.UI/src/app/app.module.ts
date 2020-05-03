@@ -32,7 +32,7 @@ import { kudosStateReducer } from './_reducers/kudos-list.reducer';
 import { AppreviationPipe } from './_pipes/appreviation.pipe';
 import { EmojiCssPipe } from "./_pipes/emojicss.pipe";
 import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';;
-import { ReportComponent } from './pages/report/report.component'
+import { ReportComponent } from './pages/report/report.component';
 
 registerLocaleData(en);
 @NgModule({
@@ -63,9 +63,8 @@ registerLocaleData(en);
         LoaderComponent,
         VarDirective,
         AppreviationPipe,
-        EmojiCssPipe,
-        ReportComponent
-          
+        EmojiCssPipe,
+        ReportComponent          
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
