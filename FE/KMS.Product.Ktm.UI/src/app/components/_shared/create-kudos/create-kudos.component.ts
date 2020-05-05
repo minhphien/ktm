@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserService } from '@app/_services';
 import { Observable } from 'rxjs';
 import { Employee, LightKudos } from '@app/_models';
@@ -13,6 +13,9 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class CreateKudosComponent implements OnInit {
   visible = false;
   profileInfo$: Observable<Employee>;
+  userSuggestion$: Observable<string[]>;
+  selectedUsers: string[] = [];
+  suggestions: string[] = [];
 
   constructor(private userService: UserService, private kudosService: KudosService, private message: NzMessageService) { }
 
@@ -41,13 +44,65 @@ export class CreateKudosComponent implements OnInit {
   }
 
   inputValue: string = '';
-  suggestions = ['minhphien','phienle'];
 
-  onChange(value: string): void {
-    console.log(value);
+  updateSuggestions(value: string): void {
+    if (value.length>3) { 
+      let keyword = value.replace(/@/g, '');
+      console.log('getting suggested list for', value, keyword);
+      this.userSuggestion$ = this.userService.getSuggestedUserList(keyword, 10);
+      this.userSuggestion$.subscribe(users=>{
+        console.log('suggestions updated',users);
+        this.suggestions = users;
+      });
+    }
+  }
+
+  renderPreView(val: any): void {
+    console.log('renderPreView ', val);
+    if (this.inputValue) {
+      const regex = this.getRegExp('@');
+      const previewValue = this.inputValue.replace(
+        regex,
+        match => {
+          this.updateSuggestions(match);
+          return `${match}`;
+        }
+      );
+    }
+  }
+
+  searchChange(): void {
+    console.log('searchChange');
+  }
+  
+  getRegExp(prefix: string | string[]): RegExp {
+    const prefixArray = Array.isArray(prefix) ? prefix : [prefix];
+    let prefixToken = prefixArray.join('').replace(/(\$|\^)/g, '\\$1');
+
+    if (prefixArray.length > 1) {
+      prefixToken = `[${prefixToken}]`;
+    }
+
+    return new RegExp(`(\\s|^)(${prefixToken})[^\\s]*`, 'g');
   }
 
   onSelect(suggestion: string): void {
-    console.log(`onSelect ${suggestion}`);
+    console.log(`onSelect @${suggestion}`);
+    
+   // this.inputValue = this.inputValue.replace(/@/g,``);
+
+    if (this.inputValue) {
+      this.inputValue = this.inputValue.replace(
+        this.getRegExp('@'),
+        match => {
+          return `u/<{>${match.substr(1)}>`;
+        }
+      );
+    }
+  }
+
+  onSuggestionMatched(val: any): void {
+    console.log('onSuggestionMatched', val);
+    
   }
 }

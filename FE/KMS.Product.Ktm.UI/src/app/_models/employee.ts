@@ -18,4 +18,5 @@ export class Employee extends User {
     gender: number;
     avatarUrl: string;
     imgUrl: string;
+    userAccount: string;
 }

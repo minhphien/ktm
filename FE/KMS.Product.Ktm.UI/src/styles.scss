@@ -1,0 +1,38 @@
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd";
+@import "../src/assets/scss/argon";
+
+
+/* You can add global styles to this file, and also import other style files */
+a { cursor: pointer }
+
+
+//
+// KTMS Customization
+//
+
+.ant-tabs-nav-wrap {
+  text-align: end;
+}
+.ant-empty-image {
+  height: 64px;
+}
+.ant-badge-dot {
+  box-shadow: 0 0 0 0px;
+}
+
+.ant-layout-header {
+  padding: 0 50px;
+  height: 62px;
+  background: $default;
+  
+  border-bottom: 1px solid #e8e8e8;
+  box-shadow: none;
+}
+
+.ant-menu{
+  background: transparent;
+}
+
+.ant-layout-footer {
+  padding: 10px
+}

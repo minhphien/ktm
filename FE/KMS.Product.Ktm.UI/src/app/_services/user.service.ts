@@ -1,13 +1,12 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
 import { environment } from '@environments/environment';
 import { User } from '@app/_models/user';
 import { Employee } from "@app/_models/employee";
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { SESSION_USER_INFO } from '@app/appState.reducer';
-import { stringify } from 'querystring';
-import { retry, map, retryWhen, flatMap, delay, take, concat } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import * as _ from 'underscore';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -45,5 +44,14 @@ export class UserService {
             return <User>JSON.parse(userString);
         }
         else return null;
+    }
+
+    getSuggestedUserList(keyword: string, maxTotal?: number): Observable<string[]>{
+        if (!keyword || keyword.length<3) return null;
+        if (maxTotal<=0) maxTotal = 1;       
+        const root = environment.hrmUrls;
+        const url = `${root.domain}${root.methods.SuggestedUsers}/${maxTotal}?employeeId=0&exceptEmployee=&filterName=${keyword}&filterOnlyStatus=&includeTerminated=false`;
+        return this.http.get<Employee[]>(url)
+            .pipe(map((users: Employee[]) => _.map(users,u=>u.userAccount)));
     }
 }
