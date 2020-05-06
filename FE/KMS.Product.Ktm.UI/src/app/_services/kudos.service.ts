@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable , of, throwError } from 'rxjs';
-import { retry, concat, retryWhen, take, flatMap, delay } from 'rxjs/operators';
+import { retry, concat, retryWhen, take, flatMap, delay, map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { LightKudos, KudosState } from '@app/_models';
 import { Store } from '@ngrx/store';
 import { updateKudos } from '@app/_reducers/kudos-list.reducer';
+import * as _ from 'underscore';
 
 
 @Injectable({
@@ -37,8 +38,9 @@ export class KudosService {
     return request$;
   }
 
-  createKudos(data: LightKudos) {
+  createKudos(data: LightKudos): Observable<Object> {
     let url = `${environment.apiUrl}${environment.methods.CreateKudos}`;
+    console.log(url);
     let request$ = this.http.post(url, data);
     return request$;
   }

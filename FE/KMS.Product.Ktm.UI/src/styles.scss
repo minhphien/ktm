@@ -6,33 +6,78 @@
 a { cursor: pointer }
 
 
+
+
 //
 // KTMS Customization
 //
 
-.ant-tabs-nav-wrap {
-  text-align: end;
-}
-.ant-empty-image {
-  height: 64px;
-}
-.ant-badge-dot {
-  box-shadow: 0 0 0 0px;
-}
 
-.ant-layout-header {
-  padding: 0 50px;
-  height: 62px;
-  background: $default;
+
+// Ant Design-related customization
+
+.ant {
+  &-badge-dot {
+    box-shadow: 0 0 0 0px;
+  }
+
+  &-empty-image {
+    height: 60px;
+  }
+
+  &-layout-header {
+    height: 58px;
+    background: $body-bg;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: none;
+    padding: 10px
+  }
   
-  border-bottom: 1px solid #e8e8e8;
-  box-shadow: none;
+  &-menu {
+    background: transparent;
+  }
+
+  &-tabs-nav-wrap {
+    text-align: end;
+  }
+
+  &-avatar-string {
+    transform: scale(0.857143) translateX(-50%);
+  }
+  &-table-thead > tr > th, &-table-tbody > tr > td {
+    padding: 5px;
+  }
+  
 }
 
-.ant-menu{
-  background: transparent;
+.header-menu {
+  height: 58px;
+  line-height: 56px;
 }
 
-.ant-layout-footer {
-  padding: 10px
+
+
+// Quill-related customization
+.ql-container {
+
+  font-size: 14px;
+  font-family: inherit;
+
+  .ql-editor {
+    
+    &::before {
+      font-size: 1em;
+      line-height: 1.7;
+      font-style: normal;
+      color: $gray-400;
+    }
+  
+    p, * p {
+      font-size: 1em;
+      font-weight: 300;
+      font-family: inherit;
+      /* line-height: 1.7; */
+    }
+  }
 }
+

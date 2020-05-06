@@ -46,12 +46,21 @@ export class UserService {
         else return null;
     }
 
-    getSuggestedUserList(keyword: string, maxTotal?: number): Observable<string[]>{
+    getSuggestedUserList(keyword: string, maxTotal?: number): Observable<any[]>{
         if (!keyword || keyword.length<3) return null;
         if (maxTotal<=0) maxTotal = 1;       
         const root = environment.hrmUrls;
         const url = `${root.domain}${root.methods.SuggestedUsers}/${maxTotal}?employeeId=0&exceptEmployee=&filterName=${keyword}&filterOnlyStatus=&includeTerminated=false`;
-        return this.http.get<Employee[]>(url)
-            .pipe(map((users: Employee[]) => _.map(users,u=>u.userAccount)));
+        let request$ = this.http.get<Employee[]>(url);
+        request$.subscribe(val=>{console.log(val)});
+        return request$.pipe(
+                map((users: Employee[]) => _.map(
+                    users, u => { 
+                        return { 
+                            'id': u.employeeNumber, 
+                            'value': `${u.fullName} - ${u.employeeCode}`, 
+                            'username': u.userAccount
+                        }}))
+                );
     }
 }

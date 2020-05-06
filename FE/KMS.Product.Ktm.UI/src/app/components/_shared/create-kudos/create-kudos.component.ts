@@ -1,9 +1,14 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { UserService } from '@app/_services';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin, of, from } from 'rxjs';
 import { Employee, LightKudos } from '@app/_models';
 import { KudosService } from '@app/_services/kudos.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { QuillEditorComponent } from 'ngx-quill';
+import 'quill-mention';
+import * as _ from 'underscore';
+import * as $ from 'jquery';
+import { map, mergeMap, mergeAll } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-kudos',
@@ -11,9 +16,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./create-kudos.component.less']
 })
 export class CreateKudosComponent implements OnInit {
+
   visible = false;
   profileInfo$: Observable<Employee>;
-  userSuggestion$: Observable<string[]>;
+  userSuggestion$: Observable<any[]>;
   selectedUsers: string[] = [];
   suggestions: string[] = [];
 
@@ -24,85 +30,79 @@ export class CreateKudosComponent implements OnInit {
   }
 
   createKudos(): void {
-    let data: LightKudos = {
-      ReceiverUsername: "phienle",
-      Content: this.inputValue,
-      SlackEmoji: ":clap:",
-      KudoTypeId: 1
-    };
-    this.kudosService.createKudos(data).subscribe(response=>{
-      this.kudosService.getMyKudos();
-      this.cleanUpModel();
-      this.message.success('Kudos. Your message is sent.', {
-        nzDuration: 1500
-      });
-    })
+     console.log(this.content);
+    // console.log(
+      $(this.content).children("span[class='mention']").each(
+        (obj:any)=>{ 
+          console.log(obj);
+          // console.log($(obj).attr("data-username"));
+        });
+
+    // let username =
+    //   of(_.toArray<string>(_.each($(this.content).children("span[class='mention']"),
+    //     (x:any) => $(x).attr('data-username')))).pipe(mergeAll());
+    //   username.subscribe(x=>{
+    //     console.log(x);
+    //   })
+    //   // username$.pipe(
+      //     mergeMap((username: string) => { 
+      //       let data =
+      //       <LightKudos> {
+      //         ReceiverUsername: username,
+      //         Content: this.content,
+      //         SlackEmoji: ":clap:",
+      //         KudoTypeId: 1
+      //       };
+      //       let reponse = this.kudosService.createKudos(data);
+      //       return reponse;
+      //     }))
+      // .subscribe(response=>{
+      // //this.kudosService.getMyKudos();
+      // this.content = '';
+      // this.message.success('Kudos!!! Your message(s) is sent.', {
+      //   nzDuration: 1500
+      // });
+    // });
+
   }
 
-  cleanUpModel() {
-    this.inputValue = '';
-  }
+  //
+  // Rich editor
+  //
 
-  inputValue: string = '';
+  toolbarOptions = ['bold', 'italic', 'underline', 'strike'];
 
-  updateSuggestions(value: string): void {
-    if (value.length>3) { 
-      let keyword = value.replace(/@/g, '');
-      console.log('getting suggested list for', value, keyword);
-      this.userSuggestion$ = this.userService.getSuggestedUserList(keyword, 10);
-      this.userSuggestion$.subscribe(users=>{
-        console.log('suggestions updated',users);
-        this.suggestions = users;
-      });
-    }
-  }
-
-  renderPreView(val: any): void {
-    console.log('renderPreView ', val);
-    if (this.inputValue) {
-      const regex = this.getRegExp('@');
-      const previewValue = this.inputValue.replace(
-        regex,
-        match => {
-          this.updateSuggestions(match);
-          return `${match}`;
-        }
-      );
-    }
-  }
-
-  searchChange(): void {
-    console.log('searchChange');
-  }
+  @ViewChild(QuillEditorComponent, { static: true }) 
+  editor: QuillEditorComponent
   
-  getRegExp(prefix: string | string[]): RegExp {
-    const prefixArray = Array.isArray(prefix) ? prefix : [prefix];
-    let prefixToken = prefixArray.join('').replace(/(\$|\^)/g, '\\$1');
+  content = ''
+  
+  modules = {
+    mention: {
+      allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+      dataAttributes: ['id', 'value', 'denotationChar','username'],
+      onSelect: (item, insertItem) => {
+        const editor = this.editor.quillEditor
+        insertItem(item)
+        editor.insertText(editor.getLength() - 1, '', 'user')
+      },
+      source: (searchTerm, renderList) => {
+        const values = [];
 
-    if (prefixArray.length > 1) {
-      prefixToken = `[${prefixToken}]`;
-    }
-
-    return new RegExp(`(\\s|^)(${prefixToken})[^\\s]*`, 'g');
-  }
-
-  onSelect(suggestion: string): void {
-    console.log(`onSelect @${suggestion}`);
-    
-   // this.inputValue = this.inputValue.replace(/@/g,``);
-
-    if (this.inputValue) {
-      this.inputValue = this.inputValue.replace(
-        this.getRegExp('@'),
-        match => {
-          return `u/<{>${match.substr(1)}>`;
+        if (searchTerm.length === 0) {
+          renderList(values, searchTerm)
+        } else {
+          this.userSuggestion$ = this.userService.getSuggestedUserList(searchTerm, 10);
+          this.userSuggestion$.subscribe(users=>{
+            renderList(users, searchTerm);
+          });
         }
-      );
-    }
+      }
+    },
+    toolbar: null
   }
 
-  onSuggestionMatched(val: any): void {
-    console.log('onSuggestionMatched', val);
-    
-  }
+  //
+  //
+
 }

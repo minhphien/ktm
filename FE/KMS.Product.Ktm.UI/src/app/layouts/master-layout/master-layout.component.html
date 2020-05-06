@@ -1,12 +1,12 @@
 <div class="h-100 d-block w-100 d-flex flex-column">
-    <nz-header class="pl-2 pr-2" >
+    <nz-header class="p-0 m-0" >
       <div class="offset-xl-3 col-xl-6 col-lg-12">
-      <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+      <ul nz-menu nzMode="horizontal" class="header-menu">
         <li nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
           <a routerLink={{menu.path}}>{{menu.name}}</a>
         </li>
         <li class="float-right" *ngIf="currentUser$ | async as currentUser">
-          <div class="btn btn-default round-pill profile-menu">
+          <div class="btn round-pill profile-menu">
             <a nz-dropdown [nzDropdownMenu]="menu">
             <nz-badge nzDot class="mr-2">
               <nz-avatar nzIcon="user" nzSrc="{{currentUser.imgUrl}}" ></nz-avatar>

@@ -9,7 +9,7 @@ import { fakeBackendProvider } from './_helpers';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
-import { NgZorroAntdModule, NZ_ICONS, NzDrawerModule } from 'ng-zorro-antd';
+import { NgZorroAntdModule, NzDrawerModule } from 'ng-zorro-antd';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
@@ -33,6 +33,7 @@ import { AppreviationPipe } from './_pipes/appreviation.pipe';
 import { EmojiCssPipe } from "./_pipes/emojicss.pipe";
 import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';;
 import { ReportComponent } from './pages/report/report.component';
+import { QuillModule } from 'ngx-quill';
 
 registerLocaleData(en);
 @NgModule({
@@ -48,6 +49,9 @@ registerLocaleData(en);
         StoreModule.forRoot({appstate: appStateReducer, kudosState: kudosStateReducer}),
         StoreDevtoolsModule.instrument({maxAge: 25}),
         
+        QuillModule.forRoot({
+            theme: 'bubble'
+        })      
     ],
     declarations: [
         AppComponent,
@@ -64,7 +68,7 @@ registerLocaleData(en);
         VarDirective,
         AppreviationPipe,
         EmojiCssPipe,
-        ReportComponent          
+        ReportComponent,   
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
