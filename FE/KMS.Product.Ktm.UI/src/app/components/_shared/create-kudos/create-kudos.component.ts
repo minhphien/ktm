@@ -30,40 +30,30 @@ export class CreateKudosComponent implements OnInit {
   }
 
   createKudos(): void {
-     console.log(this.content);
-    // console.log(
-      $(this.content).children("span[class='mention']").each(
-        (obj:any)=>{ 
-          console.log(obj);
-          // console.log($(obj).attr("data-username"));
+    let html = $(this.content)[0];
+    
+    forkJoin(of(new Observable(obs=>{
+      $(html).children("span[class='mention']").each((idx, val)=>{
+          obs.next($(val).attr("data-username"));
         });
-
-    // let username =
-    //   of(_.toArray<string>(_.each($(this.content).children("span[class='mention']"),
-    //     (x:any) => $(x).attr('data-username')))).pipe(mergeAll());
-    //   username.subscribe(x=>{
-    //     console.log(x);
-    //   })
-    //   // username$.pipe(
-      //     mergeMap((username: string) => { 
-      //       let data =
-      //       <LightKudos> {
-      //         ReceiverUsername: username,
-      //         Content: this.content,
-      //         SlackEmoji: ":clap:",
-      //         KudoTypeId: 1
-      //       };
-      //       let reponse = this.kudosService.createKudos(data);
-      //       return reponse;
-      //     }))
-      // .subscribe(response=>{
-      // //this.kudosService.getMyKudos();
-      // this.content = '';
-      // this.message.success('Kudos!!! Your message(s) is sent.', {
-      //   nzDuration: 1500
-      // });
-    // });
-
+      }).pipe(
+        mergeMap(async (username: string) =>  { 
+          let data =
+          <LightKudos> {
+            ReceiverUsername: username,
+            Content: this.content,
+            SlackEmoji: ":clap:",
+            KudoTypeId: 1
+          };
+          let reponse = await this.kudosService.createKudos(data).toPromise();
+          return reponse;})
+    ).toPromise())).subscribe(response=>{
+      this.kudosService.getMyKudos();
+      this.content = '';
+      this.message.success('Kudos!!! Your message(s) is sent.', {
+        nzDuration: 1500
+      });
+    });
   }
 
   //

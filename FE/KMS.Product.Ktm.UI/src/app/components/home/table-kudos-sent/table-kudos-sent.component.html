@@ -13,7 +13,7 @@
     <tbody>
       <tr *ngFor="let data of basicTable.data; trackBy: trackById">
         <td ><span class="eo eo-{{data.emoji | emojicss}}"></span></td>
-        <td >{{ data.content }}</td>
+        <td><quill-view [content]="data.content"></quill-view></td>
         <td class="text-right">{{ data.created | date: 'short' }}</td>
         <td class="text-center" >
           <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
