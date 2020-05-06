@@ -2,12 +2,16 @@ export class Kudos {
     content: string;
     typeName: string;
     senderBadgeId: string;
+    senderEmployeeNumber: number;
+    senderImgUrl: string;
     senderLastName: string;
     senderFirstMidName: string;
     senderTeam: string;
     receiverBadgeId: string;
+    receiverEmployeeNumber: number;
+    receiverImgUrl: string;
     receiverLastName: string;
-    receiverFirstMidName: string;
+    receiverFirstMidName: string;    
     receiverTeam: string;
     id: number;
     created: Date;

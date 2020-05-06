@@ -50,7 +50,7 @@ export class UserService {
         if (!keyword || keyword.length<3) return null;
         if (maxTotal<=0) maxTotal = 1;       
         const root = environment.hrmUrls;
-        const url = `${root.domain}${root.methods.SuggestedUsers}/${maxTotal}?employeeId=0&exceptEmployee=&filterName=${keyword}&filterOnlyStatus=&includeTerminated=false`;
+        const url = `${root.domain}${root.methods.SuggestedUsers}/${maxTotal}?employeeId=0&exceptEmployee=&filterName=${keyword}&filterOnlyStatus=&includeTerminated=true`;
         let request$ = this.http.get<Employee[]>(url);
         request$.subscribe(val=>{console.log(val)});
         return request$.pipe(

@@ -4,14 +4,16 @@ using KMS.Product.Ktm.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KMS.Product.Ktm.Repository.Migrations
 {
     [DbContext(typeof(KtmDbContext))]
-    partial class KtmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200506164825_add-EmployeeNumber")]
+    partial class addEmployeeNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

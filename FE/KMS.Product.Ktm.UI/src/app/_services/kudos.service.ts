@@ -31,7 +31,17 @@ export class KudosService {
          }),
          take(5),
          concat(throwError({error: 'Sorry, there was an error (after 5 retries)'})));
-    }));
+    }),
+    map((kudos:KudosState)=>{
+      _.each(kudos.kudoReceives,x=>{
+          x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
+          x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
+      _.each(kudos.kudoSends,x=>{
+        x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
+        x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
+      return kudos;
+    })
+    );
     request$.subscribe((kudos:KudosState)=>{
       this.store.dispatch(updateKudos(kudos));
     });

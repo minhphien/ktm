@@ -76,7 +76,9 @@ namespace KMS.Product.Ktm.Repository
                               ReceiverBadgeId = er.EmployeeBadgeId,
                               ReceiverFirstMidName = er.FirstMidName,
                               ReceiverLastName = er.LastName,
-                              ReceiverTeam = tr.TeamName
+                              ReceiverTeam = tr.TeamName,
+                              SenderEmployeeNumber = es.EmployeeNumber,
+                              ReceiverEmployeeNumber = er.EmployeeNumber
                           }
                 ).ToListAsync();
         }

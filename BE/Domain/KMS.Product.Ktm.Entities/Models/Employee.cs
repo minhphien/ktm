@@ -41,5 +41,7 @@ namespace KMS.Product.Ktm.Entities.Models
         public virtual Employee Mentor { get; set; }
 
         public virtual ICollection<Employee> Mentee { get; set; }
+
+        public int EmployeeNumber { get; set; }
     }
 }
