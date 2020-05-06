@@ -2,28 +2,25 @@
 <div *ngIf="(kudosItems$ | async) as data">
   
   <nz-table #basicTable [nzData]="data" >
-    <thead>
-      <tr>
-        <th scope="col" class="" ></th>
-        <th scope="col" class="" style="max-width: 50%;" >Content</th>
-        <th scope="col" class=" text-right">Created</th>
-        <th scope="col" class=" text-center">Sent to</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data; trackBy: trackById">
-        <td ><span class="{{data.emoji | emojicss}}"></span></td>
-        <td style="max-width: 50%;"><quill-view [content]="data.content"></quill-view></td>
-        <td class="text-right">{{ data.created | date: 'short' }}</td>
-        <td class="text-center" >
-          <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
-            nz-popover [nzPopoverContent]="data.receiverFirstMidName + ' ' + data.receiverLastName" 
-            [nzSrc] = "data.receiverImgUrl"
-            nzPopoverPlacement="top" >
-          </nz-avatar> 
-        </td >
-      </tr>
-    </tbody>
+
+    <tr>
+      <th scope="col" style="width: 10%;" ></th>
+      <th scope="col" style="width: 60%;" >Content</th>
+      <th scope="col" style="width: 15%;" class=" text-right">Created</th>
+      <th scope="col" style="width: 15%;" class="text-center">To</th>
+    </tr>
+    <tr *ngFor="let data of basicTable.data; trackBy: trackById">
+      <td ><span class="{{data.emoji | emojicss}}"></span></td>
+      <td ><quill-view [content]="data.content" class="w-75"></quill-view></td>
+      <td class="text-right">{{ data.created | date: 'short' }}</td>
+      <td class="text-center" >
+        <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
+          nz-popover [nzPopoverContent]="data.receiverFirstMidName + ' ' + data.receiverLastName" 
+          [nzSrc] = "data.receiverImgUrl"
+          nzPopoverPlacement="top" >
+        </nz-avatar> 
+      </td >
+    </tr>
   </nz-table>
 </div>
 

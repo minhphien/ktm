@@ -39,6 +39,9 @@ export class KudosService {
       _.each(kudos.kudoSends,x=>{
         x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
         x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
+      kudos.kudoReceives = _.sortBy(kudos.kudoReceives,(x)=>x.created).reverse();
+      kudos.kudoSends = _.sortBy(kudos.kudoSends,(x)=>x.created).reverse();
+
       return kudos;
     })
     );

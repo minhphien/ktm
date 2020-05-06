@@ -1,21 +1,18 @@
 <nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
 <div *ngIf="(kudosItems$ | async) as data">
-  <nz-table #basicTable [nzData]="data" >
-    <thead>
+  <nz-table #basicTable [nzData]="data"  >
+
       <tr>
-        <th scope="col" class="" ></th>
-        <th scope="col" class="" >Content</th>
-        <th scope="col" class=" text-right">Created</th>
-        <th scope="col" class=" text-center">Sent by</th>
+        <th scope="col" style="width: 10%;" ></th>
+        <th scope="col" style="width: 60%;" >Content</th>
+        <th scope="col" style="width: 15%;" class=" text-right">Created</th>
+        <th scope="col" style="width: 15%;" class="text-center">From</th>
       </tr>
-    </thead>
-    <tbody>
       <tr *ngFor="let data of basicTable.data; trackBy: trackById">
-        <td ><span class="{{data.emoji | emojicss}}"></span></td>
-        <td><quill-view [content]="data.content"></quill-view></td>
+        <td class="" ><span class="{{data.emoji | emojicss}}"></span></td>
+        <td class=""><quill-view [content]="data.content"></quill-view></td>
         <td class="text-right">{{ data.created | date: 'short' }}</td>
         <td class="text-center" >
-
           <nz-avatar [nzText]="data.senderFirstMidName + ' ' + data.senderLastName | appr" 
             nz-popover [nzPopoverContent]="data.senderFirstMidName + ' ' + data.senderLastName" 
             [nzSrc] = "data.senderImgUrl"
@@ -23,7 +20,6 @@
           </nz-avatar> 
         </td >
       </tr>
-    </tbody>
   </nz-table>
 </div>
 
