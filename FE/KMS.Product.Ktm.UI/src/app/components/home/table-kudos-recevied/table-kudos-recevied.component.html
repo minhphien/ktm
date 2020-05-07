@@ -13,11 +13,8 @@
         <td class=""><quill-view [content]="data.content"></quill-view></td>
         <td class="text-right">{{ data.created | date: 'short' }}</td>
         <td class="text-center" >
-          <nz-avatar [nzText]="data.senderFirstMidName + ' ' + data.senderLastName | appr" 
-            nz-popover [nzPopoverContent]="data.senderFirstMidName + ' ' + data.senderLastName" 
-            [nzSrc] = "data.senderImgUrl"
-            nzPopoverPlacement="top" >
-          </nz-avatar> 
+          <app-avatar [displayName] = "data.senderFirstMidName + ' ' + data.senderLastName" 
+            [imgUrl] = "data.senderImgUrl"></app-avatar>
         </td >
       </tr>
   </nz-table>

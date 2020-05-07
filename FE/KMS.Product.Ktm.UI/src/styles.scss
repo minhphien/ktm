@@ -51,6 +51,10 @@ a { cursor: pointer }
   &-table-body > table {
     table-layout: fixed;
   }
+
+  &icon {
+    vertical-align: 0.125em;
+  }
   
 }
 

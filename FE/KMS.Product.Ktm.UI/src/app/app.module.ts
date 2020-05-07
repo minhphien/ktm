@@ -33,7 +33,8 @@ import { AppreviationPipe } from './_pipes/appreviation.pipe';
 import { EmojiCssPipe } from "./_pipes/emojicss.pipe";
 import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';;
 import { ReportComponent } from './pages/report/report.component';
-import { QuillModule } from 'ngx-quill';
+import { QuillModule } from 'ngx-quill';;
+import { AvatarComponent } from './components/_shared/avatar/avatar.component'
 
 registerLocaleData(en);
 @NgModule({
@@ -68,7 +69,8 @@ registerLocaleData(en);
         VarDirective,
         AppreviationPipe,
         EmojiCssPipe,
-        ReportComponent,   
+        ReportComponent,
+        AvatarComponent   
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -1,0 +1,7 @@
+<nz-avatar [nzText]="displayName | appr" 
+    nz-popover [nzPopoverContent]="displayName" 
+    [nzSrc] = "imgUrl"
+    nzIcon="{{displayName ? '' : 'user'}}"
+    [nzSize]="size"
+    nzPopoverPlacement="top" >
+</nz-avatar> 

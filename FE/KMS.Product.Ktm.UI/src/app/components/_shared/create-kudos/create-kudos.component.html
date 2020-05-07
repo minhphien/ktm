@@ -1,8 +1,6 @@
 <div class="createkudos d-flex flex-row"  >
   <div class="pr-3" *ngVar="profileInfo$ | async as profileInfo">
-    <div class="profile-thumbnail rounded-circle overflow-hidden">
-      <img src="{{profileInfo != null ? profileInfo.imgUrl : ''}}" >
-    </div>
+    <app-avatar [size] = "50" [imgUrl] = "profileInfo.imgUrl"></app-avatar>
   </div>  
   <div class="d-flex flex-column w-100">
     <quill-editor [(ngModel)]="content" [modules]="modules" class="border bg-white" placeholder="Says something good about @someone for something." ></quill-editor>

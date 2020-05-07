@@ -8,9 +8,7 @@
         <li class="float-right" *ngIf="currentUser$ | async as currentUser">
           <div class="btn round-pill profile-menu">
             <a nz-dropdown [nzDropdownMenu]="menu">
-            <nz-badge nzDot class="mr-2">
-              <nz-avatar nzIcon="user" nzSrc="{{currentUser.imgUrl}}" ></nz-avatar>
-            </nz-badge>
+              <app-avatar imgUrl="{{currentUser.imgUrl}}" class="mr-2" ></app-avatar>
             {{currentUser.firstName}}
             <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
           </a>

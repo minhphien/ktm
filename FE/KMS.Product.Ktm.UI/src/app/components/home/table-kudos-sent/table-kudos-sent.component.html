@@ -14,11 +14,8 @@
       <td ><quill-view [content]="data.content" class="w-75"></quill-view></td>
       <td class="text-right">{{ data.created | date: 'short' }}</td>
       <td class="text-center" >
-        <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
-          nz-popover [nzPopoverContent]="data.receiverFirstMidName + ' ' + data.receiverLastName" 
-          [nzSrc] = "data.receiverImgUrl"
-          nzPopoverPlacement="top" >
-        </nz-avatar> 
+        <app-avatar [displayName] = "data.receiverFirstMidName + ' ' + data.receiverLastName" 
+            [imgUrl] = "data.receiverImgUrl"></app-avatar>
       </td >
     </tr>
   </nz-table>

@@ -1,7 +1,7 @@
 <div *ngIf="profileInfo$ | async as profileInfo">
   <div class="d-flex flex-column">
     <div class="justify-content-center mt-5 mx-auto">
-      <nz-avatar [nzSize]="128" nzIcon="user" nzSrc="{{profileInfo.imgUrl}}"></nz-avatar>
+      <app-avatar [size] = "128" [imgUrl] = "profileInfo.imgUrl"></app-avatar>
     </div>
    <div class="card-body pt-0 pt-md-4">
     <div class="text-center">
