@@ -176,7 +176,7 @@ namespace KMS.Product.Ktm.Api.Controllers
             try
             {
                 kudo.SenderUsername = User.FindFirst(KudoConstants.UserInfo.USERNAME)?.Value;
-                await _kudoService.CreateKudoByUserNameAsync(kudo);
+                _kudoService.CreateKudoByUserNameAsync(kudo).RunSynchronously();
                 return Ok();
             }
             catch (BussinessException ex)

@@ -47,12 +47,12 @@ export class CreateKudosComponent implements OnInit {
           };
           let reponse = await this.kudosService.createKudos(data).toPromise();
           return reponse;})
-    ).toPromise())).toPromise().then(response=>{
-      this.kudosService.getMyKudos();
+    ).toPromise())).toPromise().then((response: any) =>{
       this.content = '';
       this.message.success('Kudos!!! Your message(s) is sent.', {
         nzDuration: 1500
       });
+      this.kudosService.getMyKudos();
     });
   }
 
