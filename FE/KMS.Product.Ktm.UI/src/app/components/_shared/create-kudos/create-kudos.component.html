@@ -1,11 +1,13 @@
 <div class="createkudos d-flex flex-row"  >
-  <div class="pr-3" *ngVar="profileInfo$ | async as profileInfo">
-    <app-avatar [size] = "50" [imgUrl] = "profileInfo.imgUrl"></app-avatar>
+  <div class="pr-3" >
+    <app-avatar [size] = "50" *ngVar="profileInfo$ | async as profileInfo" imgUrl = "{{profileInfo ? profileInfo.imgUrl : ''}} "></app-avatar>
   </div>  
   <div class="d-flex flex-column w-100">
     <quill-editor [(ngModel)]="content" [modules]="modules" class="border bg-white" placeholder="Says something good about @someone for something." ></quill-editor>
     <div class="mt-2">
-      <button (click)="createKudos()" class="btn btn-default round-pill create-kudos-button">Kudos
+      <button (click)="createKudos()"  class="d-flex align-self-center btn btn-primary round-pill create-kudos-button {{!content ? 'disabled' : ''}}"> 
+        <i nz-icon nzType="heart" nzTheme="outline"  class="text-lg align-self-center mr-1"></i>
+        <span class="align-self-center">Kudos</span>
       </button>
     </div>
   </div>

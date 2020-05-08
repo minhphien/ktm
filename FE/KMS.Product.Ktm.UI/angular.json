@@ -33,7 +33,7 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/emoji-data-css/files/tw-20-emoji.min.css",
+              "./node_modules/emoji-data-css/files/tw-all-emoji.min.css",
               "./node_modules/quill/dist/quill.bubble.css",
               "./node_modules/quill-mention/dist/quill.mention.min.css",
               "src/styles.scss"

@@ -1,15 +1,15 @@
 <div class="d-flex mb-3">
   <div class="flex-grow-1">
-    <nz-select [(ngModel)]="filters.kudosType" class="mr-2" >
+    <nz-select [(ngModel)]="filters.kudosType" class="mr-2 kudosType" [nzCustomTemplate]="kudosType" >
       <nz-option *ngFor="let item of listOfOption" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
     </nz-select>
-    <nz-select [(ngModel)]="filters.team" class="mr-2" >
+    <ng-template #kudosType let-selected> Type: <b>{{ selected.nzLabel || '' }}</b> </ng-template>
+    <nz-select [(ngModel)]="filters.team" class="mr-2" [nzCustomTemplate]="team" >
       <nz-option *ngFor="let item of listOfTeam" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
     </nz-select>
+    <ng-template #team let-selected> Team: <b>{{ selected.nzLabel || '' }}</b> </ng-template>
   </div>
-
-    <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onChange($event)"></nz-range-picker>
-    
+  <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onChange($event)"></nz-range-picker>
 </div>
     
 <nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
@@ -25,9 +25,7 @@
     <tbody>
       <tr *ngFor="let data of basicTable.data; trackBy: trackById">
         <td class="text-center" >
-          <nz-avatar [nzText]="data.receiverFirstMidName + ' ' + data.receiverLastName | appr" 
-            nz-popover [nzPopoverContent]="data.receiverFirstMidName + ' ' + data.receiverLastName" nzPopoverPlacement="top" >
-          </nz-avatar> 
+          <app-avatar [displayName] = "data.senderFirstMidName + ' ' + data.senderLastName" ></app-avatar>
         </td >
         <td class=" text-right">0</td>
         <td class=" text-right">0</td>

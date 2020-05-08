@@ -53,8 +53,14 @@ export class KudosService {
 
   createKudos(data: LightKudos): Observable<Object> {
     let url = `${environment.apiUrl}${environment.methods.CreateKudos}`;
-    console.log(url);
     let request$ = this.http.post(url, data);
+    return request$;
+  }
+
+  getKudosReport(){
+    let url = `${environment.apiUrl}${environment.methods.Report}`;
+    let request$ = this.http.get(url);
+    console.log("getKudosReport")
     return request$;
   }
 }

@@ -19,14 +19,15 @@ class ReportFilters {
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
-  styleUrls: ['./report.component.less']
+  styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit {
   kudosItems$: Observable<Kudos[]>;
   listOfOption: SelectFilter[] = [
     {name: "Kudos", value: "Kudos"},
     {name: "Gift", value: "Gift", disabled: true},
-    {name: "Gift", value: "ff", disabled: true},
+    {name: "Compliment", value: "Compliment", disabled: true},
+    {name: "Travel abroad", value: "Travel abroad", disabled: true},
   ];
   listOfTeam: SelectFilter[];
   filters: ReportFilters;
@@ -39,6 +40,10 @@ export class ReportComponent implements OnInit {
 
   ngOnInit() {
     if (!this.kudosItems$) this.kudosService.getMyKudos();
+    let t = this.kudosService.getKudosReport();
+    t.subscribe((res)=>{
+      console.log(res);
+    });
   }
   // Treat the instructor ID as the unique identifier for the object
   trackById(index: number, data: Kudos): number {

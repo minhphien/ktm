@@ -9,11 +9,12 @@ import 'quill-mention';
 import * as _ from 'underscore';
 import * as $ from 'jquery';
 import { map, mergeMap, mergeAll } from 'rxjs/operators';
+import { NzModalService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-create-kudos',
   templateUrl: './create-kudos.component.html',
-  styleUrls: ['./create-kudos.component.less']
+  styleUrls: ['./create-kudos.component.scss']
 })
 export class CreateKudosComponent implements OnInit {
 
@@ -23,17 +24,30 @@ export class CreateKudosComponent implements OnInit {
   selectedUsers: string[] = [];
   suggestions: string[] = [];
 
-  constructor(private userService: UserService, private kudosService: KudosService, private message: NzMessageService) { }
+  constructor(private userService: UserService, private kudosService: KudosService, 
+    private message: NzMessageService, private modal: NzModalService) { }
 
   ngOnInit() {
     this.profileInfo$ = this.userService.getUserCurrentState();
   }
 
+  showMentionConfirm(): void {
+    this.modal.warning({
+      nzTitle: 'No recevier found',
+      nzContent: 'Please mention @someone that you want to send the kudos in your message.',
+    });
+  }
+
   createKudos(): void {
+    if (!this.content) return;
     let html = $(this.content)[0];
-    
+    let mentionList = $(html).children("span[class='mention']");
+    if (mentionList.length == 0){
+      this.showMentionConfirm()
+      return;
+    }
     forkJoin(of(new Observable(obs=>{
-      $(html).children("span[class='mention']").each((idx, val)=>{
+      mentionList.each((idx, val)=>{
           obs.next($(val).attr("data-username"));
         });
       }).pipe(
