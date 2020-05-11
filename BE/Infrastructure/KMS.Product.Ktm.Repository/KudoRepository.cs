@@ -56,7 +56,7 @@ namespace KMS.Product.Ktm.Repository
                           join tr in context.Set<Team>() on etr.TeamID equals tr.Id
                           join kd in context.Set<KudoDetail>() on k.KudoDetailId equals kd.Id
                           join ty in context.Set<KudoType>() on  kd.KudoTypeId equals ty.Id
-                          where (!hasDateRange || k.Created >= dateFrom && k.Created <= dateTo)
+                          where (!hasDateRange || (k.Created >= dateFrom && k.Created <= dateTo))
                             && (teamIds.Count() == 0 || teamIds.Contains(ts.Id)) 
                             && k.Created >= ets.JoinedDate
                             && (ets.ReleseadDate == null || k.Created <= ets.ReleseadDate)
@@ -81,6 +81,46 @@ namespace KMS.Product.Ktm.Repository
                               ReceiverEmployeeNumber = er.EmployeeNumber
                           }
                 ).ToListAsync();
+        }
+
+        public async Task<IEnumerable<KudosByTeamDto>> GetKudosByEmployeeForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds,
+            List<int> kudoTypeIds)
+        {
+            var selectedTeams = from team in context.Set<Team>()
+                                where teamIds.Contains(team.Id)
+                                select team.TeamName;
+
+            var result = from employee in context.Set<Employee>()
+                         where selectedTeams.Contains(employee.CurrentTeam)
+                         select new KudosByTeamDto
+                         {
+                             Employee = new EmployeeInfoDto
+                             {
+                                 BadgeId = employee.EmployeeBadgeId,
+                                 EmployeeNumber = employee.EmployeeNumber,
+                                 FirstMidName = employee.FirstMidName,
+                                 LastName = employee.LastName,
+                                 TeamName = employee.CurrentTeam
+
+                             },
+                             ReceivedKudos = new KudosSummaryInfoDto { Total = 
+                                employee.KudoReceives
+                                    .Where(i=> kudoTypeIds.Contains(i.KudoDetail.KudoType.Id))
+                                    .Where(i=> dateFrom== null || (i.KudoDetail.Created >= dateFrom))
+                                    .Where(i => dateTo == null || (i.KudoDetail.Modified <= dateTo))
+                                    .Count() },
+                             SentKudos = new KudosSummaryInfoDto { Total = 
+                                employee.KudoSends
+                                    .Where(i => kudoTypeIds.Contains(i.KudoDetail.KudoType.Id))
+                                    .Where(i => dateFrom == null || (i.KudoDetail.Created >= dateFrom))
+                                    .Where(i => dateTo == null || (i.KudoDetail.Modified <= dateTo))
+                                    .Count() }
+                         };
+
+            return await(result).ToListAsync();
         }
 
         /// <summary>

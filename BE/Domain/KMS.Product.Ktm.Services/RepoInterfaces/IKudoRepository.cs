@@ -59,5 +59,15 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <param name="badgeId"></param>
         /// <returns></returns>
         Task<UserDataDto> GetUserKudosByBadgeId(string badgeId);
+
+        /// <summary>
+        /// Get kudos list by employee for report
+        /// </summary>
+        /// <returns>Returns a collection of kudos</returns>
+        Task<IEnumerable<KudosByTeamDto>> GetKudosByEmployeeForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds,
+            List<int> kudoTypeIds);
     }
 }

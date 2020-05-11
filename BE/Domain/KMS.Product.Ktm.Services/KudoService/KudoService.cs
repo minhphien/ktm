@@ -75,20 +75,13 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// Get kudos for report
         /// </summary>
         /// <returns>Returns a collection of kudos</returns>
-        public async Task<IEnumerable<KudoDetailDto>> GetKudosForReport(
+        public async Task<IEnumerable<KudosByTeamDto>> GetKudosForReport(
             DateTime? dateFrom, 
             DateTime? dateTo, 
             List<int> teamIds, 
             List<int> kudoTypeIds)
         {
-            if(dateFrom != null && dateTo != null)
-            {
-                return await _kudoRepository.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds, true);
-            }
-            else
-            {
-                return await _kudoRepository.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds, false);
-            }
+            return await _kudoRepository.GetKudosByEmployeeForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
         }
 
         /// <summary>

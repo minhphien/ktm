@@ -38,18 +38,20 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetKudosForReport(
-            [FromQuery] DateTime? dateFrom, 
-            [FromQuery] DateTime? dateTo,
-            [FromQuery] List<int> teamIds,
-            [FromQuery] List<int> kudoTypeIds)
+        public async Task<IActionResult> GetKudosByTeamForReport(
+            DateTime? dateFrom, 
+            DateTime? dateTo,
+            int teamIds,
+            int kudoTypeIds)
         {
             try
             {
-                IEnumerable<KudoDetailDto> kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
+                var kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo,
+                    new List<int>() { teamIds }, new List<int>() { kudoTypeIds });
+                    
                 return Ok(kudos);
             }
-            catch (BussinessException ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
