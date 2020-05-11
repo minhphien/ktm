@@ -38,7 +38,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Failure: returns 500 status code with an exception message
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetKudosByTeamForReport(
+        public IActionResult GetKudosByTeamForReport(
             DateTime? dateFrom, 
             DateTime? dateTo,
             int teamIds,
@@ -46,8 +46,8 @@ namespace KMS.Product.Ktm.Api.Controllers
         {
             try
             {
-                var kudos = await _kudoService.GetKudosForReport(dateFrom, dateTo,
-                    new List<int>() { teamIds }, new List<int>() { kudoTypeIds });
+                var kudos = _kudoService.GetKudosForReport(dateFrom, dateTo,
+                    new List<int>() { teamIds }, new List<int>() { kudoTypeIds }).Result;
                     
                 return Ok(kudos);
             }

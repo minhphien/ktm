@@ -1,19 +1,19 @@
 <div class="d-flex mb-3">
   <div class="flex-grow-1">
-    <nz-select [(ngModel)]="filters.kudosType" class="mr-2 kudosType" [nzCustomTemplate]="kudosType" >
-      <nz-option *ngFor="let item of listOfOption" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
+    <nz-select [(ngModel)]="filters.selectedTeam" class="mr-2" [nzCustomTemplate]="teamTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
+      <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
     </nz-select>
-    <ng-template #kudosType let-selected> Type: <b>{{ selected.nzLabel || '' }}</b> </ng-template>
-    <nz-select [(ngModel)]="filters.team" class="mr-2" [nzCustomTemplate]="team" >
-      <nz-option *ngFor="let item of listOfTeam" [nzLabel]="item.name" [nzValue]="item.value" [nzDisabled]="item.disabled"></nz-option>
+    <ng-template #teamTmpl let-selected> Team: <b>{{  selected.nzValue.name}}</b></ng-template>
+    <nz-select [(ngModel)]="filters.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
+      <nz-option *ngFor="let item of listOfTypes" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
     </nz-select>
-    <ng-template #team let-selected> Team: <b>{{ selected.nzLabel || '' }}</b> </ng-template>
+    <ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
   </div>
-  <nz-range-picker [(ngModel)]="dateRange" (ngModelChange)="onChange($event)"></nz-range-picker>
+  <nz-range-picker [(ngModel)]="filters.dateRange" (ngModelChange)="onFilterChanged($event)"></nz-range-picker>
 </div>
     
-<nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true"></nz-skeleton>
-<div *ngIf="(kudosItems$ | async) as data">
+<nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true"></nz-skeleton>
+<div *ngIf="(kudosData$ | async) as data">
   <nz-table #basicTable [nzData]="data" >
     <thead>
       <tr>
@@ -25,10 +25,10 @@
     <tbody>
       <tr *ngFor="let data of basicTable.data; trackBy: trackById">
         <td class="text-center" >
-          <app-avatar [displayName] = "data.senderFirstMidName + ' ' + data.senderLastName" ></app-avatar>
+          <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
         </td >
-        <td class=" text-right">0</td>
-        <td class=" text-right">0</td>
+        <td class=" text-right">{{data.receivedKudos.total}}</td>
+        <td class=" text-right">{{data.sentKudos.total}}</td>
       </tr>
     </tbody>
   </nz-table>

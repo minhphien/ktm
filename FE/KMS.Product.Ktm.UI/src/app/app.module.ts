@@ -35,6 +35,7 @@ import { TableKudosSentComponent } from './components/home/table-kudos-sent/tabl
 import { ReportComponent } from './pages/report/report.component';
 import { QuillModule } from 'ngx-quill';;
 import { AvatarComponent } from './components/_shared/avatar/avatar.component'
+import { AppService } from './_services/app.service';
 
 registerLocaleData(en);
 @NgModule({
@@ -77,7 +78,8 @@ registerLocaleData(en);
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: NZ_I18N, useValue: en_US },
         // provider used to create fake backend
-        fakeBackendProvider
+        fakeBackendProvider,
+        AppService
     ],
     bootstrap: [AppComponent]
 })

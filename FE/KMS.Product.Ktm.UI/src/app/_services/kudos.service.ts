@@ -57,10 +57,11 @@ export class KudosService {
     return request$;
   }
 
-  getKudosReport(){
-    let url = `${environment.apiUrl}${environment.methods.Report}`;
+  getKudosReport(teamId: number, kudoType: number, dateRange?: Date[]): any {
+    let dateParams = `${dateRange && dateRange[0] ? '&dateFrom='+dateRange[0].toDateString():""}${dateRange && dateRange[1] ? '&dateTo='+dateRange[1].toDateString():""}`;
+
+    let url = `${environment.apiUrl}${environment.methods.Report}?teamIds=${teamId}&kudoTypeIds=${kudoType}${dateParams}`;
     let request$ = this.http.get(url);
-    console.log("getKudosReport")
     return request$;
   }
 }

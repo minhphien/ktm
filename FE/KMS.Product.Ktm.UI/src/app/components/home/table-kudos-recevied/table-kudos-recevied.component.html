@@ -9,7 +9,7 @@
         <th scope="col" style="width: 15%;" class="text-center">From</th>
       </tr>
       <tr *ngFor="let data of basicTable.data; trackBy: trackById">
-        <td class="" ><span class="{{data.emoji | emojicss}}"></span></td>
+        <td class="text-center" ><span class="{{data.emoji | emojicss}}"></span></td>
         <td class=""><quill-view [content]="data.content"></quill-view></td>
         <td class="text-right">{{ data.created | date: 'short' }}</td>
         <td class="text-center" >

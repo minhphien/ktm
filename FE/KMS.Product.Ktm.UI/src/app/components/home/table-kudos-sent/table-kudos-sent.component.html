@@ -10,7 +10,7 @@
       <th scope="col" style="width: 15%;" class="text-center">To</th>
     </tr>
     <tr *ngFor="let data of basicTable.data; trackBy: trackById">
-      <td ><span class="{{data.emoji | emojicss}}"></span></td>
+      <td class="text-center" ><span class="{{data.emoji | emojicss}}"></span></td>
       <td ><quill-view [content]="data.content" class="w-75"></quill-view></td>
       <td class="text-right">{{ data.created | date: 'short' }}</td>
       <td class="text-center" >

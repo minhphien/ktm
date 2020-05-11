@@ -3,11 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-8-role-based-authorization-example": {
+    "ktms": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "less"
+          "style": "scss"
         }
       },
       "root": "",
@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angular-8-role-based-authorization-example:build"
+            "browserTarget": "ktms:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-8-role-based-authorization-example:build:production"
+              "browserTarget": "ktms:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-8-role-based-authorization-example:build"
+            "browserTarget": "ktms:build"
           }
         },
         "test": {
@@ -118,15 +118,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "angular-8-role-based-authorization-example:serve"
+            "devServerTarget": "ktms:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "angular-8-role-based-authorization-example:serve:production"
+              "devServerTarget": "ktms:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "angular-8-role-based-authorization-example"
+  "defaultProject": "ktms"
 }

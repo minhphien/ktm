@@ -1,28 +1,29 @@
 <div class="h-100 d-block w-100 d-flex flex-column">
     <nz-header class="p-0 m-0" >
-      <div class="offset-xl-3 col-xl-6 col-lg-12">
-      <ul nz-menu nzMode="horizontal" class="header-menu">
-        <li nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
-          <a routerLink={{menu.path}}>{{menu.name}}</a>
-        </li>
-        <li class="float-right" *ngIf="currentUser$ | async as currentUser">
-          <div class="btn round-pill profile-menu">
-            <a nz-dropdown [nzDropdownMenu]="menu">
-              <app-avatar imgUrl="{{currentUser.imgUrl}}" class="mr-2" ></app-avatar>
-            {{currentUser.firstName}}
-            <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
-          </a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu>
-              <li nz-menu-item (click)="log('1st menu item')">Settings & Preferences</li>
-              <li nz-menu-item (click)="log('2nd menu item')">Help Center</li>
-              <li nz-menu-divider></li>
-              <li nz-menu-item (click)="log('3rd menu item')">Sign Out</li>
-            </ul>
-          </nz-dropdown-menu>
-          </div>
-        </li>
-      </ul>
+      <div class="offset-xl-3 col-xl-6 col-lg-12  d-flex p-0">
+        <button class="logo" routerLink ="/" ><span class="tw-32 tw-beers"></span></button>
+        <ul nz-menu nzMode="horizontal" class="header-menu ml-auto">
+          <li class="" nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
+            <a routerLink={{menu.path}}>{{menu.name}}</a>
+          </li>
+          <li class="float-right" *ngIf="currentUser$ | async as currentUser">
+            <div class="btn round-pill profile-menu">
+              <a nz-dropdown [nzDropdownMenu]="menu">
+                <app-avatar imgUrl="{{currentUser.imgUrl}}" class="" ></app-avatar>
+              {{currentUser.firstName}}
+              <i class="align-baseline" nz-icon nzType="caret-down" nzTheme="fill"></i>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item (click)="log('1st menu item')">Settings & Preferences</li>
+                <li nz-menu-item (click)="log('2nd menu item')">Help Center</li>
+                <li nz-menu-divider></li>
+                <li nz-menu-item (click)="log('3rd menu item')">Sign Out</li>
+              </ul>
+            </nz-dropdown-menu>
+            </div>
+          </li>
+        </ul>
       </div>
     </nz-header>
   <div class="d-flex flex-column flex-grow-1 overflow-auto">    
