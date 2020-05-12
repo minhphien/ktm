@@ -25,20 +25,30 @@ class ReportFilters {
 })
 export class ReportComponent implements OnInit {
   kudosData$: Observable<any>;
+  
+  listOfReports:SelectFilter[] = [
+    {name: "Sent/Received kudos by one Team", value: "1", disabled: false},
+    {name: "Sent/Received kudos across Teams", value: "2", disabled: false},
+    {name: "Sent/Received kudos by users", value: "3", disabled: false}
+  ];
+
+  selectedReport: any = _.first(this.listOfReports);
+
   listOfTypes:SelectFilter[] = [
     {name: "Kudos", value: "1"},
     {name: "Gift", value: "2", disabled: false},
     {name: "Compliment", value: "3", disabled: true},
     {name: "Travel abroad", value: "4", disabled: true}
   ];
+
   listOfTeams:SelectFilter[] = [{name: "Default", value: "1", disabled: false}, {name: "Default 2", value: "2", disabled: false}]
+  
   filters: ReportFilters = {
     selectedKudosType: _.first(this.listOfTypes),
     selectedTeam: _.first(this.listOfTeams)
   }
   
-  dateRange: any;
-   
+  dateRange: any;   
   
   constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) { }
 

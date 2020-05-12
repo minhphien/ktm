@@ -1,36 +1,45 @@
-<div class="d-flex mb-3">
-  <div class="flex-grow-1">
-    <nz-select [(ngModel)]="filters.selectedTeam" class="mr-2" [nzCustomTemplate]="teamTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
-      <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+<div class="col-xl-12 border-right p-0">
+  <div class="d-flex navbar navbar-light bg-secondary m-0 border-bottom">
+    <nz-select [(ngModel)]="selectedReport" class="nav-report mt--3 mb--3 ml--3 mr-3 border-right" [nzCustomTemplate]="reportTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
+      <nz-option *ngFor="let item of listOfReports" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
     </nz-select>
-    <ng-template #teamTmpl let-selected> Team: <b>{{  selected.nzValue.name}}</b></ng-template>
-    <nz-select [(ngModel)]="filters.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
-      <nz-option *ngFor="let item of listOfTypes" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
-    </nz-select>
-    <ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
+    <ng-template #reportTmpl let-selected> Report <br/> <b>{{selected.nzValue.name}}</b></ng-template>    
+    <div class="flex-grow-1">
+      <nz-select [(ngModel)]="filters.selectedTeam" class="mr-2" [nzCustomTemplate]="teamTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
+        <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+      </nz-select>
+      <ng-template #teamTmpl let-selected> Team: <b>{{  selected.nzValue.name}}</b></ng-template>
+      <nz-select [(ngModel)]="filters.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
+        <nz-option *ngFor="let item of listOfTypes" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+      </nz-select>
+      <ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
+    </div>
+    <nz-range-picker [(ngModel)]="filters.dateRange" ></nz-range-picker>
   </div>
-  <nz-range-picker [(ngModel)]="filters.dateRange" (ngModelChange)="onFilterChanged($event)"></nz-range-picker>
+  <div >
+    <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
+    <div *ngIf="(kudosData$ | async) as data">
+      <nz-table #basicTable [nzData]="data" >
+        <thead class="ml">
+          <tr>
+            <th scope="col" class="text-center" >Member</th>
+            <th scope="col" class=" text-right">Received Total</th>
+            <th scope="col" class=" text-right">Sent Total</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngFor="let data of basicTable.data; trackBy: trackById" class="pl-3 pr-3">
+            <td class="text-center" >
+              <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
+            </td >
+            <td class=" text-right">{{data.receivedKudos.total}}</td>
+            <td class=" text-right">{{data.sentKudos.total}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+  
 </div>
-    
-<nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true"></nz-skeleton>
-<div *ngIf="(kudosData$ | async) as data">
-  <nz-table #basicTable [nzData]="data" >
-    <thead>
-      <tr>
-        <th scope="col" class="text-center" >Member</th>
-        <th scope="col" class=" text-right">Received Total</th>
-        <th scope="col" class=" text-right">Sent Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of basicTable.data; trackBy: trackById">
-        <td class="text-center" >
-          <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
-        </td >
-        <td class=" text-right">{{data.receivedKudos.total}}</td>
-        <td class=" text-right">{{data.sentKudos.total}}</td>
-      </tr>
-    </tbody>
-  </nz-table>
-</div>
+<!-- <div class="col-xl-4 pt-3"></div> -->
 

@@ -13,7 +13,6 @@ a { cursor: pointer }
 //
 
 
-
 // Ant Design-related customization
 
 .ant {
@@ -47,7 +46,11 @@ a { cursor: pointer }
     transform: scale(0.857143) translateX(-50%);
   }
 
-  &-table-thead > tr > th, &-table-tbody > tr > td {
+  &-table-thead > tr > th {
+    padding: 10px 5px;
+  }
+
+  &-table-tbody > tr > td, &-table-tbody > tr > td {
     padding: 5px;
   }
   &-table-body > table {
@@ -56,6 +59,15 @@ a { cursor: pointer }
 
   &icon {
     vertical-align: 0.125em;
+  }
+
+  &-table-pagination.ant-pagination {
+    margin: 16px 10px;
+  }
+
+  &-layout-footer {
+    background-color: $body-bg;
+    padding: 15px 30px;
   }
   
 }
@@ -106,5 +118,21 @@ quill-view {
   }
   &-sm {
     font-size: 0.75em;
+  }
+}
+
+// Application
+
+.nav-report {
+  width: 300px;
+  > .ant-select-selection--single {
+    border: 0pt;
+    background: transparent !important;
+    height: 64px;      
+    padding: 10px 5px;
+    border-radius: 0em;
+  }
+  .ant-select-selection-selected-value {
+    line-height: 1.5em;
   }
 }
