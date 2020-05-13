@@ -6,12 +6,12 @@
     <nz-tabset nzTabPosition="top" >
       <nz-tab nzTitle="Kudos received">
         <div class="mt--3">
-          <app-table-kudos-recevied ></app-table-kudos-recevied>
+          <app-table-kudos-recevied [kudosData] = "receivedKudos$" ></app-table-kudos-recevied>
         </div>
       </nz-tab>
       <nz-tab nzTitle="Kudos sent">
         <div class="mt--3">
-          <app-table-kudos-sent></app-table-kudos-sent>
+          <app-table-kudos-sent [kudosData] = "sentKudos$" ></app-table-kudos-sent>
         </div>
       </nz-tab>
     </nz-tabset>

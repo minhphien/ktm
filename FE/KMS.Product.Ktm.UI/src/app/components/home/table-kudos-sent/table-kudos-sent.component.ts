@@ -1,9 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { KudosService } from '@app/_services/kudos.service';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Store, select } from '@ngrx/store';
-import { KudosState, Kudos } from '@app/_models';
-import { selectKudosList, selectKudosSent } from '@app/_reducers/kudos-list.reducer';
+import { Kudos } from '@app/_models';
 
 @Component({
   selector: 'app-table-kudos-sent',
@@ -11,16 +8,14 @@ import { selectKudosList, selectKudosSent } from '@app/_reducers/kudos-list.redu
   styleUrls: ['./table-kudos-sent.component.less']
 })
 export class TableKudosSentComponent implements OnInit {
-  kudosItems$: Observable<Kudos[]>;
-  constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) { 
-    this.kudosItems$ = this.store.pipe(select("kudosState"),select(selectKudosSent));
-  }
+  @Input() kudosData: Observable<Kudos[]>;
+  constructor() { }
 
   ngOnInit() {
     
   }
   
-  trackById(index: number, data: Kudos): number {
+  trackById(data: Kudos): number {
     return data ? data.id : 0;
   }
 }

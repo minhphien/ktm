@@ -1,5 +1,5 @@
-<nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
-<div *ngIf="(kudosItems$ | async) as data">
+<nz-skeleton *ngIf="!(kudosData | async)" [nzActive]="true" class="p-3"></nz-skeleton>
+<div *ngIf="(kudosData | async) as data">
   <nz-table #basicTable [nzData]="data" >
     <thead>
       <tr>
@@ -16,7 +16,7 @@
       <td class="text-center" >
         <app-avatar [displayName] = "data.receiverFirstMidName + ' ' + data.receiverLastName" 
             [imgUrl] = "data.receiverImgUrl"></app-avatar>
-      </td >
+      </td>
     </tr>
   </nz-table>
 </div>
