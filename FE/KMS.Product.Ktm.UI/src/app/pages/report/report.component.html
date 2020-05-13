@@ -25,7 +25,8 @@
       </nz-select>
       <ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
     </div>
-    <nz-range-picker [(ngModel)]="filters.dateRange" ></nz-range-picker>
+    <nz-range-picker [(ngModel)]="filters.dateRange" class="mr-2" ></nz-range-picker>
+    <a nz-icon nzType="retweet" nzTheme="outline" (click)="onFilterChanged()" ></a>
   </div>
   
   <div class= "{{filters.subFilter.visible? 'd-none': ''}}">
