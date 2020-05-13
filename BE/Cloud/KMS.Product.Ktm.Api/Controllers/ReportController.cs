@@ -81,5 +81,56 @@ namespace KMS.Product.Ktm.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
+
+        /// <summary>Gets the received kudos by badge identifier.</summary>
+        /// <param name="badgeId">The badge identifier.</param>
+        /// <param name="dateFrom">The date from.</param>
+        /// <param name="dateTo">The date to.</param>
+        /// <param name="teamIds">The team ids.</param>
+        /// <param name="kudoTypeIds">The kudo type ids.</param>
+        /// <returns></returns>
+        [HttpGet("kudos")]
+        [Route("api/[controller]/receive/{badgeId}")]
+        public async Task<IActionResult> GetReceivedKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int kudoTypeIds)
+        {
+            try
+            {
+                var kudos = await _kudoService.GetReceivedKudosByBadgeId(badgeId, dateFrom, dateTo, new List<int>() { kudoTypeIds });
+                return Ok(kudos);
+            }
+            catch (BussinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        /// <summary>Gets the sent kudos by badge identifier.</summary>
+        /// <param name="badgeId">The badge identifier.</param>
+        /// <param name="dateFrom">The date from.</param>
+        /// <param name="dateTo">The date to.</param>
+        /// <param name="kudoTypeIds">The kudo type ids.</param>
+        /// <returns></returns>
+        [HttpGet("kudos")]
+        [Route("api/[controller]/send/{badgeId}")]
+        public async Task<IActionResult> GetSentKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            int kudoTypeIds)
+        {
+            try
+            {
+                var kudos = await _kudoService.GetSentKudosByBadgeId(badgeId, dateFrom, dateTo, new List<int>() { kudoTypeIds });
+                return Ok(kudos);
+            }
+            catch (BussinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

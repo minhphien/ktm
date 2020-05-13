@@ -210,5 +210,36 @@ namespace KMS.Product.Ktm.Repository
 
             return dataReturn;
         }
+
+        public async Task<IEnumerable<KudoDetailDto>> GetSentKudosByBadgeId(string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds)
+        {
+            var result = await kudo
+                .Where(k => k.Sender.EmployeeBadgeId == badgeId &&
+                    (dateFrom == null || k.Created >= dateFrom) &&
+                    (dateTo == null || k.Modified <= dateTo) &&
+                    kudoTypeIds.Contains(k.KudoDetail.KudoTypeId)
+                )
+                .ProjectTo<KudoDetailDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return result;
+        }
+
+        public async Task<IEnumerable<KudoDetailDto>> GetReceivedKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds)
+        {
+            var result = await kudo
+                .Where(k => k.Receiver.EmployeeBadgeId == badgeId &&
+                    (dateFrom == null || k.Created >= dateFrom) &&
+                    (dateTo == null || k.Modified <= dateTo) &&
+                    kudoTypeIds.Contains(k.KudoDetail.KudoTypeId))
+                .ProjectTo<KudoDetailDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            return result;
+        }
     }
 }

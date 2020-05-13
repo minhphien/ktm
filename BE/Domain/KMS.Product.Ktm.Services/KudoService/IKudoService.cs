@@ -81,6 +81,28 @@ namespace KMS.Product.Ktm.Services.KudoService
         /// <returns></returns>
         Task CreateKudoByUserNameAsync(KudoDto kudo);
 
+        /// <summary>Gets the received kudos by badge identifier.</summary>
+        /// <param name="badgeId">The badge identifier.</param>
+        /// <param name="dateFrom"></param>
+        /// <param name="dateTo"></param>
+        /// <param name="kudoTypeIds"></param>
+        /// <returns></returns>
+        Task<IEnumerable<KudoDetailDto>> GetReceivedKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds);
 
+        /// <summary>Gets the sent kudos by badge identifier.</summary>
+        /// <param name="badgeId">The badge ID.</param>
+        /// <param name="dateFrom"></param>
+        /// <param name="dateTo"></param>
+        /// <param name="kudoTypeIds"></param>
+        /// <returns></returns>
+        Task<IEnumerable<KudoDetailDto>> GetSentKudosByBadgeId(
+            string badgeId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds);
     }
 }

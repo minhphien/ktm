@@ -191,5 +191,23 @@ namespace KMS.Product.Ktm.Services.KudoService
                 await _kudoRepository.InsertAsync(newKudo);
             }
         }
+
+        public async Task<IEnumerable<KudoDetailDto>> GetReceivedKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds)
+        {
+            return await _kudoRepository.GetReceivedKudosByBadgeId(badgeId, dateFrom, dateTo, kudoTypeIds);
+        }
+
+        public async Task<IEnumerable<KudoDetailDto>> GetSentKudosByBadgeId(
+            string badgeId, 
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> kudoTypeIds)
+        {
+            return await _kudoRepository.GetSentKudosByBadgeId(badgeId, dateFrom, dateTo, kudoTypeIds);
+        }
     }
 }
