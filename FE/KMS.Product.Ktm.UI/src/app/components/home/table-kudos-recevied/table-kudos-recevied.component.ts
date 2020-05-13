@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Kudos } from '@app/_models';
 
 @Component({
-  selector: 'app-table-kudos-recevied',
+  selector: 'app-table-kudos-received',
   templateUrl: './table-kudos-recevied.component.html',
   styleUrls: ['./table-kudos-recevied.component.less']
 })

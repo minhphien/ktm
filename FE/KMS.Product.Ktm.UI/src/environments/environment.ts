@@ -8,7 +8,9 @@ export const environment = {
     methods: {
         UserKudos: "/api/Kudo/userkudos",
         CreateKudos: "/api/kudo/kudobyusername",
-        Report: "/api/report"
+        Report: "/api/report",
+        ReportReceivedByUser: "/api/report/receive",
+        ReportSentByUser: "/api/report/send"
     },
     KmsHomeUrl: 'https://home.kms-technology.com',
     hrmUrls: {

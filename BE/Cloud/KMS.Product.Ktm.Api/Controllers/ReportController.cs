@@ -89,20 +89,18 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// <param name="teamIds">The team ids.</param>
         /// <param name="kudoTypeIds">The kudo type ids.</param>
         /// <returns></returns>
-        [HttpGet("kudos")]
-        [Route("api/[controller]/receive/{badgeId}")]
-        public async Task<IActionResult> GetReceivedKudosByBadgeId(
-            string badgeId, 
-            DateTime? dateFrom,
-            DateTime? dateTo,
-            int kudoTypeIds)
+        [HttpGet("receive/{badgeId}")]
+        public async Task<IActionResult> GetReceivedKudosByBadgeId( string badgeId,
+           [FromQuery] DateTime? dateFrom,
+           [FromQuery] DateTime? dateTo,
+           [FromQuery] int kudoTypeIds)
         {
             try
             {
                 var kudos = await _kudoService.GetReceivedKudosByBadgeId(badgeId, dateFrom, dateTo, new List<int>() { kudoTypeIds });
                 return Ok(kudos);
             }
-            catch (BussinessException ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
@@ -114,8 +112,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// <param name="dateTo">The date to.</param>
         /// <param name="kudoTypeIds">The kudo type ids.</param>
         /// <returns></returns>
-        [HttpGet("kudos")]
-        [Route("api/[controller]/send/{badgeId}")]
+        [HttpGet("send/{badgeId}")]
         public async Task<IActionResult> GetSentKudosByBadgeId(
             string badgeId, 
             DateTime? dateFrom,
@@ -127,7 +124,7 @@ namespace KMS.Product.Ktm.Api.Controllers
                 var kudos = await _kudoService.GetSentKudosByBadgeId(badgeId, dateFrom, dateTo, new List<int>() { kudoTypeIds });
                 return Ok(kudos);
             }
-            catch (BussinessException ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }

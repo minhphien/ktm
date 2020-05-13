@@ -1,11 +1,12 @@
 <div class="col-xl-12 border-right p-0">
   <div class="navbar navbar-light p-3 border-bottom">
     <nz-breadcrumb>
+      <nz-breadcrumb-item>Report</nz-breadcrumb-item>
       <nz-breadcrumb-item>
-        <a (click)="closeSubView()">Report: {{selectedReport.name}}</a>
+        <a (click)="closeSubView()">{{selectedReport.name}}</a>
       </nz-breadcrumb-item>
-      <nz-breadcrumb-item *ngIf= "subViewVisible">
-        <a>To Do</a>
+      <nz-breadcrumb-item *ngIf= "filters.subFilter.visible">
+        <a>Kudos list {{filters.subFilter.detailReportType}} by {{filters.subFilter.employee.firstMidName}} {{filters.subFilter.employee.lastName}} </a>
       </nz-breadcrumb-item>
     </nz-breadcrumb>
   </div>
@@ -27,13 +28,13 @@
     <nz-range-picker [(ngModel)]="filters.dateRange" ></nz-range-picker>
   </div>
   
-  <div class= "{{subViewVisible? 'd-none': ''}}">
+  <div class= "{{filters.subFilter.visible? 'd-none': ''}}">
     <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
     <div *ngIf="(kudosData$ | async) as data">
       <nz-table #basicTable [nzData]="data" >
         <thead class="ml">
           <tr>
-            <th scope="col" class="text-center" >Member</th>
+            <th scope="col" class="text-center">Member</th>
             <th scope="col" class=" text-right">Received Total</th>
             <th scope="col" class=" text-right">Sent Total</th>
           </tr>
@@ -43,15 +44,15 @@
             <td class="text-center" >
               <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
             </td >
-            <td class=" text-right"><a (click)="openSubView()"> {{data.receivedKudos.total}}</a></td>
-            <td class=" text-right">{{data.sentKudos.total}}</td>
+            <td class=" text-right"><a (click)="openReceiveSubView(data.employee)">{{data.receivedKudos.total}}</a></td>
+            <td class=" text-right"><a (click)="openSendSubView(data.employee)">{{data.sentKudos.total}}</a></td>
           </tr>
         </tbody>
       </nz-table>
     </div>
   </div>
-  <div class= "{{!subViewVisible? 'd-none': ''}}">
-    <!-- <app-table-kudos-sent></app-table-kudos-sent> -->
-    <app-table-kudos-recevied ></app-table-kudos-recevied>
+  <div class= "{{!filters.subFilter.visible? 'd-none': ''}}">
+    <app-table-kudos-sent *ngIf="filters.subFilter.detailReportType == 'sent'" [kudosData] = "subviewData$"></app-table-kudos-sent>
+    <app-table-kudos-received *ngIf="filters.subFilter.detailReportType == 'received'" [kudosData]="subviewData$" ></app-table-kudos-received>
   </div>
 

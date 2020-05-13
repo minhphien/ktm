@@ -1,6 +1,6 @@
 import { Component, OnInit,  AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Kudos, KudosState } from '@app/_models';
+import { Kudos, KudosState, Employee } from '@app/_models';
 import { KudosService } from '@app/_services/kudos.service';
 import { Store } from '@ngrx/store';
 import * as _ from 'underscore';
@@ -8,13 +8,19 @@ import * as _ from 'underscore';
 export class SelectFilter {
   name: string;
   value: string;
-  disabled?: boolean ;
+  disabled?: boolean ;  
 }
 
+//TODO: convert any to explicit type, if possible.
 class ReportFilters {
   selectedKudosType?: any;
   selectedTeam?: any;
   dateRange?: Date[];
+  subFilter?: {
+    detailReportType: string;
+    visible: boolean;
+    employee: string;
+  }
 }
 
 
@@ -25,7 +31,7 @@ class ReportFilters {
 })
 export class ReportComponent implements OnInit {
   kudosData$: Observable<any>;
-  
+  subviewData$: Observable<any>;
   listOfReports:SelectFilter[] = [
     {name: "Sent/Received kudos by one Team", value: "1", disabled: false},
     {name: "Sent/Received kudos across Teams", value: "2", disabled: false},
@@ -45,13 +51,15 @@ export class ReportComponent implements OnInit {
   
   filters: ReportFilters = {
     selectedKudosType: _.first(this.listOfTypes),
-    selectedTeam: _.first(this.listOfTeams)
+    selectedTeam: _.first(this.listOfTeams),
+    dateRange: [],
+    subFilter: {
+      employee: null,
+      visible: false,
+      detailReportType: null      
+    }
   }
-  
-  dateRange: any;   
-  
-  subViewVisible: boolean = false;
-  
+
   constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) { }
 
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
@@ -60,29 +68,45 @@ export class ReportComponent implements OnInit {
     this.updateDataset(this.filters);
   }
 
-  updateDataset(val: ReportFilters){
+  updateDataset(val: ReportFilters) {
     this.kudosData$ = this.kudosService.getKudosReport(
       val.selectedTeam.value, 
       val.selectedKudosType.value, 
       val.dateRange
-      );
+    );
   }
 
-  onFilterChanged(){
+  onFilterChanged() {
     this.updateDataset(this.filters);
     this.closeSubView();
-    console.log(this.dateRange);
+    console.log(this.filters.dateRange);
   }
 
   trackById(index: number, data: any): number {
     return data ? data.employee.badgeId : 0;
   }
   
-  openSubView(){
-    this.subViewVisible = true;
+  //TODO: convert employee:string to enum
+  openReceiveSubView(employee: any) {
+    this.openSubView();
+    this.filters.subFilter.detailReportType = 'received';
+    this.filters.subFilter.employee = employee;
+    this.subviewData$ = this.kudosService.getReceivedKudosByUserReport(employee.badgeId, this.filters.selectedKudosType.value, this.filters.dateRange);
   }
+
+  openSendSubView(employee: any) {
+    this.openSubView();
+    this.filters.subFilter.detailReportType = 'sent';
+    this.filters.subFilter.employee = employee;
+    this.subviewData$ = this.kudosService.getSentKudosByUserReport(employee.badgeId, this.filters.selectedKudosType.value, this.filters.dateRange);
+  }
+
+  openSubView(){   
+    this.filters.subFilter.visible = true;
+  }
+
   closeSubView() {
-    this.subViewVisible = false;
+    this.filters.subFilter.visible = false;
   }
 
 }
