@@ -50,6 +50,8 @@ export class ReportComponent implements OnInit {
   
   dateRange: any;   
   
+  subViewVisible: boolean = false;
+  
   constructor(private kudosService: KudosService, private store: Store<{kudosState: KudosState}>) { }
 
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
@@ -68,10 +70,19 @@ export class ReportComponent implements OnInit {
 
   onFilterChanged(){
     this.updateDataset(this.filters);
+    this.closeSubView();
     console.log(this.dateRange);
   }
 
   trackById(index: number, data: any): number {
     return data ? data.employee.badgeId : 0;
   }
+  
+  openSubView(){
+    this.subViewVisible = true;
+  }
+  closeSubView() {
+    this.subViewVisible = false;
+  }
+
 }

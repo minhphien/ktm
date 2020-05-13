@@ -19,7 +19,7 @@ export class TableKudosSentComponent implements OnInit {
   ngOnInit() {
     
   }
-  // Treat the instructor ID as the unique identifier for the object
+  
   trackById(index: number, data: Kudos): number {
     return data ? data.id : 0;
   }

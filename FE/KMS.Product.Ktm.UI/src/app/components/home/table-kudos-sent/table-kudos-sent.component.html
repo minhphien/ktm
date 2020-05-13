@@ -1,12 +1,14 @@
 <nz-skeleton *ngIf="!(kudosItems$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
 <div *ngIf="(kudosItems$ | async) as data">
   <nz-table #basicTable [nzData]="data" >
-    <tr>
-      <th scope="col" style="width: 10%;" ></th>
-      <th scope="col" style="width: 55%;" >Content</th>
-      <th scope="col" style="width: 20%;" class=" text-right">Created</th>
-      <th scope="col" style="width: 15%;" class="text-center">To</th>
-    </tr>
+    <thead>
+      <tr>
+        <th scope="col" style="width: 10%;" ></th>
+        <th scope="col" style="width: 55%;" >Content</th>
+        <th scope="col" style="width: 20%;" class=" text-right">Created</th>
+        <th scope="col" style="width: 15%;" class="text-center">To</th>
+      </tr>
+    </thead>
     <tr *ngFor="let data of basicTable.data; trackBy: trackById">
       <td class="text-center" ><span class="{{data.emoji | emojicss}}"></span></td>
       <td ><quill-view [content]="data.content" class="w-75"></quill-view></td>

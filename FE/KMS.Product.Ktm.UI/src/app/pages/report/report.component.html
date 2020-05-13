@@ -1,4 +1,14 @@
 <div class="col-xl-12 border-right p-0">
+  <div class="navbar navbar-light p-3 border-bottom">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a (click)="closeSubView()">Report: {{selectedReport.name}}</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item *ngIf= "subViewVisible">
+        <a>To Do</a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </div>
   <div class="d-flex navbar navbar-light bg-secondary m-0 border-bottom">
     <nz-select [(ngModel)]="selectedReport" class="nav-report mt--3 mb--3 ml--3 mr-3 border-right" [nzCustomTemplate]="reportTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
       <nz-option *ngFor="let item of listOfReports" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
@@ -16,7 +26,8 @@
     </div>
     <nz-range-picker [(ngModel)]="filters.dateRange" ></nz-range-picker>
   </div>
-  <div >
+  
+  <div class= "{{subViewVisible? 'd-none': ''}}">
     <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
     <div *ngIf="(kudosData$ | async) as data">
       <nz-table #basicTable [nzData]="data" >
@@ -32,14 +43,15 @@
             <td class="text-center" >
               <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
             </td >
-            <td class=" text-right">{{data.receivedKudos.total}}</td>
+            <td class=" text-right"><a (click)="openSubView()"> {{data.receivedKudos.total}}</a></td>
             <td class=" text-right">{{data.sentKudos.total}}</td>
           </tr>
         </tbody>
       </nz-table>
     </div>
   </div>
-  
-</div>
-<!-- <div class="col-xl-4 pt-3"></div> -->
+  <div class= "{{!subViewVisible? 'd-none': ''}}">
+    <!-- <app-table-kudos-sent></app-table-kudos-sent> -->
+    <app-table-kudos-recevied ></app-table-kudos-recevied>
+  </div>
 
