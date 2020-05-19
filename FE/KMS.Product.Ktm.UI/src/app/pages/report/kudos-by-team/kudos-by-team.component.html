@@ -17,8 +17,8 @@
             <td class="text-center" >
               <app-avatar [displayName] = "data.employee.firstMidName + ' ' + data.employee.lastName" ></app-avatar>
             </td >
-            <td class=" text-right"><a (click)="openReceiveSubView(data.employee)">{{data.receivedKudos.total}}</a></td>
-            <td class=" text-right"><a (click)="openSendSubView(data.employee)">{{data.sentKudos.total}}</a></td>
+            <td class=" text-right" ><button nz-button nzType="link" (click)="openReceiveSubView(data.employee)">{{data.receivedKudos.total}}</button></td>
+            <td class=" text-right" ><button nz-button nzType="link" (click)="openSendSubView(data.employee)">{{data.sentKudos.total}}</button></td>
           </tr>
         </tbody>
       </nz-table>

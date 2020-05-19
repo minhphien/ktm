@@ -1,10 +1,10 @@
 import { Component, OnInit, Output } from '@angular/core';
-import { ReportFilters } from '@app/_models/ReportFilters';
 import * as _ from 'underscore';
 import { Observable, of } from 'rxjs';
 import { ReportBaseComponent } from '@app/pages/report/reportBase.component';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SelectFilter } from "@app/_models/SelectFilter";
+import { ListOfDummyTeams, ListOfDummyTypes } from '@app/_models/dummies';
 
 @Component({
   selector: 'app-kudos-by-team-filter',
@@ -13,17 +13,10 @@ import { SelectFilter } from "@app/_models/SelectFilter";
 })
 export class KudosByTeamFilterComponent extends ReportBaseComponent implements OnInit {
 
-  listOfTypes: SelectFilter[] = [
-    {name: "Kudos", value: "1"},
-    {name: "Gift", value: "2", disabled: false},
-    {name: "Compliment", value: "3", disabled: true},
-    {name: "Travel abroad", value: "4", disabled: true}
-  ];
-
+  listOfTypes: SelectFilter[] = ListOfDummyTypes;
+  listOfTeams:SelectFilter[] = ListOfDummyTeams;
   subviewData$: Observable<any>;
   
-  listOfTeams:SelectFilter[] = [{name: "Default", value: "1", disabled: false}, {name: "Default 2", value: "2", disabled: false}]
-
   constructor(private activedRouter: ActivatedRoute, router : Router) { 
     super(router)  
     this.router.onSameUrlNavigation = 'reload';

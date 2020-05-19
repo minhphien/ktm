@@ -38,9 +38,13 @@ import { AppService } from './_services/app.service';
 import { ReportLayoutComponent } from './layouts/master-layout/report-layout/report-layout.component';
 import { KudosByTeamFilterComponent } from './components/report/kudos-by-team-filter/kudos-by-team-filter.component'
 import { KudosByTeamComponent } from './pages/report/kudos-by-team/kudos-by-team.component';
-import { KudosByTeamEmployeeComponent } from './pages/report/kudos-by-team-employee/kudos-by-team-employee.component';
+import { KudosByTeamEmployeeComponent } from './pages/report/kudos-by-team-employee/kudos-by-team-employee.component'
+;
 import { Error404Component } from './pages/error404/error404.component'
-
+;
+import { KudosAcrossTeamComponent } from './pages/report/kudos-across-team/kudos-across-team.component'
+;
+import { KudosAcrossTeamFilterComponent } from './components/report/kudos-across-team-filter/kudos-across-team-filter.component'
 registerLocaleData(en);
 @NgModule({
     imports: [
@@ -78,8 +82,10 @@ registerLocaleData(en);
         AvatarComponent ,
         ReportLayoutComponent ,
         KudosByTeamFilterComponent ,
-        KudosByTeamEmployeeComponent,
-        Error404Component
+        KudosByTeamEmployeeComponent,
+        Error404Component,
+        KudosAcrossTeamComponent,
+        KudosAcrossTeamFilterComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

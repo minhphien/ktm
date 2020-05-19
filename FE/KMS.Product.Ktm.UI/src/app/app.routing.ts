@@ -8,16 +8,27 @@ import { ReportLayoutComponent } from './layouts/master-layout/report-layout/rep
 import { KudosByTeamFilterComponent } from './components/report/kudos-by-team-filter/kudos-by-team-filter.component';
 import { KudosByTeamComponent } from './pages/report/kudos-by-team/kudos-by-team.component';
 import { Error404Component } from './pages/error404/error404.component';
+import { KudosAcrossTeamComponent } from './pages/report/kudos-across-team/kudos-across-team.component';
+import { KudosAcrossTeamFilterComponent } from './components/report/kudos-across-team-filter/kudos-across-team-filter.component';
 
 
 const reportRoute: Routes = [
     { path: "", redirectTo: "kudos-by-team", pathMatch: "full" },
-    { path: "kudos-by-team", children: [
-        { path: "", component: KudosByTeamComponent, pathMatch: "full" },
-        { path: "", component: KudosByTeamFilterComponent, outlet: "filter" },
-        { path: ":userName", component: KudosByTeamComponent, pathMatch: "full" }
-    ]
-    }
+    { 
+        path: "kudos-by-team", 
+        children: [
+            { path: "", component: KudosByTeamComponent, pathMatch: "full" },
+            { path: "", component: KudosByTeamFilterComponent, outlet: "filter" },
+            { path: ":userName", component: KudosByTeamComponent, pathMatch: "full" }
+        ]
+    },
+    { 
+        path: "kudos-across-team", 
+        children: [
+            { path: "", component: KudosAcrossTeamComponent, pathMatch: "full" },
+            { path: "", component: KudosAcrossTeamFilterComponent, outlet: "filter" }
+        ]
+    },
 ];
 const authorizedRoutes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "prefix" },
@@ -37,10 +48,10 @@ const routes: Routes = [
         path: "",
         component: AnonymousLayoutComponent,
         children: [
-            { path: "login", component: LoginComponent },
-            { path: "404", component: Error404Component}
+            { path: "login", component: LoginComponent }            
         ]
     },
+    { path: "404", component: Error404Component},
     { path: '**', redirectTo: "404" }
 ];
 
