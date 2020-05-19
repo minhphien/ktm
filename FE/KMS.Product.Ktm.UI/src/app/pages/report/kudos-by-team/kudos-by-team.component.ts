@@ -20,14 +20,18 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
 
   constructor(private kudosService: KudosService, 
               router: Router, 
-              private activatedRoute: ActivatedRoute) {
-    super(router)
+              activatedRoute: ActivatedRoute) {
+    super(router, activatedRoute)
     this.activatedRoute.queryParams.subscribe(param=>{
       try {
         this.filters = history.state.data.filters;
-        this.updateDataset(this.filters);
+        
       } catch(e) {}
     })
+  }
+
+  onReportNavigated(data: any){
+    this.updateDataset(this.filters);
   }
   
   ngOnInit(): void { }
@@ -35,26 +39,24 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
   updateDataset(val: ReportFilters) {
     this.kudosData$ = of(val).pipe(
       filter(f=>f.subFilter.visible == false), 
-      flatMap(f=>this.kudosService.getKudosReport(f.selectedTeam.value, f.selectedKudosType.value, f.dateRange))
+      flatMap(f=>this.kudosService.getKudosReportData(f.selectedTeam.value, f.selectedKudosType.value, f.dateRange))
     );
-    this.kudosData$.subscribe(x=>console.log('main data', x));
     let subReport = of(val).pipe(filter(f => f.subFilter.visible == true));
     this.subviewData$ = merge(
       subReport.pipe(
         filter(f=>f.subFilter.detailReportType == 'received'), 
-        flatMap(f => this.kudosService.getReceivedKudosByUserReport(
+        flatMap(f => this.kudosService.getReceivedKudosByUserReportData(
           f.subFilter.data.badgeId, 
           f.selectedKudosType.value, 
           f.dateRange))
       ),
       subReport.pipe(
         filter(f=>f.subFilter.detailReportType == 'sent'), 
-        flatMap(f => this.kudosService.getSentKudosByUserReport(
+        flatMap(f => this.kudosService.getSentKudosByUserReportData(
           f.subFilter.data.badgeId, 
           f.selectedKudosType.value, 
           f.dateRange))
       ));
-    this.subviewData$.subscribe(x=>console.log('sub data', x));
   }
   //todo: fix data type from any to eplicit data type 
   trackById(index: number, data: any): number {
@@ -69,8 +71,6 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
       data: employee
     }
     this.reloadPage();
-    
-    //
   }
 
   openSendSubView(employee: any) {
@@ -80,8 +80,6 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
       data: employee
     }    
     this.reloadPage();
-
-    //this.subviewData$ = this.kudosService.getSentKudosByUserReport(employee.badgeId, this.filters.selectedKudosType.value, this.filters.dateRange);
   }
 }
 

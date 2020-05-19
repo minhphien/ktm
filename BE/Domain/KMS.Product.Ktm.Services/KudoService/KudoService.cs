@@ -209,5 +209,10 @@ namespace KMS.Product.Ktm.Services.KudoService
         {
             return await _kudoRepository.GetSentKudosByBadgeId(badgeId, dateFrom, dateTo, kudoTypeIds);
         }
+
+        public async Task<IEnumerable<KudosAcrossTeamDto>> GetKudosAcrossTeamReport(DateTime? dateFrom, DateTime? dateTo, List<int> teamIds, List<int> kudoTypeIds)
+        {
+            return await _kudoRepository.GetKudosAcrossTeamForReport(dateFrom, dateTo, teamIds, kudoTypeIds);
+        }
     }
 }

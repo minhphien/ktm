@@ -10,7 +10,8 @@ export const environment = {
         CreateKudos: "/api/kudo/kudobyusername",
         Report: "/api/report",
         ReportReceivedByUser: "/api/report/receive",
-        ReportSentByUser: "/api/report/send"
+        ReportSentByUser: "/api/report/send",
+        ReportKudosAcrossTeam: "/api/report/kudosAcrossTeam"
     },
     KmsHomeUrl: 'https://home.kms-technology.com',
     hrmUrls: {

@@ -241,5 +241,41 @@ namespace KMS.Product.Ktm.Repository
                 .ToListAsync();
             return result;
         }
+
+        public async Task<IEnumerable<KudosAcrossTeamDto>> GetKudosAcrossTeamForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds,
+            List<int> kudoTypeIds)
+        {
+            var result = from et in context.Set<EmployeeTeam>()
+                         where (teamIds.Count == 0 || teamIds.Contains(et.Team.Id))
+                         select new KudosAcrossTeamDto
+                         {
+                             Team = new TeamDto
+                             {
+                                 TeamId = et.Team.Id,
+                                 TeamName = et.Team.TeamName
+                             },
+                             ReceivedKudos = new KudosSummaryInfoDto
+                             {
+                                Total = et.Employee.KudoReceives
+                                    .Where(i => kudoTypeIds.Contains(i.KudoDetail.KudoType.Id))
+                                    .Where(i => dateFrom == null || (i.KudoDetail.Created >= dateFrom))
+                                    .Where(i => dateTo == null || (i.KudoDetail.Modified <= dateTo))
+                                    .Count()
+                             },
+                             SentKudos = new KudosSummaryInfoDto
+                             {
+                                 Total = et.Employee.KudoSends
+                                    .Where(i => kudoTypeIds.Contains(i.KudoDetail.KudoType.Id))
+                                    .Where(i => dateFrom == null || (i.KudoDetail.Created >= dateFrom))
+                                    .Where(i => dateTo == null || (i.KudoDetail.Modified <= dateTo))
+                                    .Count()
+                             }
+                         };
+
+            return await (result).ToListAsync();
+        }
     }
 }

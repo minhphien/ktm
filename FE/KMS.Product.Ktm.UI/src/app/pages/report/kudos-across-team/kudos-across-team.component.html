@@ -1,1 +1,22 @@
-<p>kudos-across-team works!</p>
+<div class= "{{filters.subFilter.visible? 'd-none': ''}}">
+    <nz-skeleton *ngIf="!(viewData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
+    <div *ngIf="(viewData$ | async) as data">
+      <nz-table #basicTable [nzData]="data" >
+        <thead class="ml">
+          <tr>
+            <th scope="col" class="">Team Name</th>
+            <th scope="col" class=" text-right">Received Total</th>
+            <th scope="col" class=" text-right">Sent Total</th>
+          </tr>
+        </thead>
+        <tbody >
+          <tr *ngFor="let data of basicTable.data; trackBy: trackById" class="pl-3 pr-3" (click)="navigateToTeam(data)" class="cursor-pointer" >
+            <td class=""> {{data.team.teamName}}
+            </td >
+            <td class=" text-right" >{{data.receivedKudos.total}}</td>
+            <td class=" text-right" >{{data.sentKudos.total}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>

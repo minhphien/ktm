@@ -1,6 +1,3 @@
-<!-- <div class= "{{filters.subFilter.visible? 'd-none': ''}}">
-  <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
-</div> -->
 <div class= "{{filters.subFilter.visible? 'd-none': ''}}">
     <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
     <div *ngIf="(kudosData$ | async) as data">

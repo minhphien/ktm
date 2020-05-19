@@ -50,6 +50,18 @@ namespace KMS.Product.Ktm.Services.KudoService
             List<int> teamIds, 
             List<int> kudoTypeIds);
 
+        /// <summary>Gets the kudos across team report.</summary>
+        /// <param name="dateFrom">The date from.</param>
+        /// <param name="dateTo">The date to.</param>
+        /// <param name="teamIds">The team ids.</param>
+        /// <param name="kudoTypeIds">The kudo type ids.</param>
+        /// <returns></returns>
+        Task<IEnumerable<KudosAcrossTeamDto>> GetKudosAcrossTeamReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds,
+            List<int> kudoTypeIds);
+
         /// <summary>
         /// Get kudos summary for report
         /// </summary>

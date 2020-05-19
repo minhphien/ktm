@@ -86,5 +86,16 @@ namespace KMS.Product.Ktm.Services.RepoInterfaces
         /// <returns></returns>
         Task<IEnumerable<KudoDetailDto>> GetReceivedKudosByBadgeId(string badgeId, DateTime? dateFrom, DateTime? dateTo, List<int> kudoTypeIds);
 
+        /// <summary>Gets the kudos across team for report.</summary>
+        /// <param name="dateFrom">The date from.</param>
+        /// <param name="dateTo">The date to.</param>
+        /// <param name="teamIds">The team ids.</param>
+        /// <param name="kudoTypeIds">The kudo type ids.</param>
+        /// <returns></returns>
+        Task<IEnumerable<KudosAcrossTeamDto>> GetKudosAcrossTeamForReport(
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            List<int> teamIds,
+            List<int> kudoTypeIds);
     }
 }

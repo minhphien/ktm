@@ -15,24 +15,24 @@ export class KudosByTeamFilterComponent extends ReportBaseComponent implements O
 
   listOfTypes: SelectFilter[] = ListOfDummyTypes;
   listOfTeams:SelectFilter[] = ListOfDummyTeams;
-  subviewData$: Observable<any>;
   
-  constructor(private activedRouter: ActivatedRoute, router : Router) { 
-    super(router)  
-    this.router.onSameUrlNavigation = 'reload';
-    this.activedRouter.queryParams.subscribe(x =>{
-      console.log('param changed from filter');
-    });
+  constructor(activedRouter: ActivatedRoute, router : Router) { 
+    super(router, activedRouter)  
     this.initialDefaultFilters();
+  }
+
+  onReportNavigated(){
+    console.log(this.filters);
   }
 
   ngOnInit(): void { }
   
   initialDefaultFilters(){
-    this.filters.selectedTeam = _.first(this.listOfTeams);
-    this.filters.selectedKudosType = _.first(this.listOfTypes);
+    this.filters.selectedTeam = this.filters.selectedTeam || _.first(this.listOfTeams);
+    this.filters.selectedKudosType = this.filters.selectedKudosType || _.first(this.listOfTypes);
     this.reloadPage();
   }
+  
   onFilterChanged() {
     this.reloadPage();
   }

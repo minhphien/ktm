@@ -8,6 +8,9 @@ using AutoMapper;
 using KMS.Product.Ktm.Api.Exceptions;
 using KMS.Product.Ktm.Entities.DTO;
 using KMS.Product.Ktm.Services.KudoService;
+using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+using AuthorizeAttribute = Microsoft.AspNetCore.Authorization.AuthorizeAttribute;
 
 namespace KMS.Product.Ktm.Api.Controllers
 {
@@ -122,6 +125,27 @@ namespace KMS.Product.Ktm.Api.Controllers
             try
             {
                 var kudos = await _kudoService.GetSentKudosByBadgeId(badgeId, dateFrom, dateTo, new List<int>() { kudoTypeIds });
+                return Ok(kudos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("kudosAcrossTeam")]
+        public IActionResult GetKudosAcrossTeamReport(
+            [FromQuery] List<int> teamIds,
+            int kudoTypeIds,
+            DateTime? dateFrom,
+            DateTime? dateTo           
+            )
+        {
+            try
+            {
+                var kudos = _kudoService.GetKudosAcrossTeamReport(dateFrom, dateTo,
+                    teamIds, new List<int>() { kudoTypeIds }).Result;
+
                 return Ok(kudos);
             }
             catch (Exception ex)

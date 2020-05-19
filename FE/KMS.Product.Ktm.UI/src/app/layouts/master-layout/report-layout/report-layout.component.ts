@@ -3,6 +3,7 @@ import * as _ from 'underscore';
 import { ReportBaseComponent } from '@app/pages/report/reportBase.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SelectFilter } from "@app/_models/SelectFilter";
+import { ListOfReports } from '@app/_models/dummies';
 
 @Component({
   selector: 'app-report-layout',
@@ -11,35 +12,22 @@ import { SelectFilter } from "@app/_models/SelectFilter";
 })
 export class ReportLayoutComponent extends ReportBaseComponent implements OnInit {
 
-  listOfReports: SelectFilter[] = [
-    { name: "Sent/Received kudos by one Team", routeUrl: "/report/kudos-by-team",  value: "1", disabled: false },
-    { name: "Sent/Received kudos across Teams", routeUrl: "/report/kudos-across-team", value: "2", disabled: false },
-    { name: "Sent/Received kudos by users", routeUrl: "/report/kudos-by-user", value: "3", disabled: false }
-  ];
+  listOfReports: SelectFilter[] =  ListOfReports;
 
-  selectedReport: any = _.first(this.listOfReports);
-
-  subFilter = {
-    employee: null,
-    visible: false,
-    detailReportType: null      
+  constructor( activatedRoute: ActivatedRoute, router: Router) { 
+    super(router, activatedRoute)
   }
 
-
-  constructor(private activatedRoute: ActivatedRoute, router: Router) { 
-    super(router)
-    this.activatedRoute.queryParams.subscribe(s=>{
-      try {
-        let routeFilters = history.state.data.filters;
-        this.filters = routeFilters;
-      } catch(e) {}
-    })
+  onReportNavigated(){
+    this.filters.selectedReport = this.getSelectedReportFromRoute();
   }
 
   onReportChanged(newVal: SelectFilter){
-    this.router.navigateByUrl(newVal.routeUrl);
+    this.navigateToUrl(newVal.routeUrl, true);
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    console.log('filter from layout',this.filters)    
+  }
 
 }

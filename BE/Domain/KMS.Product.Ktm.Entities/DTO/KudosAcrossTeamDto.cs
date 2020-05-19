@@ -1,8 +1,8 @@
 ﻿namespace KMS.Product.Ktm.Entities.DTO
 {
-    public class KudosByTeamDto : TeamDto
+    public class KudosAcrossTeamDto
     {
-        public EmployeeInfoDto Employee { get; set; }
+        public TeamDto Team { get; set; }
         public KudosSummaryInfoDto SentKudos { get; set; }
         public KudosSummaryInfoDto ReceivedKudos { get; set; }
     }

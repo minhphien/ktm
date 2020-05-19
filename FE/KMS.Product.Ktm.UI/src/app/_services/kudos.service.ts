@@ -55,26 +55,26 @@ export class KudosService {
     return request$;
   }
 
-  getKudosReport(teamId: number, kudoType: number, dateRange?: Date[]): any {
+  getKudosReportData(teamId: number, kudoType: number, dateRange?: Date[]): any {
     let dateParams = `${dateRange && dateRange[0] ? '&dateFrom='+dateRange[0].toDateString():""}${dateRange && dateRange[1] ? '&dateTo='+dateRange[1].toDateString():""}`;
     let url = `${environment.apiUrl}${environment.methods.Report}?teamIds=${teamId}&kudoTypeIds=${kudoType}${dateParams}`;
     let request$ = this.http.get(url);
     return request$;
   }
 
-  getReceivedKudosByUserReport(badgeId: string, kudoType: number, dateRange?: Date[]) {
+  getReceivedKudosByUserReportData(badgeId: string, kudoType: number, dateRange?: Date[]) {
     let dateParams = `${dateRange && dateRange[0] ? '&dateFrom='+dateRange[0].toDateString():""}${dateRange && dateRange[1] ? '&dateTo='+dateRange[1].toDateString():""}`;
     let url = `${environment.apiUrl}${environment.methods.ReportReceivedByUser}/${badgeId}?kudoTypeIds=${kudoType}${dateParams}`;
-    return this.requestKudosDetailByUserReport(url);
+    return this.requestKudosDetailByUserReportData(url);
   }
 
-  getSentKudosByUserReport(badgeId: string, kudoType: number, dateRange?: Date[]) {
+  getSentKudosByUserReportData(badgeId: string, kudoType: number, dateRange?: Date[]) {
     let dateParams = `${dateRange && dateRange[0] ? '&dateFrom='+dateRange[0].toDateString():""}${dateRange && dateRange[1] ? '&dateTo='+dateRange[1].toDateString():""}`;
     let url = `${environment.apiUrl}${environment.methods.ReportSentByUser}/${badgeId}?kudoTypeIds=${kudoType}${dateParams}`;
-    return this.requestKudosDetailByUserReport(url);
+    return this.requestKudosDetailByUserReportData(url);
   }
 
-  private requestKudosDetailByUserReport(url) {
+  private requestKudosDetailByUserReportData(url) {
     let request$ = this.http.get(url).pipe(retryWhen(error => {
       return error.pipe(
         flatMap((error: any) => {
@@ -94,6 +94,17 @@ export class KudosService {
       return kudos;
     }));
     console.log('starting ', request$);
+    return request$;
+  }
+
+  getKudosAcrossTeamReportData(teamIds: string[], kudoType: number, dateRange?: Date[]): any {
+    let dateParams = `${dateRange && dateRange[0] ? '&dateFrom='+dateRange[0].toDateString():""}${dateRange && dateRange[1] ? '&dateTo='+dateRange[1].toDateString():""}`;
+    let teamIdsParams = _
+      .map(teamIds, x => "teamIds="+x)
+      .reduce((x,y) => x + "&" + y,"");
+    let url = `${environment.apiUrl}${environment.methods.ReportKudosAcrossTeam}?${teamIdsParams}&kudoTypeIds=${kudoType}${dateParams}`;
+    console.log('requestKudos',url);
+    let request$ = this.http.get(url);
     return request$;
   }
 }
