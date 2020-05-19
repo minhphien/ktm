@@ -1,0 +1,23 @@
+<div class="col-xl-12 border-right p-0">
+  <div class="navbar navbar-light p-3 border-bottom">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>Report</nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        <a (click)="navigateToUrl(selectedReport.navigateToUrl, true)">{{selectedReport.name}}</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item *ngIf= "filters.subFilter.visible">
+        <a>Kudos list {{filters.subFilter.detailReportType}} by {{filters.subFilter.data.firstMidName}} {{filters.subFilter.data.lastName}} </a>
+      </nz-breadcrumb-item> 
+    </nz-breadcrumb>
+  </div>
+  <div class="d-flex navbar navbar-light bg-secondary m-0 border-bottom">
+    <nz-select [(ngModel)]="selectedReport" class="nav-report mt--3 mb--3 ml--3 mr-3 border-right" [nzCustomTemplate]="reportTmpl" [compareWith]="compareFn" (ngModelChange)= "onReportChanged(selectedReport)" >
+      <nz-option *ngFor="let item of listOfReports" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+    </nz-select>
+    <ng-template #reportTmpl let-selected> Report <br/><b>{{selected.nzValue.name}}</b></ng-template>  
+    <div class="flex-grow-1">
+      <router-outlet name="filter"></router-outlet>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,12 @@
+<nz-select [(ngModel)]="filters.selectedTeam" class="mr-2" [nzCustomTemplate]="teamTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
+  <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+</nz-select>
+<ng-template #teamTmpl let-selected> Team: <b>{{  selected.nzValue.name}}</b></ng-template>
+
+<nz-select [(ngModel)]="filters.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
+  <nz-option *ngFor="let item of listOfTypes" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+</nz-select>
+<ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
+
+<nz-range-picker [(ngModel)]="filters.dateRange" class="mr-2" ></nz-range-picker>
+<a nz-icon nzType="retweet" nzTheme="outline" (click)="onFilterChanged()" ></a>

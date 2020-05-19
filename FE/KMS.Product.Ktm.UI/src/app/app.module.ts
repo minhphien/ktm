@@ -24,18 +24,22 @@ import { MasterLayoutComponent } from './layouts/master-layout/master-layout.com
 import { UserInfoPanelComponent } from './components/home/user-info-panel/user-info-panel.component';
 import { TableKudosReceivedComponent } from './components/home/table-kudos-recevied/table-kudos-recevied.component';
 import { CreateKudosComponent } from './components/_shared/create-kudos/create-kudos.component';
-import { LoaderComponent } from './components/_shared/loader/loader.component'// import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { LoaderComponent } from './components/_shared/loader/loader.component'
 import { appStateReducer } from './appState.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { VarDirective } from './_directives/varDirective';
 import { kudosStateReducer } from './_reducers/kudos-list.reducer';
 import { AppreviationPipe } from './_pipes/appreviation.pipe';
 import { EmojiCssPipe } from "./_pipes/emojicss.pipe";
-import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';;
-import { ReportComponent } from './pages/report/report.component';
-import { QuillModule } from 'ngx-quill';;
-import { AvatarComponent } from './components/_shared/avatar/avatar.component'
+import { TableKudosSentComponent } from './components/home/table-kudos-sent/table-kudos-sent.component';
+import { QuillModule } from 'ngx-quill';
+import { AvatarComponent } from './components/_shared/avatar/avatar.component';
 import { AppService } from './_services/app.service';
+import { ReportLayoutComponent } from './layouts/master-layout/report-layout/report-layout.component';
+import { KudosByTeamFilterComponent } from './components/report/kudos-by-team-filter/kudos-by-team-filter.component'
+import { KudosByTeamComponent } from './pages/report/kudos-by-team/kudos-by-team.component';
+import { KudosByTeamEmployeeComponent } from './pages/report/kudos-by-team-employee/kudos-by-team-employee.component';
+import { Error404Component } from './pages/error404/error404.component'
 
 registerLocaleData(en);
 @NgModule({
@@ -50,7 +54,6 @@ registerLocaleData(en);
         AppRoutingModule,
         StoreModule.forRoot({appstate: appStateReducer, kudosState: kudosStateReducer}),
         StoreDevtoolsModule.instrument({maxAge: 25}),
-        
         QuillModule.forRoot({
             theme: 'bubble'
         })      
@@ -70,8 +73,13 @@ registerLocaleData(en);
         VarDirective,
         AppreviationPipe,
         EmojiCssPipe,
-        ReportComponent,
-        AvatarComponent   
+        KudosByTeamComponent,
+        ReportLayoutComponent,
+        AvatarComponent ,
+        ReportLayoutComponent ,
+        KudosByTeamFilterComponent ,
+        KudosByTeamEmployeeComponent,
+        Error404Component
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
