@@ -128,21 +128,23 @@ quill-view {
 // Application
 
 ::-webkit-scrollbar
-{
-  width: 7px;
-  background-color: transparent;
+{  
+  width: 14px;
+  background-color: $white;
   border: 0;
 
   &-track {
-    background-color: transparent;
-    border-radius: 10px;
-    
+    & {
+      background-color: $white;
+      border-radius: 0;
+    }
   }
 
   &-thumb {
     background-color: $light;
-    border-radius: 10px;
-    
+    border-radius: 1.5em;
+    width: 7px;
+    border: 3px solid $white;
   }
 }
 
