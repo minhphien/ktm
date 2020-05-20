@@ -8,7 +8,7 @@ import { QuillEditorComponent } from 'ngx-quill';
 import 'quill-mention';
 import * as _ from 'underscore';
 import * as $ from 'jquery';
-import { map, mergeMap, mergeAll } from 'rxjs/operators';
+import { map, mergeMap, mergeAll, flatMap } from 'rxjs/operators';
 import { NzModalService } from 'ng-zorro-antd';
 
 @Component({
@@ -51,7 +51,7 @@ export class CreateKudosComponent implements OnInit {
           obs.next($(val).attr("data-username"));
         });
       }).pipe(
-        map(async (username: string) =>  { 
+        flatMap(async (username: string) =>  { 
           let data =
           <LightKudos> {
             ReceiverUsername: username,

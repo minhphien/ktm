@@ -23,6 +23,7 @@ export class KudosService {
     let request$ = this.http.get(url).pipe(retryWhen(error => {
         return error.pipe(
           flatMap((error: any) => {
+            
               if(error.status  === 503) {
                 return of(error.status).pipe(delay(1500));
               }
