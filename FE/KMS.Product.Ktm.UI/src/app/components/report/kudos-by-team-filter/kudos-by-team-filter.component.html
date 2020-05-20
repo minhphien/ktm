@@ -1,4 +1,4 @@
-<div class="mt-3">
+<div class="">
   <nz-select [(ngModel)]="filters.selectedTeam" class="mr-2" [nzCustomTemplate]="teamTmpl" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
     <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
   </nz-select>
