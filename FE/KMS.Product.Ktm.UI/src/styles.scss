@@ -116,7 +116,7 @@ quill-view {
 
 // Emoji
 
-.text{
+.text {
   &-lg {
     font-size: 1.5em;
   }
@@ -127,8 +127,31 @@ quill-view {
 
 // Application
 
+::-webkit-scrollbar
+{
+  width: 7px;
+  background-color: transparent;
+  border: 0;
+
+  &-track {
+    background-color: transparent;
+    border-radius: 10px;
+    
+  }
+
+  &-thumb {
+    background-color: $light;
+    border-radius: 10px;
+    
+  }
+}
+
+
+
+
+
 .nav-report {
-  width: 300px;
+  min-width: 300px;
   > .ant-select-selection--single {
     border: 0pt;
     background: transparent !important;

@@ -10,13 +10,16 @@
       </nz-breadcrumb-item> 
     </nz-breadcrumb>
   </div>
-  <div class="d-flex navbar navbar-light bg-secondary m-0 border-bottom">
-    <nz-select [(ngModel)]="filters.selectedReport" class="nav-report mt--3 mb--3 ml--3 mr-3 border-right" [nzCustomTemplate]="reportTmpl" [compareWith]="compareFn" (ngModelChange)= "onReportChanged(filters.selectedReport)" >
-      <nz-option *ngFor="let item of listOfReports" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
-    </nz-select>
-    <ng-template #reportTmpl let-selected> Report <br/><b>{{selected.nzValue.name}}</b></ng-template>  
-    <div class="flex-grow-1">
-      <router-outlet name="filter"></router-outlet>
+  <div class="d-flex flex-row align-items-stretch bg-secondary m-0 border-bottom">
+    <div class="mr-3 border-right">
+      <nz-select [(ngModel)]="filters.selectedReport" class="nav-report  " [nzCustomTemplate]="reportTmpl" [compareWith]="compareFn" (ngModelChange)= "onReportChanged(filters.selectedReport)" >
+        <nz-option *ngFor="let item of listOfReports" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+      </nz-select>
+      <ng-template #reportTmpl let-selected> Report <br/><b>{{selected.nzValue.name}}</b></ng-template>
+    </div>
+    
+    <div class="flex-fill m-3 pl--1">
+      <router-outlet name="filter" ></router-outlet>
     </div>
   </div>
   <router-outlet></router-outlet>
