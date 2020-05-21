@@ -22,8 +22,10 @@ export class KudosAcrossTeamFilterComponent extends ReportBaseComponent implemen
   }
 
   initialDefaultFilters(){
-    this.filters.selectedKudosType = this.filters.selectedKudosType || _.first(this.listOfTypes);
-    this.reloadPage();
+    if (this.filter && ! this.filter.selectedKudosType){
+      this.filter.selectedKudosType = _.first(this.listOfTypes);
+      this.reloadPage();
+    }
   }
 
   onFilterChanged() {

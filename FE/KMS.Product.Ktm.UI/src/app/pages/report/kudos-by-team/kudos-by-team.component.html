@@ -1,4 +1,4 @@
-<div class= "{{filters.subFilter.visible? 'd-none': ''}}">
+<div class= "{{filter.subFilter.visible? 'd-none': ''}}">
     <nz-skeleton *ngIf="!(kudosData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
     <div *ngIf="(kudosData$ | async) as data">
       <nz-table #basicTable [nzData]="data" >
@@ -21,7 +21,7 @@
       </nz-table>
     </div>
   </div>
-  <div class= "{{!filters.subFilter.visible? 'd-none': ''}}">
-    <app-table-kudos-sent *ngIf="filters.subFilter.detailReportType == 'sent'" [kudosData] = "subviewData$"></app-table-kudos-sent>
-    <app-table-kudos-received *ngIf="filters.subFilter.detailReportType == 'received'" [kudosData]="subviewData$" ></app-table-kudos-received>
+  <div class= "{{!filter.subFilter.visible? 'd-none': ''}}">
+    <app-table-kudos-sent *ngIf="filter.subFilter.detailReportType == 'sent'" [kudosData] = "subviewData$"></app-table-kudos-sent>
+    <app-table-kudos-received *ngIf="filter.subFilter.detailReportType == 'received'" [kudosData]="subviewData$" ></app-table-kudos-received>
   </div>

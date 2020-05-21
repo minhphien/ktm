@@ -5,9 +5,9 @@ import { ReportBaseComponent } from '../reportBase.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReportFilters } from '@app/_models/ReportFilters';
 import { Observable, of } from 'rxjs';
-import { filter, flatMap } from 'rxjs/operators';
 import { KudosService } from '@app/_services';
 import * as _ from 'underscore';
+import { filter, flatMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-kudos-across-team',
@@ -16,25 +16,31 @@ import * as _ from 'underscore';
 })
 export class KudosAcrossTeamComponent extends ReportBaseComponent implements OnInit {
   viewData$: Observable<any>;
-  constructor(router: Router, activatedRoute: ActivatedRoute, private kudosService: KudosService) {
-    super(router, activatedRoute);
+  
+  constructor(private kudosService: KudosService, router: Router, activatedRoute: ActivatedRoute) {
+    super(router, activatedRoute)
   }
 
+  static count: number = 0;
+  
   onReportNavigated(){
-    this.updateDataset(this.filters);
+    this.updateDataset(this.filter);
   }
 
   updateDataset(val: ReportFilters){
-    console.log('updateDataset',val);
+    console.log('selected Team',_.map(val.selectedTeams, x=>x.value), val.selectedKudosType.value, val.dateRange);
+    console.log('getKudosAcrossTeamReport', this.kudosService)
     this.viewData$ = of(val).pipe(
       filter(f=>f.subFilter.visible == false), 
-      flatMap(f=>this.kudosService.getKudosAcrossTeamReportData(_.map(val.selectedTeams, x=>x.value), f.selectedKudosType.value, f.dateRange))
-    );
-    this.viewData$.subscribe(val=>console.log(val));
+      flatMap(f=>this.kudosService.getKudosAcrossTeamReportData(
+        f.selectedKudosType.value, 
+        f.dateRange,
+        _.map(val.selectedTeams, x=>x.value))
+    ));
   }
 
   navigateToTeam(data: any) {
-    this.filters.selectedTeam = _.find(ListOfDummyTeams,x=>x.value == data.team.teamId);
+    this.filter.selectedTeam = _.find(ListOfDummyTeams,x=>x.value == data.team.teamId);
     this.navigateToUrl("/report/kudos-by-team");
   }
 

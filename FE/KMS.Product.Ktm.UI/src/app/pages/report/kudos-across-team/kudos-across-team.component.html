@@ -1,4 +1,4 @@
-<div class= "{{filters.subFilter.visible? 'd-none': ''}}">
+<div class= "{{filter.subFilter.visible? 'd-none': ''}}">
     <nz-skeleton *ngIf="!(viewData$ | async)" [nzActive]="true" class="p-3"></nz-skeleton>
     <div *ngIf="(viewData$ | async) as data">
       <nz-table #basicTable [nzData]="data" >

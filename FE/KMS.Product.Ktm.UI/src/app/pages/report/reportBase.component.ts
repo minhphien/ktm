@@ -8,21 +8,24 @@ import { SelectFilter } from '@app/_models/SelectFilter';
 export abstract class ReportBaseComponent {
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
   
-  filters: ReportFilters = {
-    selectedReport: this.getSelectedReportFromRoute(),
+  private static filters: ReportFilters = {
+    selectedReport: null,
     selectedKudosType: null,
     selectedTeam: null,
+    selectedTeams: [],
     dateRange: [],
-    subFilter: this.initialSubFilter()
+    subFilter: null
   }
 
 
   constructor(protected router: Router, protected activatedRoute: ActivatedRoute){
+    this.filter.selectedReport = this.getSelectedReportFromRoute();
+    this.filter.subFilter = this.initialSubFilter();
     activatedRoute.queryParams.subscribe(x=> {
       let extras = this.router.getCurrentNavigation().extras
       if (extras && extras.state) {
         if(extras.state.data){
-          this.filters = history.state.data.filters;
+          this.filter = history.state.data.filters;
         }
         this.onReportNavigated(this.router.getCurrentNavigation().extras.state.data)
       }
@@ -48,15 +51,22 @@ export abstract class ReportBaseComponent {
   }
 
   navigateToUrl(url: string = this.currentRoute(), resetSubFilter: boolean = false){    
-    if (resetSubFilter) this.filters.subFilter = this.initialSubFilter();
+    if (resetSubFilter) this.filter.subFilter = this.initialSubFilter();
     let navigationExtras: NavigationExtras = {
       queryParams: { timeStamp: _.now()},
       state: {
-        data: { filters: this.filters}
+        data: { filters: this.filter}
       }
     };
     this.router.navigate([url], navigationExtras);
   }
   
   reloadPage(){ this.navigateToUrl(); }
+
+  get filter() {
+    return ReportBaseComponent.filters
+  }
+  set filter(val: ReportFilters){
+    ReportBaseComponent.filters = val;
+  }
 }

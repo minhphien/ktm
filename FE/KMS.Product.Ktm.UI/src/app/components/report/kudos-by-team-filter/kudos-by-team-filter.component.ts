@@ -22,14 +22,15 @@ export class KudosByTeamFilterComponent extends ReportBaseComponent implements O
   }
 
   onReportNavigated(){
-    console.log(this.filters);
+    console.log(this.filter);
   }
 
   ngOnInit(): void { }
   
   initialDefaultFilters(){
-    this.filters.selectedTeam = this.filters.selectedTeam || _.first(this.listOfTeams);
-    this.filters.selectedKudosType = this.filters.selectedKudosType || _.first(this.listOfTypes);
+
+    this.filter.selectedTeam = this.filter.selectedTeam || _.first(this.listOfTeams);
+    this.filter.selectedKudosType = this.filter.selectedKudosType || _.first(this.listOfTypes);
     this.reloadPage();
   }
   

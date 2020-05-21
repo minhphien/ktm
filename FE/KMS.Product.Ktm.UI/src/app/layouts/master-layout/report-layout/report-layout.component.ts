@@ -13,13 +13,14 @@ import { ListOfReports } from '@app/_models/dummies';
 export class ReportLayoutComponent extends ReportBaseComponent implements OnInit {
 
   listOfReports: SelectFilter[] =  ListOfReports;
-
+  filters: any;
   constructor( activatedRoute: ActivatedRoute, router: Router) { 
     super(router, activatedRoute)
+    this.filters = this.filter;
   }
 
   onReportNavigated(){
-    this.filters.selectedReport = this.getSelectedReportFromRoute();
+    this.filter.selectedReport = this.getSelectedReportFromRoute();
   }
 
   onReportChanged(newVal: SelectFilter){
@@ -27,7 +28,7 @@ export class ReportLayoutComponent extends ReportBaseComponent implements OnInit
   }
 
   ngOnInit(): void { 
-    console.log('filter from layout',this.filters)    
+    console.log('filter from layout',this.filter)    
   }
 
 }

@@ -22,16 +22,10 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
               router: Router, 
               activatedRoute: ActivatedRoute) {
     super(router, activatedRoute)
-    this.activatedRoute.queryParams.subscribe(param=>{
-      try {
-        this.filters = history.state.data.filters;
-        
-      } catch(e) {}
-    })
   }
 
   onReportNavigated(data: any){
-    this.updateDataset(this.filters);
+    this.updateDataset(this.filter);
   }
   
   ngOnInit(): void { }
@@ -65,7 +59,7 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
   
   //TODO: convert employee:any to Object type 
   openReceiveSubView(employee: any) {
-    this.filters.subFilter = {
+    this.filter.subFilter = {
       visible: true,
       detailReportType: 'received',
       data: employee
@@ -74,7 +68,7 @@ export class KudosByTeamComponent extends ReportBaseComponent implements OnInit 
   }
 
   openSendSubView(employee: any) {
-    this.filters.subFilter = {
+    this.filter.subFilter = {
       visible: true,
       detailReportType: 'sent',
       data: employee
