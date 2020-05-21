@@ -11,7 +11,7 @@ namespace KMS.Product.Ktm.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class KudoTypeController : ControllerBase
+    public class KudosTypeController : ControllerBase
     {
         private readonly IKudoTypeService _kudoTypeService;
 
@@ -19,7 +19,7 @@ namespace KMS.Product.Ktm.Api.Controllers
         /// Inject KudoType service
         /// </summary>
         /// <returns></returns>
-        public KudoTypeController(IKudoTypeService kudoTypeService)
+        public KudosTypeController(IKudoTypeService kudoTypeService)
         {
             _kudoTypeService = kudoTypeService ?? throw new ArgumentNullException($"{nameof(kudoTypeService)}");
         }

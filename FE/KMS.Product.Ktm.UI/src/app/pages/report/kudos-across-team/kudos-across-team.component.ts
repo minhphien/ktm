@@ -4,10 +4,11 @@ import { ListOfDummyTeams } from '@app/_models/dummies';
 import { ReportBaseComponent } from '../reportBase.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReportFilters } from '@app/_models/ReportFilters';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import { KudosService } from '@app/_services';
 import * as _ from 'underscore';
-import { filter, flatMap } from 'rxjs/operators';
+import { filter, flatMap, takeLast } from 'rxjs/operators';
+import { Team } from '@app/_models/kudosType';
 
 @Component({
   selector: 'app-kudos-across-team',
@@ -28,8 +29,6 @@ export class KudosAcrossTeamComponent extends ReportBaseComponent implements OnI
   }
 
   updateDataset(val: ReportFilters){
-    console.log('selected Team',_.map(val.selectedTeams, x=>x.value), val.selectedKudosType.value, val.dateRange);
-    console.log('getKudosAcrossTeamReport', this.kudosService)
     this.viewData$ = of(val).pipe(
       filter(f=>f.subFilter.visible == false), 
       flatMap(f=>this.kudosService.getKudosAcrossTeamReportData(
@@ -40,8 +39,12 @@ export class KudosAcrossTeamComponent extends ReportBaseComponent implements OnI
   }
 
   navigateToTeam(data: any) {
-    this.filter.selectedTeam = _.find(ListOfDummyTeams,x=>x.value == data.team.teamId);
-    this.navigateToUrl("/report/kudos-by-team");
+    console.log('last team', this.listOfTypes$, this.listOfTeams$);
+    this.listOfTeams$.pipe(takeLast(1)).subscribe(listOfTeam=>{
+      this.filter.selectedTeam = _.find(listOfTeam,x => x.value == data.team.teamId);
+      console.log(this.filter.selectedTeam);
+      this.navigateToUrl("/report/kudos-by-team")
+    });
   }
 
   ngOnInit(): void { }

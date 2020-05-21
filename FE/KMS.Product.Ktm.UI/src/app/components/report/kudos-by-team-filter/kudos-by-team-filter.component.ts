@@ -1,10 +1,13 @@
 import { Component, OnInit, Output } from '@angular/core';
 import * as _ from 'underscore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, concat, forkJoin } from 'rxjs';
 import { ReportBaseComponent } from '@app/pages/report/reportBase.component';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { SelectFilter } from "@app/_models/SelectFilter";
 import { ListOfDummyTeams, ListOfDummyTypes } from '@app/_models/dummies';
+import { KudosService, ReportService } from '@app/_services';
+import { map, flatMap, takeLast, take, first, last, concatAll, combineAll } from 'rxjs/operators';
+import { KudosType } from '@app/_models/kudosType';
 
 @Component({
   selector: 'app-kudos-by-team-filter',
@@ -13,25 +16,34 @@ import { ListOfDummyTeams, ListOfDummyTypes } from '@app/_models/dummies';
 })
 export class KudosByTeamFilterComponent extends ReportBaseComponent implements OnInit {
 
-  listOfTypes: SelectFilter[] = ListOfDummyTypes;
-  listOfTeams:SelectFilter[] = ListOfDummyTeams;
+  // listOfTypes$: Observable<SelectFilter[]>;
+  // listOfTeams$: Observable<SelectFilter[]>;
   
-  constructor(activedRouter: ActivatedRoute, router : Router) { 
-    super(router, activedRouter)  
-    this.initialDefaultFilters();
+  constructor(activedRouter: ActivatedRoute, router : Router, private reportService: ReportService) { 
+    super(router, activedRouter) 
+    this.populateFilterData(); 
+    
   }
 
   onReportNavigated(){
-    console.log(this.filter);
+    
   }
 
   ngOnInit(): void { }
+
+  populateFilterData(){
+    this.listOfTypes$ = this.reportService.getAllKudosTypes();
+    this.listOfTeams$ = this.reportService.getAllTeams()
+    this.initialDefaultFilters();
+  }
   
   initialDefaultFilters(){
-
-    this.filter.selectedTeam = this.filter.selectedTeam || _.first(this.listOfTeams);
-    this.filter.selectedKudosType = this.filter.selectedKudosType || _.first(this.listOfTypes);
-    this.reloadPage();
+    forkJoin({type: this.listOfTypes$, team: this.listOfTeams$})
+      .subscribe( f => {
+        this.filter.selectedKudosType = this.filter.selectedKudosType || _.first(f.type); 
+        this.filter.selectedTeam = this.filter.selectedTeam || _.first(f.team); 
+        this.reloadPage(); 
+      });
   }
   
   onFilterChanged() {

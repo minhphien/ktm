@@ -1,6 +1,6 @@
 <div class="mb-1">
-  <nz-select [(ngModel)]="filter.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
-    <nz-option *ngFor="let item of listOfTypes" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+  <nz-select *ngIf="listOfTypes$" [(ngModel)]="filter.selectedKudosType" nzMode="default" [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" class="mr-2 kudosType" [nzCustomTemplate]="kudosTypeTempl" >
+    <nz-option *ngFor="let item of listOfTypes$ | async" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
   </nz-select>
   <ng-template #kudosTypeTempl let-selected> Type: <b>{{ selected.nzValue.name  }}</b></ng-template>
   
@@ -9,8 +9,8 @@
 </div>
 
 <div class=" pb--3">
-  <nz-select [(ngModel)]="filter.selectedTeams" nzPlaceHolder="No Team Selected" nzMode="multiple" [nzMaxTagCount]="2" [nzMaxTagPlaceholder]="tagPlaceHolder" class="multi-select mr-2"  [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
-    <nz-option *ngFor="let item of listOfTeams" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
+  <nz-select *ngIf="listOfTeams$" [(ngModel)]="filter.selectedTeams" nzPlaceHolder="No Team Selected" nzMode="multiple" [nzMaxTagCount]="2" [nzMaxTagPlaceholder]="tagPlaceHolder" class="multi-select mr-2"  [compareWith]="compareFn" (ngModelChange)= "onFilterChanged()" >
+    <nz-option *ngFor="let item of listOfTeams$ | async" [nzLabel]="item.name" [nzValue]="item" [nzDisabled]="item.disabled"></nz-option>
   </nz-select>
   <ng-template #tagPlaceHolder let-selectedList> and {{ selectedList.length }} more selected </ng-template>
 </div>

@@ -7,6 +7,8 @@ import { LightKudos, KudosState, Kudos } from '@app/_models';
 import { Store } from '@ngrx/store';
 import { updateKudos } from '@app/_reducers/kudos-list.reducer';
 import * as _ from 'underscore';
+import { SelectFilter } from '@app/_models/SelectFilter';
+import { KudosType } from '@app/_models/kudosType';
 
 
 @Injectable({

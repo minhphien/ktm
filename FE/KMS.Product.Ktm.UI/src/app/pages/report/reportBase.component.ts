@@ -4,11 +4,12 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'underscore';
 import { ListOfReports } from '@app/_models/dummies';
 import { SelectFilter } from '@app/_models/SelectFilter';
+import { concat, of, Observable } from 'rxjs';
 
 export abstract class ReportBaseComponent {
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
   
-  private static filters: ReportFilters = {
+  private static Filters: ReportFilters = {
     selectedReport: null,
     selectedKudosType: null,
     selectedTeam: null,
@@ -16,7 +17,17 @@ export abstract class ReportBaseComponent {
     dateRange: [],
     subFilter: null
   }
+  private static ListOfTypes$: Observable<SelectFilter[]>;
+  private static ListOfTeams$: Observable<SelectFilter[]>;
 
+  get listOfTypes$() { return ReportBaseComponent.ListOfTypes$ }
+  set listOfTypes$(value) { ReportBaseComponent.ListOfTypes$ = value }
+
+  get listOfTeams$() { return ReportBaseComponent.ListOfTeams$ }
+  set listOfTeams$(value) { ReportBaseComponent.ListOfTeams$ = value }
+
+  get filter() { return ReportBaseComponent.Filters }
+  set filter(value) { ReportBaseComponent.Filters = value }
 
   constructor(protected router: Router, protected activatedRoute: ActivatedRoute){
     this.filter.selectedReport = this.getSelectedReportFromRoute();
@@ -63,10 +74,5 @@ export abstract class ReportBaseComponent {
   
   reloadPage(){ this.navigateToUrl(); }
 
-  get filter() {
-    return ReportBaseComponent.filters
-  }
-  set filter(val: ReportFilters){
-    ReportBaseComponent.filters = val;
-  }
+  
 }

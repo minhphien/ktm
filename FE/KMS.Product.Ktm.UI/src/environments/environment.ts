@@ -11,7 +11,9 @@ export const environment = {
         Report: "/api/report",
         ReportReceivedByUser: "/api/report/receive",
         ReportSentByUser: "/api/report/send",
-        ReportKudosAcrossTeam: "/api/report/kudosAcrossTeam"
+        ReportKudosAcrossTeam: "/api/report/kudosAcrossTeam",
+        AllKudosTypes: "/api/kudosType",
+        AllTeams: "/api/team"
     },
     KmsHomeUrl: 'https://home.kms-technology.com',
     hrmUrls: {
