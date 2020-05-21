@@ -22,34 +22,24 @@ export class KudosService {
   
   getMyKudos(): Observable<any> {
     let url = `${environment.apiUrl}${environment.methods.UserKudos}`;
-    let request$ = this.http.get(url).pipe(retryWhen(error => {
-        return error.pipe(
-          flatMap((error: any) => {
-            
-              if(error.status  === 503) {
-                return of(error.status).pipe(delay(1500));
-              }
-              return throwError({error: 'No retry'});
-          }),
-          take(5),
-          concat(throwError({error: 'Sorry, there was an error (after 5 retries)'})));
-      }),
+    let request$ = this.handleError(this.http.get(url)).pipe(
       map((kudos:KudosState)=>{
-        _.each(kudos.kudoReceives,x=>{
-            x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
-            x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
-        _.each(kudos.kudoSends,x=>{
-          x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
-          x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
-        kudos.kudoReceives = _.sortBy(kudos.kudoReceives,(x)=>x.created).reverse();
-        kudos.kudoSends = _.sortBy(kudos.kudoSends,(x)=>x.created).reverse();
-
+        kudos.kudoReceives = _.sortBy(this.addImgUrls(kudos.kudoReceives), (x) => x.created).reverse();
+        kudos.kudoSends = _.sortBy(this.addImgUrls(kudos.kudoSends), (x) => x.created).reverse();
         return kudos;
     }));
     request$.subscribe((kudos:KudosState)=>{
       this.store.dispatch(updateKudos(kudos));
     });
     return request$;
+  }
+
+  private addImgUrls(list: Kudos[]): Kudos[] {
+    _.each(list, x=>{
+      x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
+      x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;
+    });
+    return list;
   }
 
   createKudos(data: LightKudos): Observable<Object> {
@@ -92,24 +82,14 @@ export class KudosService {
   }
 
   private requestKudosDetailByUserReportData(url, params?: HttpParams) {
-    let request$ = this.http.get(url, {params: params}).pipe(retryWhen(error => {
-      return error.pipe(
-        flatMap((error: any) => {
-            if(error.status  === 503) {
-              return of(error.status).pipe(delay(1500));
-            }
-            return throwError({error: 'No retry'});
-        }),
-        take(5),
-        concat(throwError({error: 'Sorry, there was an error (after 5 retries)'})));
-    }),
-    map((kudos:Kudos[])=>{
-      _.each(kudos,x=>{
-        x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
-        x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
-      kudos = _.sortBy(kudos,(x)=>x.created).reverse();
-      return kudos;
-    }));
+    let request$ = this.handleError(this.http.get(url, {params: params})).pipe(
+      map((kudos:Kudos[])=>{
+        _.each(kudos,x=>{
+          x.senderImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.senderEmployeeNumber}/300`;
+          x.receiverImgUrl = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnPhoto}/${x.receiverEmployeeNumber}/300`;});
+        kudos = _.sortBy(kudos,(x)=>x.created).reverse();
+        return kudos;
+      }));
     return request$;
   }
 
@@ -142,5 +122,20 @@ export class KudosService {
       params = params.append(key, x)
     });
     return params;
+  }
+
+  private handleError(val$: Observable<Object>): Observable<Object> {
+    if (!val$) return null;
+    return val$.pipe(retryWhen(error => {
+      return error.pipe(
+        flatMap((error: any) => {
+            if(error.status  === 503) {
+              return of(error.status).pipe(delay(1500));
+            }
+            return throwError({error: 'No retry'});
+        }),
+        take(5),
+        concat(throwError({error: 'Sorry, there was an error (after 5 retries)'})));
+    }));
   }
 }

@@ -37,14 +37,7 @@ export class KudosByTeamFilterComponent extends ReportBaseComponent implements O
     this.initialDefaultFilters();
   }
   
-  initialDefaultFilters(){
-    forkJoin({type: this.listOfTypes$, team: this.listOfTeams$})
-      .subscribe( f => {
-        this.filter.selectedKudosType = this.filter.selectedKudosType || _.first(f.type); 
-        this.filter.selectedTeam = this.filter.selectedTeam || _.first(f.team); 
-        this.reloadPage(); 
-      });
-  }
+  
   
   onFilterChanged() {
     this.reloadPage();

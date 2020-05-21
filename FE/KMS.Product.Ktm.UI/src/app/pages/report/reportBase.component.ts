@@ -4,7 +4,7 @@ import { NavigationExtras, Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'underscore';
 import { ListOfReports } from '@app/_models/dummies';
 import { SelectFilter } from '@app/_models/SelectFilter';
-import { concat, of, Observable } from 'rxjs';
+import { concat, of, Observable, forkJoin } from 'rxjs';
 
 export abstract class ReportBaseComponent {
   compareFn = (o1: any, o2: any) => (o1 && o2 ? o1.value === o2.value : o1 === o2);
@@ -74,5 +74,13 @@ export abstract class ReportBaseComponent {
   
   reloadPage(){ this.navigateToUrl(); }
 
+  initialDefaultFilters(){
+    forkJoin({type: this.listOfTypes$, team: this.listOfTeams$})
+      .subscribe( f => {
+        this.filter.selectedKudosType = this.filter.selectedKudosType || _.first(f.type); 
+        this.filter.selectedTeam = this.filter.selectedTeam || _.first(f.team); 
+        this.reloadPage(); 
+      });
+  }
   
 }
