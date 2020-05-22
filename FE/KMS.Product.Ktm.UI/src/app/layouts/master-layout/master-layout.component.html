@@ -1,7 +1,7 @@
 <div class="h-100 d-block w-100 d-flex flex-column">
     <nz-header class="p-0 m-0" >
       <div class="col-xl-12 col-lg-12  d-flex p-0">
-        <button  routerLink ="/" class="logo d-flex justify-content-center" ><span class="tw-20 tw-beers "></span></button>
+        <button  routerLink ="/" class="logo d-flex justify-content-center align-items-center" ><span class="tw-20 tw-beers "></span></button>
         <ul nz-menu nzMode="horizontal" class="header-menu ml-auto">
           <li class="" nz-menu-item *ngFor="let menu of menus" nzMatchRouter>
             <a routerLink={{menu.path}}>{{menu.name}}</a>
