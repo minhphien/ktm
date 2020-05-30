@@ -4,7 +4,7 @@ import {Http, Response} from '@angular/http';
 import * as $ from "jquery";
 import {Observable} from 'rxjs/Rx';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AppService {
     constructor(
         @Inject(DOCUMENT)

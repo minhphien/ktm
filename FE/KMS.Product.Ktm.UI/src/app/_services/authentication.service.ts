@@ -10,6 +10,9 @@ import { selectUserInfo, updateUser, deleteUser } from '@app/appState.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+
+    public static MAX_RETRY: number = 1; 
+    private readonly RETRY_NAME: string = "retry"; 
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser$: Observable<User>;
 
@@ -35,6 +38,26 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
         this.store.dispatch(deleteUser());
         this.currentUserSubject.next(null);
+    }
+
+    validToRetryLogin(): boolean {
+        return (Number(this.getSessionField(this.RETRY_NAME))) <= AuthenticationService.MAX_RETRY;
+    }
+
+    increaseRetry() {
+        let val = Number(this.getSessionField(this.RETRY_NAME)) || 0;
+        console.log('increase',val);
+        sessionStorage.setItem(this.RETRY_NAME, `${val + 1}`);
+    }
+
+    resetRetry(): void {
+        sessionStorage.setItem(this.RETRY_NAME, "0");
+    }
+
+    private getSessionField(key: string): string{
+        let val = sessionStorage.getItem(key);
+        if (val === undefined) sessionStorage.setItem(key, "0");
+        return val;
     }
     
 }

@@ -7,7 +7,7 @@ import { selectUserInfo } from '@app/appState.reducer';
 import { AppState } from '@app/_models';
 import { Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { UserService } from '@app/_services';
+import { UserService, AuthenticationService } from '@app/_services';
 import { KudosService } from '@app/_services/kudos.service';
 
 @Component({

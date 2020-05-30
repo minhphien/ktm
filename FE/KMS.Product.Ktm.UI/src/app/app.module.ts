@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 
+import { LocationStrategy, HashLocationStrategy} from '@angular/common';
+
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
 
