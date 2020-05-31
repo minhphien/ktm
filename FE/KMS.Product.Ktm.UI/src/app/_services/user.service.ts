@@ -19,11 +19,6 @@ export class UserService {
     getUserById(id: number):Observable<User> {
         return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
     }
-    
-    setUserInfoSession(userInfo: User){
-        console.log('updating session.', userInfo);
-        sessionStorage.setItem(SESSION_USER_INFO, JSON.stringify(userInfo));
-    }
 
     getUserCurrentState() : Observable<Employee>{
         let url = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnInfoUserLogin}`;
@@ -35,15 +30,6 @@ export class UserService {
             }
             return employee;
         }));
-    }
-    
-    getUserInfoSession(): User{
-        let userString = sessionStorage.getItem(SESSION_USER_INFO);
-        if (userString && userString != 'undefined') {
-            console.log('parsing');
-            return <User>JSON.parse(userString);
-        }
-        else return null;
     }
 
     getSuggestedUserList(keyword: string, maxTotal?: number): Observable<any[]>{

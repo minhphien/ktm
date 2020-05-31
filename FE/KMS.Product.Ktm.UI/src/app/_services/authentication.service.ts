@@ -13,6 +13,7 @@ export class AuthenticationService {
 
     public static MAX_RETRY: number = 1; 
     private readonly RETRY_NAME: string = "retry"; 
+    private readonly ROUTE_URL: string = "routeUrl"; 
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser$: Observable<User>;
 
@@ -41,17 +42,20 @@ export class AuthenticationService {
     }
 
     validToRetryLogin(): boolean {
-        return (Number(this.getSessionField(this.RETRY_NAME))) <= AuthenticationService.MAX_RETRY;
+        return (Number(this.getSessionField(this.RETRY_NAME) || "0")) < AuthenticationService.MAX_RETRY;
     }
 
-    increaseRetry() {
+    startRetry(routeUrl: string) {
         let val = Number(this.getSessionField(this.RETRY_NAME)) || 0;
-        console.log('increase',val);
-        sessionStorage.setItem(this.RETRY_NAME, `${val + 1}`);
+        sessionStorage.setItem(this.RETRY_NAME, `${val+1}`);
+        sessionStorage.setItem(this.ROUTE_URL, routeUrl);
     }
 
-    resetRetry(): void {
-        sessionStorage.setItem(this.RETRY_NAME, "0");
+    endRetry(): string {
+        sessionStorage.removeItem(this.RETRY_NAME);
+        var url = sessionStorage.getItem(this.ROUTE_URL);
+        sessionStorage.removeItem(this.ROUTE_URL);
+        return url;
     }
 
     private getSessionField(key: string): string{

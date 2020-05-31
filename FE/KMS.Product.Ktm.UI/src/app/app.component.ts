@@ -23,14 +23,8 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.loading$ = this.store.pipe(select("appstate"),select(selectLoading));        
         this.user$ = this.store.pipe(select("appstate"), select(selectUserInfo));
-        this.user$.subscribe((user:User)=>{
-            if (user) this.userService.setUserInfoSession(user);
-        });
-        let sesInfo = this.userService.getUserInfoSession();
-        if (sesInfo) this.store.dispatch(updateUser(sesInfo));
 
-        this.store.dispatch(loading());
-        
+        this.store.dispatch(loading());        
         this.store.dispatch(loaded());
     }
 }

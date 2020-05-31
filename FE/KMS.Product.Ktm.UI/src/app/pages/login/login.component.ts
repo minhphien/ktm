@@ -7,6 +7,7 @@ import { environment } from '@environments/environment';
 import { State, Store, select } from '@ngrx/store';
 import { AppState, User } from '@app/_models';
 import { selectUserInfo, updateUser } from '@app/appState.reducer';
+import { DefaultUrlSerializer,UrlSerializer } from "@angular/router";
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -25,21 +26,31 @@ export class LoginComponent implements OnInit {
 
     signOn(){
         const urlParams = new URLSearchParams(window.location.search);
+        
         const accessToken = urlParams.get('accessToken');
         
         if (accessToken) {
           this.authenticationService.signOn(accessToken).pipe(first()).subscribe((user:User)=> { 
             this.store.dispatch(updateUser(user));
               if(user) {
-                  this.router.navigate(['/']);
+                var currenturl = this.authenticationService.endRetry();
+                if (!currenturl) {this.router.navigate(['/']);}
+                else {
+                  var parser = document.createElement('a');
+                  parser.href = currenturl;
+                  var params = new URLSearchParams(parser.search);
+                  console.log(params.get('returnUrl'));
+                  this.router.navigate([params.get('returnUrl')]);
+                }
+                
               }
           });
         } else {
           if(this.authenticationService.validToRetryLogin()){
-            this.authenticationService.increaseRetry();
+            this.authenticationService.startRetry(`${document.URL}`);
             window.location.replace(`${environment.KmsHomeUrl}/login?returnUrl=${document.URL}`);
           } else{
-            this.authenticationService.resetRetry();
+            this.authenticationService.endRetry();
             this.router.navigate(['/404']);
           }
         }
