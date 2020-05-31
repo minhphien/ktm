@@ -39,10 +39,8 @@ export class KudosAcrossTeamComponent extends ReportBaseComponent implements OnI
   }
 
   navigateToTeam(data: any) {
-    console.log('last team', this.listOfTypes$, this.listOfTeams$);
     this.listOfTeams$.pipe(takeLast(1)).subscribe(listOfTeam=>{
       this.filter.selectedTeam = _.find(listOfTeam,x => x.value == data.team.teamId);
-      console.log(this.filter.selectedTeam);
       this.navigateToUrl("/report/kudos-by-team")
     });
   }

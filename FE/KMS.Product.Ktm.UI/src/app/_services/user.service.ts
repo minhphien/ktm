@@ -22,7 +22,6 @@ export class UserService {
 
     getUserCurrentState() : Observable<Employee>{
         let url = `${environment.hrmUrls.domain}${environment.hrmUrls.methods.ReturnInfoUserLogin}`;
-        console.log(url);
         return this.http.get<Employee>(url)
         .pipe(map((employee:Employee)=>{
             if(employee){
@@ -38,7 +37,6 @@ export class UserService {
         const root = environment.hrmUrls;
         const url = `${root.domain}${root.methods.SuggestedUsers}/${maxTotal}?employeeId=0&exceptEmployee=&filterName=${keyword}&filterOnlyStatus=&includeTerminated=false`;
         let request$ = this.http.get<Employee[]>(url);
-        request$.subscribe(val=>{console.log(val)});
         return request$.pipe(
                 map((users: Employee[]) => _.map(
                     users, u => { 

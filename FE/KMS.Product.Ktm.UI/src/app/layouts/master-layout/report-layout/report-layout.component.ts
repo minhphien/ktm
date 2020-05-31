@@ -27,8 +27,6 @@ export class ReportLayoutComponent extends ReportBaseComponent implements OnInit
     this.navigateToUrl(newVal.routeUrl, true);
   }
 
-  ngOnInit(): void { 
-    console.log('filter from layout',this.filter)    
-  }
+  ngOnInit(): void {  }
 
 }

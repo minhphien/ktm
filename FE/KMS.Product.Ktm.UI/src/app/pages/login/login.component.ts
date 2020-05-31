@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
                   var parser = document.createElement('a');
                   parser.href = currenturl;
                   var params = new URLSearchParams(parser.search);
-                  console.log(params.get('returnUrl'));
                   this.router.navigate([params.get('returnUrl')]);
                 }
                 
@@ -57,9 +56,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        // redirect to home if already logged in
         let user = <AppState>this.appState.getValue();
-        console.log('info from login',user)
         this.signOn();
     }
 }

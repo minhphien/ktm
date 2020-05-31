@@ -117,7 +117,6 @@ export class KudosService {
   private appendParamList(params: HttpParams, key: string, items: string[]){
     if(!params){ params = new HttpParams() }
     if (!items) return params;
-    console.log('check', items);
     _.forEach(items, (x) => { 
       params = params.append(key, x)
     });
